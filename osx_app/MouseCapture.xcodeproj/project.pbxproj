@@ -22,6 +22,9 @@
 		8F22B69518BAD48D0099DA47 /* player_pause.png in Resources */ = {isa = PBXBuildFile; fileRef = 8F22B69318BAD48D0099DA47 /* player_pause.png */; };
 		8F22B69618BAD48D0099DA47 /* player_play.png in Resources */ = {isa = PBXBuildFile; fileRef = 8F22B69418BAD48D0099DA47 /* player_play.png */; };
 		8F22B69818BAD53A0099DA47 /* Record-Pressed-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 8F22B69718BAD53A0099DA47 /* Record-Pressed-icon.png */; };
+		8F70515D18C92B6D0065BEB9 /* libSocketRocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F70515418C92AFB0065BEB9 /* libSocketRocket.a */; };
+		8F70515E18C92DCB0065BEB9 /* SocketRocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F70515618C92AFB0065BEB9 /* SocketRocket.framework */; };
+		8F70516418C931220065BEB9 /* SocketRocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8F70515618C92AFB0065BEB9 /* SocketRocket.framework */; };
 		8FB8507218BAB229007D2A07 /* editclear.png in Resources */ = {isa = PBXBuildFile; fileRef = 8FB8507118BAB229007D2A07 /* editclear.png */; };
 /* End PBXBuildFile section */
 
@@ -33,7 +36,55 @@
 			remoteGlobalIDString = 8F1C993E18B948F40003C83C;
 			remoteInfo = MouseCapture;
 		};
+		8F70515318C92AFB0065BEB9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8F70514C18C92AFA0065BEB9 /* SocketRocket.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F6B2082D1450F597009315AF;
+			remoteInfo = SocketRocket;
+		};
+		8F70515518C92AFB0065BEB9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8F70514C18C92AFA0065BEB9 /* SocketRocket.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F668C880153E91210044DBAC;
+			remoteInfo = SocketRocketOSX;
+		};
+		8F70515718C92AFB0065BEB9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8F70514C18C92AFA0065BEB9 /* SocketRocket.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F6BDA802145900D200FE3253;
+			remoteInfo = SRWebSocketTests;
+		};
+		8F70515918C92AFB0065BEB9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8F70514C18C92AFA0065BEB9 /* SocketRocket.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F62417E314D52F3C003CE997;
+			remoteInfo = TestChat;
+		};
+		8F70515B18C92B490065BEB9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8F70514C18C92AFA0065BEB9 /* SocketRocket.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = F6B2082C1450F597009315AF;
+			remoteInfo = SocketRocket;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		8F70515F18C92EF20065BEB9 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				8F70516418C931220065BEB9 /* SocketRocket.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		8F1C993F18B948F40003C83C /* MouseCapture.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MouseCapture.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -59,6 +110,7 @@
 		8F22B69318BAD48D0099DA47 /* player_pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = player_pause.png; sourceTree = "<group>"; };
 		8F22B69418BAD48D0099DA47 /* player_play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = player_play.png; sourceTree = "<group>"; };
 		8F22B69718BAD53A0099DA47 /* Record-Pressed-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Record-Pressed-icon.png"; sourceTree = "<group>"; };
+		8F70514C18C92AFA0065BEB9 /* SocketRocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SocketRocket.xcodeproj; path = ../SocketRocket/SocketRocket.xcodeproj; sourceTree = "<group>"; };
 		8FB8507118BAB229007D2A07 /* editclear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = editclear.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -67,6 +119,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8F70515E18C92DCB0065BEB9 /* SocketRocket.framework in Frameworks */,
+				8F70515D18C92B6D0065BEB9 /* libSocketRocket.a in Frameworks */,
 				8F1C994318B948F40003C83C /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -86,6 +140,7 @@
 		8F1C993618B948F40003C83C = {
 			isa = PBXGroup;
 			children = (
+				8F70514C18C92AFA0065BEB9 /* SocketRocket.xcodeproj */,
 				8F22B69718BAD53A0099DA47 /* Record-Pressed-icon.png */,
 				8F22B69318BAD48D0099DA47 /* player_pause.png */,
 				8F22B69418BAD48D0099DA47 /* player_play.png */,
@@ -169,6 +224,17 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		8F70514D18C92AFA0065BEB9 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8F70515418C92AFB0065BEB9 /* libSocketRocket.a */,
+				8F70515618C92AFB0065BEB9 /* SocketRocket.framework */,
+				8F70515818C92AFB0065BEB9 /* SRWebSocketTests.octest */,
+				8F70515A18C92AFB0065BEB9 /* TestChat.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -179,10 +245,12 @@
 				8F1C993B18B948F40003C83C /* Sources */,
 				8F1C993C18B948F40003C83C /* Frameworks */,
 				8F1C993D18B948F40003C83C /* Resources */,
+				8F70515F18C92EF20065BEB9 /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				8F70515C18C92B490065BEB9 /* PBXTargetDependency */,
 			);
 			name = MouseCapture;
 			productName = MouseCapture;
@@ -233,6 +301,12 @@
 			mainGroup = 8F1C993618B948F40003C83C;
 			productRefGroup = 8F1C994018B948F40003C83C /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 8F70514D18C92AFA0065BEB9 /* Products */;
+					ProjectRef = 8F70514C18C92AFA0065BEB9 /* SocketRocket.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				8F1C993E18B948F40003C83C /* MouseCapture */,
@@ -240,6 +314,37 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		8F70515418C92AFB0065BEB9 /* libSocketRocket.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libSocketRocket.a;
+			remoteRef = 8F70515318C92AFB0065BEB9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8F70515618C92AFB0065BEB9 /* SocketRocket.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = SocketRocket.framework;
+			remoteRef = 8F70515518C92AFB0065BEB9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8F70515818C92AFB0065BEB9 /* SRWebSocketTests.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = SRWebSocketTests.octest;
+			remoteRef = 8F70515718C92AFB0065BEB9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8F70515A18C92AFB0065BEB9 /* TestChat.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = TestChat.app;
+			remoteRef = 8F70515918C92AFB0065BEB9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		8F1C993D18B948F40003C83C /* Resources */ = {
@@ -293,6 +398,11 @@
 			isa = PBXTargetDependency;
 			target = 8F1C993E18B948F40003C83C /* MouseCapture */;
 			targetProxy = 8F1C996418B948F40003C83C /* PBXContainerItemProxy */;
+		};
+		8F70515C18C92B490065BEB9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = SocketRocket;
+			targetProxy = 8F70515B18C92B490065BEB9 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -407,7 +517,17 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MouseCapture/MouseCapture-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.8.xctoolchain/usr/include,
+					"\"$(TARGET_BUILD_DIR)/usr/local/lib/include\"",
+					"\"$(OBJROOT)/UninstalledProducts/include\"",
+				);
 				INFOPLIST_FILE = "MouseCapture/MouseCapture-Info.plist";
+				"OTHER_LDFLAGS[arch=*]" = (
+					"-ObjC",
+					"-all_load",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -420,6 +540,12 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MouseCapture/MouseCapture-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.8.xctoolchain/usr/include,
+					"\"$(TARGET_BUILD_DIR)/usr/local/lib/include\"",
+					"\"$(OBJROOT)/UninstalledProducts/include\"",
+				);
 				INFOPLIST_FILE = "MouseCapture/MouseCapture-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
