@@ -19,6 +19,7 @@ static id monitorUserInputs;
 @property (weak) IBOutlet NSToolbarItem *toolbarRecordButton;
 @property (weak) IBOutlet NSToolbarItem *toolbarStopButton;
 
+@property (weak) IBOutlet NSTextField *socketStatus;
 @property (weak) IBOutlet NSTextField *cursorDeltaXLabel;
 @property (weak) IBOutlet NSTextField *cursorDeltaYLabel;
 @property (weak) IBOutlet NSTextField *cursorPosXLabel;
@@ -37,6 +38,7 @@ static id monitorUserInputs;
 
 @property (readwrite) BOOL recordingEnabled;
 
+- (IBAction)reconnect:(id)sender;
 - (IBAction)clearButtonPressed:(id)sender;
 - (IBAction)recordButtonPressed:(id)sender;
 - (IBAction)stopButtonPressed:(id)sender;

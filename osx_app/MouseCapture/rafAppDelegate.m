@@ -7,12 +7,15 @@
 //
 
 #import "rafAppDelegate.h"
+// SocketRocket
+#import <SocketRocket/SRWebSocket.h>
 
 @implementation rafAppDelegate
 @synthesize logView;
 @synthesize toolbarClearButton;
 @synthesize toolbarRecordButton;
 @synthesize toolbarStopButton;
+@synthesize socketStatus;
 @synthesize cursorPosXLabel;
 @synthesize cursorPosYLabel;
 @synthesize cursorDeltaXLabel;
@@ -26,6 +29,8 @@
 @synthesize keyDownCounter;
 @synthesize leftMouseCounter;
 
+SRWebSocket *_webSocket;
+
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     self.recordingEnabled = YES;
@@ -36,7 +41,13 @@
     if (self.recordingEnabled) {
         [self initCounters];
         [self startRecording];
+        [self startSocket];
     }
+}
+
+- (void)reconnect:(id)sender;
+{
+    [self _reconnectSocket];
 }
 
 - (void)initCounters {
@@ -46,6 +57,21 @@
     self.cursorPositionY = [NSNumber numberWithFloat:0];
     self.keyDownCounter = [NSNumber numberWithInt:0];
     self.leftMouseCounter = [NSNumber numberWithInt:0];
+}
+
+- (void)startSocket {
+    [self _reconnectSocket];
+}
+
+-(void) _reconnectSocket {
+    _webSocket.delegate = nil;
+    [_webSocket close];
+    
+    _webSocket = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"ws://localhost:9000/chat"]]];
+    _webSocket.delegate = self;
+    
+    //self.title = @"Opening Connection...";
+    [_webSocket open];
 }
 
 - (IBAction)clearButtonPressed:(id)sender {
@@ -136,6 +162,38 @@
     [logView setString: [[logView string] stringByAppendingFormat:@"%@: %@\n", [self.logDateFormatter stringFromDate:[NSDate date]],  message]];
     
     [logView scrollRangeToVisible:NSMakeRange([[logView string] length], 0)];
+}
+
+
+#pragma mark - SRWebSocketDelegate
+
+- (void)webSocketDidOpen:(SRWebSocket *)webSocket;
+{
+    NSLog(@"Websocket Connected");
+    [socketStatus setStringValue:@"Connected!"];
+}
+
+- (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error;
+{
+    NSLog(@":( Websocket Failed With Error %@", error);
+    
+    [socketStatus setStringValue:@"Connection Failed! (see logs)"];
+    _webSocket = nil;
+}
+
+- (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message;
+{
+    NSLog(@"Received \"%@\"", message);
+    //[_messages addObject:[[TCMessage alloc] initWithMessage:message fromMe:NO]];
+    //[self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:_messages.count - 1 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+    //[self.tableView scrollRectToVisible:self.tableView.tableFooterView.frame animated:YES];
+}
+
+- (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean;
+{
+    NSLog(@"WebSocket closed");
+    [socketStatus setStringValue:@"Connection Closed! (see logs)"];
+    _webSocket = nil;
 }
 
 @end
