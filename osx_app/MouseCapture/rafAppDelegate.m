@@ -76,7 +76,7 @@ SRWebSocket *_webSocket;
     _webSocket.delegate = nil;
     [_webSocket close];
     
-    _webSocket = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"ws://192.168.173.123:9000/"]]];
+    _webSocket = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"ws://localhost:9000/"]]];
     _webSocket.delegate = self;
     
     [socketStatus setStringValue:@"Opening connection!"];
@@ -125,12 +125,19 @@ SRWebSocket *_webSocket;
                 CGFloat posX = location.x;
                 CGFloat posY = location.y;
                 
+                NSDictionary *keyData = [NSDictionary dictionaryWithObjectsAndKeys:
+                                         [NSNumber numberWithFloat:posX], @"posX",
+                                         [NSNumber numberWithFloat:posY], @"posY",
+                                         [NSNumber numberWithFloat:deltaX], @"deltaX",
+                                         [NSNumber numberWithFloat:deltaY], @"deltaY",
+                                         nil];
+                
                 self.cursorDeltaX = [NSNumber numberWithFloat:deltaX];
                 self.cursorDeltaY = [NSNumber numberWithFloat:deltaY];
                 self.cursorPositionX = [NSNumber numberWithFloat:posX];
                 self.cursorPositionY = [NSNumber numberWithFloat:posY];
                 
-                [self reportToSocket:@"mousemove"];
+                [self reportToSocket:@"mousemove" :keyData];
                 
                 break;
             }
@@ -139,7 +146,7 @@ SRWebSocket *_webSocket;
             case 1:
             {
                 // Report to socket
-                [self reportToSocket:@"click"];
+                [self reportToSocket:@"click":nil];
                 
                 [self logMessageToLogView:[NSString stringWithFormat:@"Left click!"]];
                 self.leftMouseCounter = [NSNumber numberWithInt:(1 + [self.leftMouseCounter intValue])];
@@ -149,7 +156,16 @@ SRWebSocket *_webSocket;
             // Key down
             case 10:
             {
-                [self reportToSocket:@"keydown"];
+                //NSString *chars = [[incomingEvent characters] lowercaseString];
+                //unichar character = [chars characterAtIndex:0];
+                
+                NSLog(@"%c", [incomingEvent keyCode]);
+                
+                NSDictionary *keyData = [NSDictionary dictionaryWithObjectsAndKeys:
+                                         @"[key to determine]", @"keyPressed",
+                                         nil];
+                
+                [self reportToSocket:@"keydown" :keyData];
                 
                 [self logMessageToLogView:[NSString stringWithFormat:@"Keyboard key down!"]];
                 self.keyDownCounter = [NSNumber numberWithInt:(1 + [self.keyDownCounter intValue])];
@@ -167,21 +183,30 @@ SRWebSocket *_webSocket;
 }
 
 
--(void)reportToSocket:(NSString*)type {
+-(void)reportToSocket:(NSString*)type :(NSDictionary*)eventData {
     
     NSLog(@"reportToSocket :: %@", type);
     
-    if ([type isEqualToString:@"click"]) {
-        [_webSocket send:@"click"];
+    NSError *error;
+    NSDictionary *finalDataObject;
+    NSString *requestJson;
+    
+    finalDataObject = [NSDictionary dictionaryWithObjectsAndKeys:
+                       type, @"type",
+                       eventData, @"data",
+                       nil];
+    
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:finalDataObject
+                                                       options:NSJSONWritingPrettyPrinted
+                                                         error:&error];
+    
+    if (!jsonData) {
+        //Deal with error
+    } else {
+        requestJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     }
     
-    else if ([type isEqualToString:@"keydown"]) {
-        [_webSocket send:@"keydown"];
-    }
-    
-    else if ([type isEqualToString:@"mousemove"]) {
-        [_webSocket send:@"mousemove"];
-    }
+    [_webSocket send:requestJson];
 }
 
 
