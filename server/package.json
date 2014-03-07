@@ -1,0 +1,24 @@
+{
+  "name": "team-data-capture",
+  "version": "0.0.1",
+  "description": "An OSX app to retrieve input data & use it for something",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/raiseandfall/team-data-capture"
+  },
+  "author": "Matthieu COLLE",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/raiseandfall/team-data-capture/issues"
+  },
+  "homepage": "https://github.com/raiseandfall/team-data-capture",
+  "dependencies": {
+    "grunt-contrib-jshint": "~0.8.0",
+    "primus": "~2.0.3"
+  }
+}
