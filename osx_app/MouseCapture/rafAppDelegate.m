@@ -45,6 +45,15 @@ SRWebSocket *_webSocket;
     }
 }
 
+- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication {
+    return NO;
+}
+
+- (BOOL)validateToolbarItem:(NSToolbarItem *)theItem {
+    return YES;
+}
+
+
 - (void)reconnect:(id)sender;
 {
     [self _reconnectSocket];
@@ -67,10 +76,10 @@ SRWebSocket *_webSocket;
     _webSocket.delegate = nil;
     [_webSocket close];
     
-    _webSocket = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"ws://localhost:9000/chat"]]];
+    _webSocket = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"ws://192.168.173.123:9000/"]]];
     _webSocket.delegate = self;
     
-    //self.title = @"Opening Connection...";
+    [socketStatus setStringValue:@"Opening connection!"];
     [_webSocket open];
 }
 
@@ -121,12 +130,17 @@ SRWebSocket *_webSocket;
                 self.cursorPositionX = [NSNumber numberWithFloat:posX];
                 self.cursorPositionY = [NSNumber numberWithFloat:posY];
                 
+                [self reportToSocket:@"mousemove"];
+                
                 break;
             }
                 
             // Left click
             case 1:
             {
+                // Report to socket
+                [self reportToSocket:@"click"];
+                
                 [self logMessageToLogView:[NSString stringWithFormat:@"Left click!"]];
                 self.leftMouseCounter = [NSNumber numberWithInt:(1 + [self.leftMouseCounter intValue])];
                 break;
@@ -135,6 +149,8 @@ SRWebSocket *_webSocket;
             // Key down
             case 10:
             {
+                [self reportToSocket:@"keydown"];
+                
                 [self logMessageToLogView:[NSString stringWithFormat:@"Keyboard key down!"]];
                 self.keyDownCounter = [NSNumber numberWithInt:(1 + [self.keyDownCounter intValue])];
                 break;
@@ -150,13 +166,24 @@ SRWebSocket *_webSocket;
     [self logMessageToLogView:[NSString stringWithFormat:@"Start Recording"]];
 }
 
-- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication {
-    return NO;
+
+-(void)reportToSocket:(NSString*)type {
+    
+    NSLog(@"reportToSocket :: %@", type);
+    
+    if ([type isEqualToString:@"click"]) {
+        [_webSocket send:@"click"];
+    }
+    
+    else if ([type isEqualToString:@"keydown"]) {
+        [_webSocket send:@"keydown"];
+    }
+    
+    else if ([type isEqualToString:@"mousemove"]) {
+        [_webSocket send:@"mousemove"];
+    }
 }
 
-- (BOOL)validateToolbarItem:(NSToolbarItem *)theItem {
-    return YES;
-}
 
 -(void)logMessageToLogView:(NSString*)message {
     [logView setString: [[logView string] stringByAppendingFormat:@"%@: %@\n", [self.logDateFormatter stringFromDate:[NSDate date]],  message]];
