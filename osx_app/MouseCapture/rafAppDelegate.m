@@ -7,6 +7,7 @@
 //
 
 #import "rafAppDelegate.h"
+
 // SocketRocket
 #import <SocketRocket/SRWebSocket.h>
 
@@ -30,6 +31,9 @@
 @synthesize leftMouseCounter;
 
 SRWebSocket *_webSocket;
+NSString *TRACKED_CHARS = @"abcdefghijklmnopqrstuvwxyz0123456789";
+NSString *SEPARATORS = @" []{}|,.<>/?!@#$%^&*()_-+=~`\\";
+NSString *SEPARATORS_KEY_CODES = @"$";
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
@@ -156,19 +160,32 @@ SRWebSocket *_webSocket;
             // Key down
             case 10:
             {
-                //NSString *chars = [[incomingEvent characters] lowercaseString];
-                //unichar character = [chars characterAtIndex:0];
+                // Character just hit
+                NSString *_char = [[incomingEvent characters] lowercaseString];
+                //char key = [incomingEvent keyCode];
+                NSString *_keyCode = [NSString stringWithFormat:@"%d" , [incomingEvent keyCode]];
+                NSLog(@"key : '%@'", _char);
                 
-                NSLog(@"%c", [incomingEvent keyCode]);
+                unichar character = [_char characterAtIndex:0];
+                NSLog(@"keyCode :: %@", _keyCode);
+                NSLog(@"special character :: %c", character);
                 
-                NSDictionary *keyData = [NSDictionary dictionaryWithObjectsAndKeys:
-                                         @"[key to determine]", @"keyPressed",
-                                         nil];
-                
-                [self reportToSocket:@"keydown" :keyData];
-                
-                [self logMessageToLogView:[NSString stringWithFormat:@"Keyboard key down!"]];
+                [self logMessageToLogView:[NSString stringWithFormat:@"Key pressed : %@", _char]];
                 self.keyDownCounter = [NSNumber numberWithInt:(1 + [self.keyDownCounter intValue])];
+                
+                // Only report key if it's a character we want to track
+                if ([self isCharacterTracked:_char]) {
+                    NSDictionary *keyData = [NSDictionary dictionaryWithObjectsAndKeys:
+                                             _char, @"keyPressed",
+                                             nil];
+                    
+                    [self reportToSocket:@"keydown" :keyData];
+                }
+                
+                if ([self isSeparator:_char:_keyCode]) {
+                    
+                }
+                
                 break;
             }
                 
@@ -183,9 +200,55 @@ SRWebSocket *_webSocket;
 }
 
 
+/**
+ * @function    isCharacterTracked
+ **/
+-(BOOL)isCharacterTracked:(NSString*)_char {
+    // Check if it's a character / number / space / comma / period
+    NSCharacterSet *charSet = [NSCharacterSet characterSetWithCharactersInString:TRACKED_CHARS];
+    NSRange range = [_char rangeOfCharacterFromSet:charSet];
+    
+    if (range.location != NSNotFound) {
+        NSLog(@"Allowed character : %@", _char);
+        return TRUE;
+    } else {
+        NSLog(@"NOT Allowed character : %@", _char);
+        return FALSE;
+    }
+}
+
+
+/**
+ * @function    isSeparator
+ **/
+-(BOOL)isSeparator:(NSString*)_char :(NSString*)keyCode {
+    // Check if it's a character / number / space / comma / period
+    NSCharacterSet *charSet;
+    NSRange range;
+    
+    charSet = [NSCharacterSet characterSetWithCharactersInString:SEPARATORS];
+    range = [_char rangeOfCharacterFromSet:charSet];
+    
+    if (range.location != NSNotFound) {
+        NSLog(@"Separator ! : %@", _char);
+        return TRUE;
+    } else {
+        // Check if it's a RETURN ( keyCode $ )
+        charSet = [NSCharacterSet characterSetWithCharactersInString:SEPARATORS_KEY_CODES];
+        range = [keyCode rangeOfCharacterFromSet:charSet];
+        
+        if (range.location != NSNotFound) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+}
+
+
 -(void)reportToSocket:(NSString*)type :(NSDictionary*)eventData {
     
-    NSLog(@"reportToSocket :: %@", type);
+    //NSLog(@"reportToSocket :: %@", type);
     
     NSError *error;
     NSDictionary *finalDataObject;
@@ -236,9 +299,6 @@ SRWebSocket *_webSocket;
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message;
 {
     NSLog(@"Received \"%@\"", message);
-    //[_messages addObject:[[TCMessage alloc] initWithMessage:message fromMe:NO]];
-    //[self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:_messages.count - 1 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
-    //[self.tableView scrollRectToVisible:self.tableView.tableFooterView.frame animated:YES];
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean;

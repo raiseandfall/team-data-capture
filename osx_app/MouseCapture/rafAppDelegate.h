@@ -38,11 +38,12 @@ static id monitorUserInputs;
 
 @property (readwrite) BOOL recordingEnabled;
 
-- (IBAction)reconnect:(id)sender;
-- (IBAction)clearButtonPressed:(id)sender;
-- (IBAction)recordButtonPressed:(id)sender;
-- (IBAction)stopButtonPressed:(id)sender;
-
-- (void)logMessageToLogView:(NSString*)message;
+- (IBAction)reconnect               :(id)sender;
+- (IBAction)clearButtonPressed      :(id)sender;
+- (IBAction)recordButtonPressed     :(id)sender;
+- (IBAction)stopButtonPressed       :(id)sender;
+- (BOOL)isCharacterTracked          :(NSString*)_char;
+- (BOOL)isSeparator                 :(NSString*)_char   :(NSString*)keyCode;
+- (void)logMessageToLogView         :(NSString*)message;
 
 @end

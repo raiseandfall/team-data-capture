@@ -22,6 +22,7 @@
 		8F22B69518BAD48D0099DA47 /* player_pause.png in Resources */ = {isa = PBXBuildFile; fileRef = 8F22B69318BAD48D0099DA47 /* player_pause.png */; };
 		8F22B69618BAD48D0099DA47 /* player_play.png in Resources */ = {isa = PBXBuildFile; fileRef = 8F22B69418BAD48D0099DA47 /* player_play.png */; };
 		8F22B69818BAD53A0099DA47 /* Record-Pressed-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 8F22B69718BAD53A0099DA47 /* Record-Pressed-icon.png */; };
+		8F3425DD18CA531400052C7F /* keyCodes.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F3425DC18CA531400052C7F /* keyCodes.m */; };
 		8F70515D18C92B6D0065BEB9 /* libSocketRocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F70515418C92AFB0065BEB9 /* libSocketRocket.a */; };
 		8F70515E18C92DCB0065BEB9 /* SocketRocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F70515618C92AFB0065BEB9 /* SocketRocket.framework */; };
 		8F70516418C931220065BEB9 /* SocketRocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8F70515618C92AFB0065BEB9 /* SocketRocket.framework */; };
@@ -110,6 +111,8 @@
 		8F22B69318BAD48D0099DA47 /* player_pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = player_pause.png; sourceTree = "<group>"; };
 		8F22B69418BAD48D0099DA47 /* player_play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = player_play.png; sourceTree = "<group>"; };
 		8F22B69718BAD53A0099DA47 /* Record-Pressed-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Record-Pressed-icon.png"; sourceTree = "<group>"; };
+		8F3425DB18CA531400052C7F /* keyCodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = keyCodes.h; sourceTree = "<group>"; };
+		8F3425DC18CA531400052C7F /* keyCodes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = keyCodes.m; sourceTree = "<group>"; };
 		8F70514C18C92AFA0065BEB9 /* SocketRocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SocketRocket.xcodeproj; path = ../SocketRocket/SocketRocket.xcodeproj; sourceTree = "<group>"; };
 		8FB8507118BAB229007D2A07 /* editclear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = editclear.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -190,6 +193,8 @@
 				8F1C995718B948F40003C83C /* MainMenu.xib */,
 				8F1C995A18B948F40003C83C /* Images.xcassets */,
 				8F1C994918B948F40003C83C /* Supporting Files */,
+				8F3425DB18CA531400052C7F /* keyCodes.h */,
+				8F3425DC18CA531400052C7F /* keyCodes.m */,
 			);
 			path = MouseCapture;
 			sourceTree = "<group>";
@@ -378,6 +383,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8F3425DD18CA531400052C7F /* keyCodes.m in Sources */,
 				8F1C995618B948F40003C83C /* rafAppDelegate.m in Sources */,
 				8F1C994F18B948F40003C83C /* main.m in Sources */,
 			);
