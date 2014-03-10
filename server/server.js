@@ -6,39 +6,83 @@
  */
 
 var config = {
-  port: 9000
+  port: 9000,
+  address: 'localhost'
 };
 
-var app = require('http').createServer(processRequest),
+var processRequest = function (req, res) {
+  res.writeHead(200, {'Content-Type': 'text/json'});
+  res.end(tpl);
+};
+
+var http = require('http'),
     WebSocketServer = require('ws').Server,
-    wss = new WebSocketServer( { server: app} ),
-    clientId = 0;
+    fs = require('fs'),
+    wss,
+    hbs = require('handlebars'),
+    clientId = 0,
+    aClients = [],
+    tpl = fs.readFileSync('./index.html', 'utf8'),
+    app;
 
-app.listen(config.port);
+app = http.createServer(processRequest).listen(config.port, config.address);
+wss = new WebSocketServer( { server: app } );
 
-var processRequest = function( req, res ) {
-  res.writeHead(200);
-  res.end("All glory to WebSockets!\n");
-};
 
-wss.on('connection', function(ws) {
+wss.on('connection', function (ws) {
   var _clientId = clientId++;
 
-  console.log('Client #%d connected !', _clientId);
+  console.log('Client #%d connected !', _clientId, ws._socket.remoteAddress);
 
-  // On message
-  ws.on('message', function(data, flags) {
-    console.log('Client #%d : %s', _clientId, data);
-  });
+  // If client already exists
+  var cli = new Client( _clientId, ws._socket.remoteAddress );
 
-  ws.send('something');
+  if (cli === true) {
+    // On message
+    ws.on('message', function (data, flags) {
+      console.log('Client #%d : %s', _clientId, data);
+    });
 
-  // Client disconnected
-  ws.on('close', function() {
-    console.log('Client #%d disconnected', _clientId);
-  });
+    // Client disconnected
+    ws.on('close', function () {
+      console.log('Client #%d disconnected', _clientId);
 
-  ws.on('error', function(e) {
-    console.log('Client #%d error: %s', thisId, e.message);
-  });
+      // Unbind events
+      ws.off('message');
+      ws.off('close');
+      ws.off('error');
+
+      cli.disconnect( _clientId );
+    });
+
+    // Client error
+    ws.on('error', function (e) {
+      console.log('Client #%d error: %s', thisId, e.message);
+    });
+  }
 });
+
+
+
+// Client
+var Client = function (_id, _ip) {
+  this.ID = _id;
+  this.IP_ADDRESS = _ip;
+
+  aClients.push({
+    id: _id,
+    ip: _ip
+  });
+};
+Client.prototype.getId = function () {
+  return this.ID;
+};
+Client.prototype.disconnect = function (_id) {
+  var numClients = aClients.length;
+  for (var c=0; c < numClients; c++) {
+    if (_id === aClients[c].id) {
+      aClients.splice(c, 1);
+      return true;
+    }
+  }
+};

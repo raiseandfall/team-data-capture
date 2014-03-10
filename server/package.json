@@ -19,6 +19,7 @@
   "homepage": "https://github.com/raiseandfall/team-data-capture",
   "dependencies": {
     "grunt-contrib-jshint": "~0.8.0",
-    "primus": "~2.0.3"
+    "primus": "~2.0.3",
+    "handlebars": "~2.0.0-alpha.2"
   }
 }

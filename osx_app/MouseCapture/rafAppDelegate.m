@@ -264,7 +264,7 @@ NSString *SEPARATORS_KEY_CODES = @"$";
                                                          error:&error];
     
     if (!jsonData) {
-        //Deal with error
+
     } else {
         requestJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     }
