@@ -1,25 +1,28 @@
 {
-  "name": "team-data-capture",
+  "name": "application-name",
   "version": "0.0.1",
-  "description": "An OSX app to retrieve input data & use it for something",
-  "main": "server.js",
+  "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node app.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/raiseandfall/team-data-capture"
-  },
-  "author": "Matthieu COLLE",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/raiseandfall/team-data-capture/issues"
-  },
-  "homepage": "https://github.com/raiseandfall/team-data-capture",
   "dependencies": {
-    "grunt-contrib-jshint": "~0.8.0",
-    "primus": "~2.0.3",
-    "handlebars": "~2.0.0-alpha.2"
+    "express": "~3.4.8",
+    "static-favicon": "~1.0.0",
+    "morgan": "~1.0.0",
+    "cookie-parser": "~1.0.1",
+    "body-parser": "~1.0.0",
+    "debug": "~0.7.4",
+    "ws": "~0.4.31",
+    "jade": "~1.3.0",
+    "mongoose": "~3.8.8",
+    "grunt": "~0.4.4",
+    "grunt-contrib-jshint": "~0.9.0",
+    "grunt-contrib-nodeunit": "~0.3.3",
+    "grunt-develop": "~0.3.0",
+    "grunt-contrib-watch": "~0.6.0"
+  },
+  "devDependencies": {
+    "jshint-stylish": "~0.1.5"
   }
 }

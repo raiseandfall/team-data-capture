@@ -7,28 +7,17 @@ module.exports = function(grunt) {
     // grunt-contrib-jshint
     jshint: {
       files: [
-        'Gruntfile.js',
-        'tasks/*.js'
+        '**/*.js',
+        '!node_modules/**/*js'
       ],
       options: {
-        'laxcomma':true,
-        'curly': true,
-        'eqeqeq': true,
-        'immed': true,
-        'latedef': true,
-        'newcap': true,
-        'noarg': true,
-        'sub': true,
-        'undef': true,
-        'boss': true,
-        'eqnull': true,
-        'node': true
+        jshintrc: '.jshintrc',
       }
     },
     // grunt-develop
     develop: {
       server: {
-        file: 'test/app.js'
+        file: 'app.js'
       }
     },
     // grunt-contrib-watch
@@ -42,7 +31,7 @@ module.exports = function(grunt) {
       },
       nodeunit: {
         files: 'test/**/*.js',
-        tasks: ['node-unit']
+        tasks: ['nodeunit']
       }
     },
     // grunt-contrib-nodeunit
@@ -51,9 +40,14 @@ module.exports = function(grunt) {
     }
   });
 
+  grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-nodeunit');
+  grunt.loadNpmTasks('grunt-develop');
 
   // default = run jslint and all tests
   grunt.registerTask('default', ['jshint','develop','nodeunit']);
+
+  // dev = run jslint and all tests
+  grunt.registerTask('dev', ['develop', 'watch']);
 };
