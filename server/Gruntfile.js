@@ -17,7 +17,7 @@ module.exports = function(grunt) {
     // grunt-develop
     develop: {
       server: {
-        file: 'app.js'
+        file: 'server.js'
       }
     },
     // grunt-contrib-watch
