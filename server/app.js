@@ -8,7 +8,8 @@ var express = require('express'),
     mongoose = require('mongoose'),
     routes = require('./routes'),
     users = require('./routes/user'),
-    app = express();
+    app = express(),
+    Socket = require('./sockets').Socket;
 
 
 /**
@@ -101,7 +102,7 @@ var TeamCaptureApp = function() {
       var db = exports.db = mongoose.connection;
       db.on('error', console.error.bind(console, 'connection error:'));
       db.once('open', function callback () {
-        console.log('Connected to tonesdb DB');
+        console.log('Connected to teamcapture DB');
       });
 
     };
@@ -158,7 +159,9 @@ var TeamCaptureApp = function() {
        * Socket.io
        */
 
-      require('./sockets')(self.server);
+
+      self.socket = new Socket();
+      self.socket.initialize(self.server);
     };
 };
 
