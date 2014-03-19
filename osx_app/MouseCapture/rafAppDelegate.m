@@ -49,6 +49,31 @@ NSString *SEPARATORS_KEY_CODES = @"$";
     }
 }
 
+
+- (void)awakeFromNib {
+    _statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength];
+    
+    NSImage *menuIcon = [NSImage imageNamed:@"Menu Icon"];
+    NSImage *highlightIcon = [NSImage imageNamed:@"Menu Icon"]; // Yes, we're using the exact same image asset.
+    [highlightIcon setTemplate:YES]; // Allows the correct highlighting of the icon when the menu is clicked.
+    
+    [[self statusItem] setImage:menuIcon];
+    [[self statusItem] setAlternateImage:highlightIcon];
+    [[self statusItem] setMenu:[self menu]];
+    [[self statusItem] setHighlightMode:YES];
+}
+
+- (IBAction)toggleAllRecordings:(id)sender {
+    NSLog(@"toggleAllRecordings:");
+}
+- (IBAction)toggleKeyboardRecording:(id)sender {
+    NSLog(@"toggleKeyboardRecording:");
+}
+- (IBAction)toggleMouseRecording:(id)sender {
+    NSLog(@"toggleMouseRecording:");
+}
+
+
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication {
     return NO;
 }

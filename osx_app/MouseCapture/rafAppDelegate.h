@@ -38,6 +38,16 @@ static id monitorUserInputs;
 
 @property (readwrite) BOOL recordingEnabled;
 
+@property (readwrite, retain) IBOutlet NSMenu *menu;
+@property (readwrite, retain) IBOutlet NSMenuItem *pauseAllRecordingsItem;
+@property (readwrite, retain) IBOutlet NSMenuItem *pauseMouseRecordingItem;
+@property (readwrite, retain) IBOutlet NSMenuItem *pauseKeyboardRecordingItem;
+@property (readwrite, retain) IBOutlet NSStatusItem *statusItem;
+
+- (IBAction)toggleAllRecordings         :(id)sender;
+- (IBAction)toggleKeyboardRecording     :(id)sender;
+- (IBAction)toggleMouseRecording        :(id)sender;
+
 - (IBAction)reconnect               :(id)sender;
 - (IBAction)clearButtonPressed      :(id)sender;
 - (IBAction)recordButtonPressed     :(id)sender;
