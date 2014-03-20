@@ -907,6 +907,7 @@
                 <outlet property="pauseAllRecordingsItem" destination="RLx-lh-0Nr" id="gIw-TS-Mv2"/>
                 <outlet property="pauseKeyboardRecordingItem" destination="Jfd-4c-K9p" id="68L-CG-l7C"/>
                 <outlet property="pauseMouseRecordingItem" destination="9wX-MN-9Q7" id="TZE-Tm-g0G"/>
+                <outlet property="showLoggerItem" destination="1Pl-3V-A8Y" id="vRL-66-K9H"/>
                 <outlet property="socketStatus" destination="mcm-DL-X0c" id="pYp-4i-QAX"/>
                 <outlet property="toolbarClearButton" destination="cSK-Jw-jHQ" id="hMu-JJ-Exh"/>
                 <outlet property="toolbarRecordButton" destination="nX3-HP-ZmN" id="kQB-he-sPe"/>
@@ -938,6 +939,13 @@
                     </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="wPM-Xg-ndS"/>
+                <menuItem title="Show logger" id="1Pl-3V-A8Y">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="showLogger:" target="494" id="cuU-y6-mXJ"/>
+                    </connections>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="B3a-Ob-G0x"/>
                 <menuItem title="Exit" id="rfu-NC-RQu">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>

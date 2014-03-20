@@ -49,6 +49,11 @@ NSString *SEPARATORS_KEY_CODES = @"$";
         [self startRecording];
         [self startSocket];
     }
+    
+    // Check if we are closing the logger window
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(onClosingLogger:) name:NSWindowWillCloseNotification
+                                               object:[self window]];
 }
 
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication {
@@ -57,6 +62,15 @@ NSString *SEPARATORS_KEY_CODES = @"$";
 
 - (BOOL)validateToolbarItem:(NSToolbarItem *)theItem {
     return YES;
+}
+
+/**
+ * @function        onClosingLogger
+ * @description     called when logger window is closed
+**/
+- (void)onClosingLogger:(NSNotification *)notification
+{
+    [[self showLoggerItem] setTitle:@"Show logger"];
 }
 
 
@@ -78,9 +92,11 @@ NSString *SEPARATORS_KEY_CODES = @"$";
     [[self statusItem] setHighlightMode:YES];
 }
 
+/**
+ * @function        toggleAllRecordings
+ * @description     toggle all recordings
+**/
 - (IBAction)toggleAllRecordings:(id)sender {
-    NSLog(@"toggleAllRecordings:");
-    
     // If recording started already
     if (!self.isGlobalRecording) {
         [self startRecording];
@@ -94,9 +110,12 @@ NSString *SEPARATORS_KEY_CODES = @"$";
         [[self pauseMouseRecordingItem] setTitle:@"Start mouse recording"];
     }
 }
+
+/**
+ * @function        toggleKeyboardRecording
+ * @description     toggle keyboard recording
+**/
 - (IBAction)toggleKeyboardRecording:(id)sender {
-    NSLog(@"toggleKeyboardRecording:");
-    
     self.isKeyboardRecording = !self.isKeyboardRecording;
     
     if (self.isKeyboardRecording) {
@@ -105,15 +124,33 @@ NSString *SEPARATORS_KEY_CODES = @"$";
         [[self pauseKeyboardRecordingItem] setTitle:@"Start keyboard recording"];
     }
 }
+
+/**
+ * @function        toggleMouseRecording
+ * @description     toggle Mouse recording
+**/
 - (IBAction)toggleMouseRecording:(id)sender {
-    NSLog(@"toggleMouseRecording:");
-    
     self.isMouseRecording = !self.isMouseRecording;
     
     if (self.isMouseRecording) {
         [[self pauseMouseRecordingItem] setTitle:@"Stop mouse recording"];
     } else {
         [[self pauseMouseRecordingItem] setTitle:@"Start mouse recording"];
+    }
+}
+
+/**
+ * @function        showLogger
+ * @description     show logger file
+**/
+- (IBAction)showLogger:(id)sender {
+    if ([[self window] isVisible]) {
+        [[self window] close];
+        [[self showLoggerItem] setTitle:@"Show logger"];
+    } else {
+        [[self window] setLevel: NSStatusWindowLevel];
+        [[self window] makeKeyAndOrderFront:nil];
+        [[self showLoggerItem] setTitle:@"Hide logger"];
     }
 }
 
