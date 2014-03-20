@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8F0DC14B18DB8E660055F53B /* jvst_logo_16.png in Resources */ = {isa = PBXBuildFile; fileRef = 8F0DC14618DB8E660055F53B /* jvst_logo_16.png */; };
+		8F0DC14C18DB8E660055F53B /* jvst_logo_32.png in Resources */ = {isa = PBXBuildFile; fileRef = 8F0DC14718DB8E660055F53B /* jvst_logo_32.png */; };
+		8F0DC14D18DB8E660055F53B /* jvst_logo_128.png in Resources */ = {isa = PBXBuildFile; fileRef = 8F0DC14818DB8E660055F53B /* jvst_logo_128.png */; };
+		8F0DC14E18DB8E660055F53B /* jvst_logo_256.png in Resources */ = {isa = PBXBuildFile; fileRef = 8F0DC14918DB8E660055F53B /* jvst_logo_256.png */; };
+		8F0DC14F18DB8E660055F53B /* jvst_logo_512.png in Resources */ = {isa = PBXBuildFile; fileRef = 8F0DC14A18DB8E660055F53B /* jvst_logo_512.png */; };
 		8F1C994318B948F40003C83C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F1C994218B948F40003C83C /* Cocoa.framework */; };
 		8F1C994D18B948F40003C83C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8F1C994B18B948F40003C83C /* InfoPlist.strings */; };
 		8F1C994F18B948F40003C83C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F1C994E18B948F40003C83C /* main.m */; };
@@ -22,7 +27,6 @@
 		8F22B69518BAD48D0099DA47 /* player_pause.png in Resources */ = {isa = PBXBuildFile; fileRef = 8F22B69318BAD48D0099DA47 /* player_pause.png */; };
 		8F22B69618BAD48D0099DA47 /* player_play.png in Resources */ = {isa = PBXBuildFile; fileRef = 8F22B69418BAD48D0099DA47 /* player_play.png */; };
 		8F22B69818BAD53A0099DA47 /* Record-Pressed-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 8F22B69718BAD53A0099DA47 /* Record-Pressed-icon.png */; };
-		8F70515D18C92B6D0065BEB9 /* libSocketRocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F70515418C92AFB0065BEB9 /* libSocketRocket.a */; settings = {ATTRIBUTES = (Required, ); }; };
 		8F70515E18C92DCB0065BEB9 /* SocketRocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F70515618C92AFB0065BEB9 /* SocketRocket.framework */; };
 		8F70516418C931220065BEB9 /* SocketRocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8F70515618C92AFB0065BEB9 /* SocketRocket.framework */; };
 		8FB8507218BAB229007D2A07 /* editclear.png in Resources */ = {isa = PBXBuildFile; fileRef = 8FB8507118BAB229007D2A07 /* editclear.png */; };
@@ -87,6 +91,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		8F0DC14618DB8E660055F53B /* jvst_logo_16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = jvst_logo_16.png; sourceTree = "<group>"; };
+		8F0DC14718DB8E660055F53B /* jvst_logo_32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = jvst_logo_32.png; sourceTree = "<group>"; };
+		8F0DC14818DB8E660055F53B /* jvst_logo_128.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = jvst_logo_128.png; sourceTree = "<group>"; };
+		8F0DC14918DB8E660055F53B /* jvst_logo_256.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = jvst_logo_256.png; sourceTree = "<group>"; };
+		8F0DC14A18DB8E660055F53B /* jvst_logo_512.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = jvst_logo_512.png; sourceTree = "<group>"; };
 		8F1C993F18B948F40003C83C /* MouseCapture.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MouseCapture.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8F1C994218B948F40003C83C /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		8F1C994518B948F40003C83C /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -120,7 +129,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				8F70515E18C92DCB0065BEB9 /* SocketRocket.framework in Frameworks */,
-				8F70515D18C92B6D0065BEB9 /* libSocketRocket.a in Frameworks */,
 				8F1C994318B948F40003C83C /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -140,6 +148,11 @@
 		8F1C993618B948F40003C83C = {
 			isa = PBXGroup;
 			children = (
+				8F0DC14618DB8E660055F53B /* jvst_logo_16.png */,
+				8F0DC14718DB8E660055F53B /* jvst_logo_32.png */,
+				8F0DC14818DB8E660055F53B /* jvst_logo_128.png */,
+				8F0DC14918DB8E660055F53B /* jvst_logo_256.png */,
+				8F0DC14A18DB8E660055F53B /* jvst_logo_512.png */,
 				8F70514C18C92AFA0065BEB9 /* SocketRocket.xcodeproj */,
 				8F22B69718BAD53A0099DA47 /* Record-Pressed-icon.png */,
 				8F22B69318BAD48D0099DA47 /* player_pause.png */,
@@ -352,13 +365,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				8FB8507218BAB229007D2A07 /* editclear.png in Resources */,
+				8F0DC14D18DB8E660055F53B /* jvst_logo_128.png in Resources */,
 				8F1C994D18B948F40003C83C /* InfoPlist.strings in Resources */,
 				8F22B69518BAD48D0099DA47 /* player_pause.png in Resources */,
+				8F0DC14C18DB8E660055F53B /* jvst_logo_32.png in Resources */,
 				8F22B69818BAD53A0099DA47 /* Record-Pressed-icon.png in Resources */,
+				8F0DC14F18DB8E660055F53B /* jvst_logo_512.png in Resources */,
 				8F1C995B18B948F40003C83C /* Images.xcassets in Resources */,
 				8F22B69618BAD48D0099DA47 /* player_play.png in Resources */,
 				8F22B69218BACEF20099DA47 /* jvst_logo_blueOnTransparent.png in Resources */,
 				8F1C995318B948F40003C83C /* Credits.rtf in Resources */,
+				8F0DC14E18DB8E660055F53B /* jvst_logo_256.png in Resources */,
+				8F0DC14B18DB8E660055F53B /* jvst_logo_16.png in Resources */,
 				8F1C995918B948F40003C83C /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
