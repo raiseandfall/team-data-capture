@@ -209,26 +209,6 @@ NSString *SEPARATORS_KEY_CODES = @"$";
     [_webSocket open];
 }
 
-- (IBAction)clearButtonPressed:(id)sender {
-    self.keyDownCounter = [NSNumber numberWithInt:0];
-    self.leftMouseCounter = [NSNumber numberWithInt:0];
-    [self.logView setString:@""];
-}
-
-- (IBAction)recordButtonPressed:(id)sender {
-    if (self.isGlobalRecording) {
-        return;
-    }
-    [self startRecording];
-}
-
-- (IBAction)stopButtonPressed:(id)sender {
-    if (!self.isGlobalRecording) {
-        return;
-    }
-    [self stopRecording];
-}
-
 
 /**
  * @function        stopRecording
@@ -401,6 +381,38 @@ NSString *SEPARATORS_KEY_CODES = @"$";
 
 
 /**
+ * @function        clearButtonPressed
+ * @description     called when clear button is pressed
+**/
+- (IBAction)clearButtonPressed:(id)sender {
+    self.keyDownCounter = [NSNumber numberWithInt:0];
+    self.leftMouseCounter = [NSNumber numberWithInt:0];
+    [self.logView setString:@""];
+}
+
+/**
+ * @function        recordButtonPressed
+ * @description     called when record button is pressed
+**/
+- (IBAction)recordButtonPressed:(id)sender {
+    if (self.isGlobalRecording) {
+        return;
+    }
+    [self toggleAllRecordings:nil];
+}
+
+/**
+ * @function        stopButtonPressed
+ * @description     called when stop button is pressed
+**/
+- (IBAction)stopButtonPressed:(id)sender {
+    if (!self.isGlobalRecording) {
+        return;
+    }
+    [self toggleAllRecordings:nil];
+}
+
+/**
  * @function        reportToSocket
  * @description     report event to web socket
 **/
@@ -426,7 +438,6 @@ NSString *SEPARATORS_KEY_CODES = @"$";
     
     [_webSocket send:requestJson];
 }
-
 
 /**
  * @function        logMessageToLogView
