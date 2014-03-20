@@ -22,7 +22,7 @@
 		8F22B69518BAD48D0099DA47 /* player_pause.png in Resources */ = {isa = PBXBuildFile; fileRef = 8F22B69318BAD48D0099DA47 /* player_pause.png */; };
 		8F22B69618BAD48D0099DA47 /* player_play.png in Resources */ = {isa = PBXBuildFile; fileRef = 8F22B69418BAD48D0099DA47 /* player_play.png */; };
 		8F22B69818BAD53A0099DA47 /* Record-Pressed-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 8F22B69718BAD53A0099DA47 /* Record-Pressed-icon.png */; };
-		8F70515D18C92B6D0065BEB9 /* libSocketRocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F70515418C92AFB0065BEB9 /* libSocketRocket.a */; };
+		8F70515D18C92B6D0065BEB9 /* libSocketRocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F70515418C92AFB0065BEB9 /* libSocketRocket.a */; settings = {ATTRIBUTES = (Required, ); }; };
 		8F70515E18C92DCB0065BEB9 /* SocketRocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F70515618C92AFB0065BEB9 /* SocketRocket.framework */; };
 		8F70516418C931220065BEB9 /* SocketRocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8F70515618C92AFB0065BEB9 /* SocketRocket.framework */; };
 		8FB8507218BAB229007D2A07 /* editclear.png in Resources */ = {isa = PBXBuildFile; fileRef = 8FB8507118BAB229007D2A07 /* editclear.png */; };
