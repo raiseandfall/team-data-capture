@@ -918,18 +918,24 @@
         <userDefaultsController representsSharedInstance="YES" id="yJF-dN-bmB"/>
         <menu id="t0p-o8-Lw1">
             <items>
-                <menuItem title="Pause keyboard recording" id="Jfd-4c-K9p">
+                <menuItem title="Stop keyboard recording" id="Jfd-4c-K9p">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
-                        <action selector="menuAction:" target="494" id="JhW-bh-UGS"/>
+                        <action selector="toggleKeyboardRecording:" target="494" id="jKR-Et-6Iv"/>
                     </connections>
                 </menuItem>
-                <menuItem title="Pause mouse recording" id="9wX-MN-9Q7">
+                <menuItem title="Stop mouse recording" id="9wX-MN-9Q7">
                     <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="toggleMouseRecording:" target="494" id="TK3-aS-7K3"/>
+                    </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="Oa4-Cy-3a7"/>
-                <menuItem title="Pause all recordings" id="RLx-lh-0Nr">
+                <menuItem title="Stop all recordings" id="RLx-lh-0Nr">
                     <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="toggleAllRecordings:" target="494" id="W3G-Lk-qVN"/>
+                    </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="wPM-Xg-ndS"/>
                 <menuItem title="Exit" id="rfu-NC-RQu">

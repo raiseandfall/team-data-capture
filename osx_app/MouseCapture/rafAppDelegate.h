@@ -36,7 +36,9 @@ static id monitorUserInputs;
 @property (readwrite) NSNumber *keyDownCounter;
 @property (readwrite) NSNumber *leftMouseCounter;
 
-@property (readwrite) BOOL recordingEnabled;
+@property (readwrite) BOOL isGlobalRecording;
+@property (readwrite) BOOL isKeyboardRecording;
+@property (readwrite) BOOL isMouseRecording;
 
 @property (readwrite, retain) IBOutlet NSMenu *menu;
 @property (readwrite, retain) IBOutlet NSMenuItem *pauseAllRecordingsItem;
