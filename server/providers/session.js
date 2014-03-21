@@ -8,5 +8,5 @@ var sessionSchema = mongoose.Schema({
 });
 
 
-var Session = mongoose.model('Session', actionSchema);
-exports.ActionSchema = Session;
+var Session = mongoose.model('Session', sessionSchema);
+exports.SessionSchema = Session;

@@ -1,40 +1,54 @@
-var Socket = require('../providers/socket').Socket;
+var Socket = require('../providers/socket').Socket,
+  APP = require('../config.js').APP;
 /**
  *  Define the Socket Object.
  */
-var Client = function(id, ws) {
-  this.id = ''; // id in mongodb
-  this.clientId = id; // id of the client 
+var Client = function(ws) {
   this.ws = ws;
 };
 /**
 * set the username of the  
 */
-Client.prototype.setUsername = function(s){
-  this.username = s?s:'';
+
+Client.prototype.sayHello = function(id){
+  var data = '{"type": "hello","data":{"id": '+id+'}}';
+  this.id = id;
+  this.send(data);
 };
 
-Client.prototype.setMacaddress = function(s){
-  this.macaddress = s?s:'';
+Client.prototype.welcome = function(data){
+  var response = '{"type":"'+APP.TYPE.WELCOME+'"}';
+  this.mac = data.mac;
+  this.username = data.username;
+  this.send(response, this.save);
 };
 
 Client.prototype.send = function(data){
   this.ws.send(data);
 };
 
-Client.prototype.save = function(data, fn){
-  this.ws.send(data);
+Client.prototype.save = function(response, fn){
+  var self = this;
 
-  var socket = new Socket({
-    username: this.username,
-    email: this.email
-  });
-
-  socket.save(function(err, socket){
+  Socket.find({'mac':this.mac}).exec(function(err, sockets){
     if(err) {
       throw new Error(err, 'Creating a Socket: An error has occurred');
     }else{
-      fn(socket.id);
+      if(sockets.length > 0){
+        fn(response);
+      }else{
+        var socket = new Socket({
+          username: this.username,
+          email: this.email
+        });
+        socket.save(function(err, socket){
+          if(err) {
+            throw new Error(err, 'Creating a Socket: An error has occurred');
+          }else{
+            fn(response);
+          }
+        });
+      }
     }
   });
 };

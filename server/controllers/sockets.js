@@ -1,7 +1,6 @@
 var WebSocketServer = require('ws').Server,
-Client = require('./client').Client;
-
-
+  Client = require('./client').Client,
+  APP = require('../config.js').APP;
 
 /**
  *  Define the Socket Object.
@@ -10,13 +9,15 @@ var Socket = function() {
   //  Scope.
   var self = this;
 
-  self.message = function (data, flags) {
+  self.message = function (data) {
+    var datajson = JSON.parse(data),
+      client = self.sockets[datajson.data.id];
     console.log('Client : '+ data);
-    datajson = JSON.parse(data);
-    console.log('Client : '+ JSON.parse(data).type);
-    var data = '{"type": "confirm"}';
-    self.sockets[datajson.id].send(data);
-
+    switch(datajson.type){
+      case APP.TYPE.AUTH:
+        client.welcome(datajson.data);
+        break;
+    }
   };
 
   self.close = function () {
@@ -35,14 +36,13 @@ var Socket = function() {
 
     console.log('Client #'+self.clientId+' connected !');
 
-    var client = new Client(ws);
-    // store the new socket in sockets
-    self.sockets[self.clientId] = client;
-
-    var data = '{"type": "auth","id": '+self.clientId+'}';
-    client.send(data);
-
     if(ws){
+      var client = new Client(ws);
+      // store the new socket in sockets
+      self.sockets[self.clientId] = client;
+
+      client.sayHello(self.clientId);
+
       ws.on('message', self.message);
       ws.on('close', self.close);
       ws.on('error', self.error);

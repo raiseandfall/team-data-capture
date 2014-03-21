@@ -1,13 +1,14 @@
 var TeamCaptureApp = require('../app').TeamCaptureApp,
-    Socket = require('../sockets').Socket,
+    Socket = require('../controllers/sockets').Socket,
     app = new TeamCaptureApp(4000),
     socket = new Socket(),
     events = require('events'),
-    idLog = 0;
+    idLog = 0,
+    APP = require('../config.js').APP;
 
 exports['read ipaddress'] = function (test) {
 		app.initialize();
-    test.equal(app.ipaddress, "127.0.0.1");
+    test.equal(app.ipaddress, "192.168.173.103");
     test.done();
 };
 
@@ -42,26 +43,13 @@ exports['connect socket'] = function (test) {
 	socket.connection();
 };
 
+
 exports['message socket'] = function (test) {
 
 	console.log = function (str) {
-		test.equal(str, 'Socket - message :test');
+		test.equal(str, 'Client : {"type":"mousemove"}');
 		test.done();
 	};
-	socket.message('test');
+	socket.message('{"type":"'+APP.TYPE.MOUSE_MOVE+'"}');
 
 };
-
-/*
-exports['connect user'] = function (test) {
-	var ev = new events.EventEmitter();
-
-	WebSocketServer = function () { return ev; };
-
-	console.log = function (str) {
-		test.equal(str, 'Client #1 connected !');
-		test.done();
-	};
-	ev.emit('connection');
-};
-*/
