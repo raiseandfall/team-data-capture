@@ -15,7 +15,7 @@ var express = require('express'),
 /**
  *  Define the team capture application.
  */
-var TeamCaptureApp = function() {
+var TeamCaptureApp = function(port) {
 
     //  Scope.
     var self = this;
@@ -31,7 +31,7 @@ var TeamCaptureApp = function() {
     self.setupVariables = function() {
         //  Set the environment variables we need.
         self.ipaddress = process.env.OPENSHIFT_NODEJS_IP;
-        self.port      = process.env.OPENSHIFT_NODEJS_PORT || 9000;
+        self.port      = process.env.OPENSHIFT_NODEJS_PORT || port;
         self.mongodb_host = process.env.OPENSHIFT_MONGODB_DB_HOST;
         self.mongodb_port = process.env.OPENSHIFT_MONGODB_DB_PORT;
         self.mongodb_username = process.env.OPENSHIFT_MONGODB_DB_USERNAME;

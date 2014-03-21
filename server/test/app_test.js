@@ -1,6 +1,6 @@
 var TeamCaptureApp = require('../app').TeamCaptureApp,
-		WebSocketServer = require('ws').Server,
-		app = new TeamCaptureApp(),
+    Socket = require('../sockets').Socket,
+		app = new TeamCaptureApp(4000),
     events = require('events'),
     idLog = 0;
 
@@ -18,7 +18,7 @@ exports['start server'] = function (test) {
 				test.equal(str, '%s: Node server started on %s:%d ...');
 				break;
 			case 1:
-				test.equal(str, 'Connected to tonesdb DB');
+				test.equal(str, 'Connected to teamcapture DB');
 				test.done();
 				break;
 			default:
@@ -28,6 +28,21 @@ exports['start server'] = function (test) {
 		idLog ++;
 	};
 };
+
+exports['connect socket'] = function (test) {
+	var ev = new events.EventEmitter();
+
+  var socket = new Socket();
+  socket.initialize(app.server);
+
+	console.log = function (str) {
+		test.equal(str, 'Client connected !');
+		test.done();
+	};
+	socket.connection();
+
+};
+
 /*
 exports['connect user'] = function (test) {
 	var ev = new events.EventEmitter();

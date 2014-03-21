@@ -26,11 +26,14 @@ var Socket = function() {
    */
   self.connection = function(ws) {
     self.clientId++;
-    console.log('Client #%d connected !', self._clientId, ws._socket.remoteAddress);
-
-    ws.on('message', self.message);
-    ws.on('close', self.close);
-    ws.on('error', self.error);
+    console.log('Client connected !');
+    var remoteAddress = ws?ws._socket.remoteAddress:'';
+    if(ws){
+      console.log('Client #%d: ', self._clientId,remoteAddress);
+      ws.on('message', self.message);
+      ws.on('close', self.close);
+      ws.on('error', self.error);
+    }
   };
 
   /**
