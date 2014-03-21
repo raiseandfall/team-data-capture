@@ -9,7 +9,7 @@ var express = require('express'),
     routes = require('./routes'),
     users = require('./routes/user'),
     app = express(),
-    Socket = require('./sockets').Socket;
+    Socket = require('./controllers/sockets').Socket;
 
 
 /**

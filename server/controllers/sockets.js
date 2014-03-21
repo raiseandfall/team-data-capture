@@ -1,4 +1,5 @@
-var WebSocketServer = require('ws').Server;
+var WebSocketServer = require('ws').Server,
+Client = require('./client').Client;
 
 
 
@@ -11,6 +12,11 @@ var Socket = function() {
 
   self.message = function (data, flags) {
     console.log('Client : '+ data);
+    datajson = JSON.parse(data);
+    console.log('Client : '+ JSON.parse(data).type);
+    var data = '{"type": "confirm"}';
+    self.sockets[datajson.id].send(data);
+
   };
 
   self.close = function () {
@@ -29,14 +35,12 @@ var Socket = function() {
 
     console.log('Client #'+self.clientId+' connected !');
 
+    var client = new Client(ws);
     // store the new socket in sockets
-    self.sockets[self.clientId] = ws;
+    self.sockets[self.clientId] = client;
 
-    var data = {
-      "type": "id",
-      "id": self.clientId
-    }
-    ws.send(data);
+    var data = '{"type": "auth","id": '+self.clientId+'}';
+    client.send(data);
 
     if(ws){
       ws.on('message', self.message);
@@ -54,13 +58,6 @@ var Socket = function() {
     self.wss = new WebSocketServer( { server: app } );
     self.wss.on('connection', self.connection );
   };
-};
-
-/**
- *  Define the Socket Object.
- */
-var Client = function(ws) {
-  this.ws = ws;
 };
 
 exports.Socket = Socket;
