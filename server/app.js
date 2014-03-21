@@ -32,10 +32,10 @@ var TeamCaptureApp = function() {
     //  Set the environment variables we need.
     self.ipaddress = process.env.OPENSHIFT_NODEJS_IP;
     self.port      = process.env.OPENSHIFT_NODEJS_PORT || 9000;
-    self.mongodb_host = 'localhost'; //process.env.OPENSHIFT_MONGODB_DB_HOST;
-    self.mongodb_port = 'team-data-capture'; //process.env.OPENSHIFT_MONGODB_DB_PORT;
-    self.mongodb_username = 'admin'; //process.env.OPENSHIFT_MONGODB_DB_USERNAME;
-    self.mongodb_password = 'password'; //process.env.OPENSHIFT_MONGODB_DB_PASSWORD;
+    self.mongodb_host = process.env.OPENSHIFT_MONGODB_DB_HOST;
+    self.mongodb_port = process.env.OPENSHIFT_MONGODB_DB_PORT;
+    self.mongodb_username = process.env.OPENSHIFT_MONGODB_DB_USERNAME;
+    self.mongodb_password = process.env.OPENSHIFT_MONGODB_DB_PASSWORD;
 
     if (typeof self.ipaddress === "undefined") {
       //  Log errors on OpenShift but continue w/ 127.0.0.1 - this
@@ -47,10 +47,10 @@ var TeamCaptureApp = function() {
       //  Log errors on OpenShift but continue w/ 127.0.0.1 - this
       //  allows us to run/test the app locally.
       self.mongodb = "mongodb://localhost/teamcapture";
-      self.mongodb_db = "teamcapture";
+      self.mongodb_db = 'teamcapture';
     } else {
       self.mongodb = "mongodb://[user]:[password]@"+self.mongodb_host+":"+self.mongodb_port+"/public";
-      self.mongodb_db = "public";
+      self.mongodb_db = 'teamcapture';
     }
   };
 
