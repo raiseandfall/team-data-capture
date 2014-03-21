@@ -1,6 +1,7 @@
 var TeamCaptureApp = require('../app').TeamCaptureApp,
     Socket = require('../sockets').Socket,
-		app = new TeamCaptureApp(4000),
+    app = new TeamCaptureApp(4000),
+    socket = new Socket(),
     events = require('events'),
     idLog = 0;
 
@@ -31,15 +32,23 @@ exports['start server'] = function (test) {
 
 exports['connect socket'] = function (test) {
 	var ev = new events.EventEmitter();
-
-  var socket = new Socket();
+  
   socket.initialize(app.server);
 
 	console.log = function (str) {
-		test.equal(str, 'Client connected !');
+		test.equal(str, 'Client #1 connected !');
 		test.done();
 	};
 	socket.connection();
+};
+
+exports['message socket'] = function (test) {
+
+	console.log = function (str) {
+		test.equal(str, 'Socket - message :test');
+		test.done();
+	};
+	socket.message('test');
 
 };
 

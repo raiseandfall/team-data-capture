@@ -10,11 +10,12 @@ var Socket = function() {
   var self = this;
 
   self.message = function (data, flags) {
-    console.log('Client #%d : %s', self._clientId, data);
+    console.log(this);
+    console.log('Client : '+ data);
   };
   
   self.close = function () {
-    console.log('Client #%d disconnected', self._clientId);
+    console.log('Client #%d disconnected', this.clientId);
   };
 
   self.error = function (e) {
@@ -26,10 +27,19 @@ var Socket = function() {
    */
   self.connection = function(ws) {
     self.clientId++;
-    console.log('Client connected !');
-    var remoteAddress = ws?ws._socket.remoteAddress:'';
+
+    console.log('Client #'+self.clientId+' connected !');
+
+    // store the new socket in sockets
+    self.sockets[self.clientId] = ws;
+
+    var data = {
+      "type": "id",
+      "id": self.clientId
+    }
+    ws.send(data);
+
     if(ws){
-      console.log('Client #%d: ', self._clientId,remoteAddress);
       ws.on('message', self.message);
       ws.on('close', self.close);
       ws.on('error', self.error);
@@ -41,10 +51,17 @@ var Socket = function() {
    */
   self.initialize = function(app) {
     self.clientId = 0;
+    self.sockets = [];
     self.wss = new WebSocketServer( { server: app } );
-
     self.wss.on('connection', self.connection );
   };
+};
+
+/**
+ *  Define the Socket Object.
+ */
+var Client = function(ws) {
+  this.ws = ws;
 };
 
 exports.Socket = Socket;
