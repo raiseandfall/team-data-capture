@@ -50,6 +50,6 @@ exports['message socket'] = function (test) {
 		test.equal(str, 'Client : {"type":"mousemove"}');
 		test.done();
 	};
-	socket.message('{"type":"'+APP.TYPE.MOUSE_MOVE+'"}');
+	socket.message('{"type":"'+APP.ACTION.MOUSE_MOVE+'"}');
 
 };
