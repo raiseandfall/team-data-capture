@@ -254,6 +254,8 @@ NSDictionary *ACTION_TYPES;
     self.isKeyboardRecording = YES;
     self.isMouseRecording = YES;
     
+    NSLog(@"startRecording");
+    
     // Fire everytime cursor move
     NSUInteger eventMasks = NSMouseMovedMask | NSLeftMouseDownMask | NSKeyDownMask;
     
@@ -281,7 +283,7 @@ NSDictionary *ACTION_TYPES;
                     self.cursorPositionX = [NSNumber numberWithFloat:posX];
                     self.cursorPositionY = [NSNumber numberWithFloat:posY];
                 
-                    [self reportToSocket:[ACTION_TYPES objectForKey:@"MOUSE_MOVE"] :keyData];
+                    [self reportToSocket:@"MOUSE_MOVE" :keyData];
                 }
                     
                 break;
@@ -292,7 +294,7 @@ NSDictionary *ACTION_TYPES;
             {
                 if ([self isMouseRecording]) {
                     // Report to socket
-                    [self reportToSocket:[ACTION_TYPES objectForKey:@"CLICK"] :nil];
+                    [self reportToSocket:@"CLICK" :nil];
                 
                     [self logMessageToLogView:[NSString stringWithFormat:@"Left click!"]];
                     self.leftMouseCounter = [NSNumber numberWithInt:(1 + [self.leftMouseCounter intValue])];
@@ -309,8 +311,6 @@ NSDictionary *ACTION_TYPES;
                     int keyCode = (int)[incomingEvent keyCode];
                     NSString *_keyCode = [NSString stringWithFormat:@"%d" , [incomingEvent keyCode]];
                 
-                    //NSLog(@"keyCode :: %@", _keyCode);
-                
                     [self logMessageToLogView:[NSString stringWithFormat:@"Key pressed : %@", _char]];
                     self.keyDownCounter = [NSNumber numberWithInt:(1 + [self.keyDownCounter intValue])];
                     
@@ -322,7 +322,7 @@ NSDictionary *ACTION_TYPES;
                                                  _char, @"keyPressed",
                                                  nil];
                     
-                        [self reportToSocket:[ACTION_TYPES objectForKey:@"KEY_DOWN"] :keyData];
+                        [self reportToSocket:@"KEY_DOWN" :keyData];
                     }
                 
                     // If it's a delete key
@@ -338,7 +338,7 @@ NSDictionary *ACTION_TYPES;
                         NSDictionary *keyData = [NSDictionary dictionaryWithObjectsAndKeys:
                                                  currentWord, @"word",
                                                  nil];
-                        [self reportToSocket:[ACTION_TYPES objectForKey:@"WORD"] :keyData];
+                        [self reportToSocket:@"WORD" :keyData];
                         currentWord = @"";
                         
                     // Stack letter to current word
@@ -456,18 +456,22 @@ NSDictionary *ACTION_TYPES;
     NSError *error;
     NSString *requestJson;
     NSDictionary *finalDataObject;
+    NSString *callType = type;
     
     // Add date to data if type is ACTION_TYPE
     if ([ACTION_TYPES objectForKey:type] != nil) {
         NSString *timeStampValue = [NSString stringWithFormat:@"%ld", (long)[[NSDate date] timeIntervalSince1970]];
+        callType = [ACTION_TYPES objectForKey:type];
         
         NSLog(@"timestamp : %@", timeStampValue);
         
         [eventData setValue:timeStampValue forKey:@"date"];
     }
     
+    NSLog(@"reportToSocket : %@", callType);
+    
     finalDataObject = [NSDictionary dictionaryWithObjectsAndKeys:
-                                     type, @"type",
+                                     [ACTION_TYPES objectForKey:type], @"type",
                                      eventData, @"data",
                                     [NSString stringWithFormat:@"%d", clientID], @"id",
                                      nil];
@@ -535,8 +539,6 @@ NSDictionary *ACTION_TYPES;
     // If hello message
     if ([type isEqualToString:@"hello"]) {
         clientID = [[[info objectForKey:@"data"] objectForKey:@"id"] intValue];
-        
-        NSLog(@"Websocket message : %i", clientID);
         
         // confirm client connection
         [self confirmClientConnection];
