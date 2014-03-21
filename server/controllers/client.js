@@ -17,40 +17,44 @@ Client.prototype.sayHello = function(id){
 };
 
 Client.prototype.welcome = function(data){
-  var response = '{"type":"'+APP.TYPE.WELCOME+'"}';
   this.mac = data.mac;
   this.username = data.username;
-  this.send(response, this.save);
+  this.saveSocket();
 };
 
-Client.prototype.send = function(data){
-  this.ws.send(data);
-};
-
-Client.prototype.save = function(response, fn){
+Client.prototype.saveSocket = function(){
   var self = this;
-
-  Socket.find({'mac':this.mac}).exec(function(err, sockets){
+  Socket.find({'mac':self.mac}).exec(function(err, sockets){
     if(err) {
       throw new Error(err, 'Creating a Socket: An error has occurred');
     }else{
       if(sockets.length > 0){
-        fn(response);
+        self.saveSession();
       }else{
         var socket = new Socket({
-          username: this.username,
-          email: this.email
+          username: self.username,
+          mac: self.mac
         });
         socket.save(function(err, socket){
           if(err) {
             throw new Error(err, 'Creating a Socket: An error has occurred');
           }else{
-            fn(response);
+            self.saveSession();
           }
         });
       }
     }
   });
 };
+Client.prototype.saveSession = function(){
+  var response = '{"type":"'+APP.TYPE.WELCOME+'"}',
+    self = this;
+  self.send(response);
+}
+
+Client.prototype.send = function(data){
+  this.ws.send(data);
+};
+
 
 exports.Client = Client;

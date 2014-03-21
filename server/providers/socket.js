@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var socketSchema = mongoose.Schema({
-    macaddress: String,
+    mac: String,
     username: String
 });
 

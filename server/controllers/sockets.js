@@ -11,8 +11,8 @@ var Socket = function() {
 
   self.message = function (data) {
     var datajson = JSON.parse(data),
-      client = self.sockets[datajson.data.id];
-    console.log('Client : '+ data);
+      client = self.sockets[datajson.id];
+    //console.log('Client : '+ data);
     switch(datajson.type){
       case APP.TYPE.AUTH:
         client.welcome(datajson.data);
