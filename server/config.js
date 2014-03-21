@@ -2,10 +2,15 @@
 /**
  *  main():  Main code.
  */
-var ACTIONS = {
-	MOUSE_MOVE: 'mousemove',
-	CLICK: 'click',
-	KEY_DOWN: 'key_down',
-	MOUSE_WHEEL: 'mouse_wheel',
-	WORD:	'word'	
+exports.APP = {
+	TYPE: {
+		HELLO: 'hello',
+		AUTH: 'auth',
+		WELCOME: 'welcome',
+		MOUSE_MOVE: 'mousemove',
+		CLICK: 'click',
+		KEY_DOWN: 'keydown',
+		MOUSE_WHEEL: 'mousewheel',
+		WORD:	'word'
+	}	
 };
