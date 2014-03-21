@@ -7,11 +7,13 @@
 //
 
 #import "rafAppDelegate.h"
+#import "MacAddress.h"
 
 // SocketRocket
 #import <SocketRocket/SRWebSocket.h>
 
 @implementation rafAppDelegate
+
 @synthesize logView;
 @synthesize toolbarClearButton;
 @synthesize toolbarRecordButton;
@@ -32,12 +34,16 @@
 @synthesize keyDownCounter;
 @synthesize leftMouseCounter;
 
+
+// VARIABLES
 SRWebSocket *_webSocket;
 NSString *TRACKED_CHARS = @"abcdefghijklmnopqrstuvwxyz0123456789";
 NSString *SEPARATORS = @" []{}|,.;:<>/?!@#$%^&*()_-+=~`'\"\\";
 NSString *SEPARATORS_KEY_CODES = @"$";
 NSString *currentWord = @"";
 int clientID = 0;
+NSDictionary *ACTION_TYPES;
+
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
@@ -48,9 +54,17 @@ int clientID = 0;
     // Start recording id enabled
     if (self.isGlobalRecording) {
         [self initCounters];
-        [self startRecording];
         [self startSocket];
     }
+    
+    // ACTION TYPES
+    ACTION_TYPES = [NSDictionary dictionaryWithObjectsAndKeys:
+                       @"mousemove", @"MOUSE_MOVE",
+                       @"click", @"CLICK",
+                       @"keydown", @"KEY_DOWN",
+                       @"word", @"WORD",
+                       @"mousewheel", @"MOUSE_WHEEL",
+                        nil];
     
     // Check if we are closing the logger window
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -75,8 +89,6 @@ int clientID = 0;
     [[self showLoggerItem] setTitle:@"Show logger"];
 }
 
-
-
 /**
  * @function        displayPreferencesWindow
  * @description     display preferences window
@@ -84,8 +96,6 @@ int clientID = 0;
 - (IBAction)displayPreferencesWindow:(id)sender{
     [[self preferences] makeKeyAndOrderFront:nil];
 }
-
-
 
 
 /*******************
@@ -168,8 +178,6 @@ int clientID = 0;
 }
 
 
-
-
 /*******************
  * WEB SOCKET 
  *******************/
@@ -182,7 +190,6 @@ int clientID = 0;
 {
     [self _reconnectSocket];
 }
-
 
 /**
  * @function        init
@@ -197,7 +204,6 @@ int clientID = 0;
     self.leftMouseCounter = [NSNumber numberWithInt:0];
 }
 
-
 /**
  * @function        startSocket
  * @description     start web socket
@@ -205,7 +211,6 @@ int clientID = 0;
 - (void)startSocket {
     [self _reconnectSocket];
 }
-
 
 /**
  * @function        _reconnectSocket
@@ -221,7 +226,6 @@ int clientID = 0;
     [socketStatus setStringValue:@"Opening connection!"];
     [_webSocket open];
 }
-
 
 /**
  * @function        stopRecording
@@ -239,7 +243,6 @@ int clientID = 0;
     [self initCounters];
     [self logMessageToLogView:[NSString stringWithFormat:@"Stop Recording"]];
 }
-
 
 /**
  * @function        startRecording
@@ -278,7 +281,7 @@ int clientID = 0;
                     self.cursorPositionX = [NSNumber numberWithFloat:posX];
                     self.cursorPositionY = [NSNumber numberWithFloat:posY];
                 
-                    [self reportToSocket:@"mousemove" :keyData];
+                    [self reportToSocket:[ACTION_TYPES objectForKey:@"MOUSE_MOVE"] :keyData];
                 }
                     
                 break;
@@ -289,7 +292,7 @@ int clientID = 0;
             {
                 if ([self isMouseRecording]) {
                     // Report to socket
-                    [self reportToSocket:@"click":nil];
+                    [self reportToSocket:[ACTION_TYPES objectForKey:@"CLICK"] :nil];
                 
                     [self logMessageToLogView:[NSString stringWithFormat:@"Left click!"]];
                     self.leftMouseCounter = [NSNumber numberWithInt:(1 + [self.leftMouseCounter intValue])];
@@ -319,7 +322,7 @@ int clientID = 0;
                                                  _char, @"keyPressed",
                                                  nil];
                     
-                        [self reportToSocket:@"keydown" :keyData];
+                        [self reportToSocket:[ACTION_TYPES objectForKey:@"KEY_DOWN"] :keyData];
                     }
                 
                     // If it's a delete key
@@ -335,7 +338,7 @@ int clientID = 0;
                         NSDictionary *keyData = [NSDictionary dictionaryWithObjectsAndKeys:
                                                  currentWord, @"word",
                                                  nil];
-                        [self reportToSocket:@"word" :keyData];
+                        [self reportToSocket:[ACTION_TYPES objectForKey:@"WORD"] :keyData];
                         currentWord = @"";
                         
                     // Stack letter to current word
@@ -363,7 +366,7 @@ int clientID = 0;
  * @function        isCharacterTracked
  * @description     check if a character has to be tracked
 **/
--(BOOL)isCharacterTracked:(NSString*)_char {
+- (BOOL)isCharacterTracked:(NSString*)_char {
     // Check if it's a character to track
     NSCharacterSet *charSet = [NSCharacterSet characterSetWithCharactersInString:TRACKED_CHARS];
     NSRange range = [_char rangeOfCharacterFromSet:charSet];
@@ -380,7 +383,7 @@ int clientID = 0;
  * @function        isSeparator
  * @description     check if a character is a separator
  **/
--(BOOL)isSeparator:(NSString*)_char :(NSString*)_sKeyCode :(int)_iKeyCode {
+- (BOOL)isSeparator:(NSString*)_char :(NSString*)_sKeyCode :(int)_iKeyCode {
     // Check if it's a character / number / space / comma / period
     NSCharacterSet *charSet;
     NSRange range;
@@ -444,40 +447,64 @@ int clientID = 0;
  * @function        reportToSocket
  * @description     report event to web socket
 **/
--(void)reportToSocket:(NSString*)type :(NSDictionary*)eventData {
+- (void)reportToSocket:(NSString*)type :(NSDictionary*)eventData {
     // If client not connected
     if (clientID == 0){
         return;
     }
     
     NSError *error;
-    NSDictionary *finalDataObject;
     NSString *requestJson;
+    NSDictionary *finalDataObject;
+    
+    // Add date to data if type is ACTION_TYPE
+    if ([ACTION_TYPES objectForKey:type] != nil) {
+        NSString *timeStampValue = [NSString stringWithFormat:@"%ld", (long)[[NSDate date] timeIntervalSince1970]];
+        
+        NSLog(@"timestamp : %@", timeStampValue);
+        
+        [eventData setValue:timeStampValue forKey:@"date"];
+    }
     
     finalDataObject = [NSDictionary dictionaryWithObjectsAndKeys:
-                       [NSString stringWithFormat:@"%d", clientID], @"id",
-                       type, @"type",
-                       eventData, @"data",
-                       nil];
+                                     type, @"type",
+                                     eventData, @"data",
+                                    [NSString stringWithFormat:@"%d", clientID], @"id",
+                                     nil];
     
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:finalDataObject
                                                        options:NSJSONWritingPrettyPrinted
                                                          error:&error];
     
-    if (!jsonData) {
-
-    } else {
+    if (jsonData) {
         requestJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     }
     
     [_webSocket send:requestJson];
 }
 
+
+/**
+ * @function        confirmClientConnection
+ * @description     confirm client connection : send MAC Address & user name
+**/
+- (void)confirmClientConnection {
+    MacAddress *macAddress = [[MacAddress alloc] init];
+    
+    NSDictionary *connectionData = [NSDictionary dictionaryWithObjectsAndKeys:
+                                     [macAddress getMacAddress], @"mac",
+                                     NSUserName(), @"username",
+                                     nil];
+    
+    [self reportToSocket:@"auth" :connectionData];
+}
+
+
 /**
  * @function        logMessageToLogView
  * @description     log message to UI
 **/
--(void)logMessageToLogView:(NSString*)message {
+- (void)logMessageToLogView:(NSString*)message {
     [logView setString: [[logView string] stringByAppendingFormat:@"%@: %@\n", [self.logDateFormatter stringFromDate:[NSDate date]],  message]];
     
     [logView scrollRangeToVisible:NSMakeRange([[logView string] length], 0)];
@@ -486,30 +513,38 @@ int clientID = 0;
 
 #pragma mark - SRWebSocketDelegate
 
-- (void)webSocketDidOpen:(SRWebSocket *)webSocket;
-{
+- (void)webSocketDidOpen:(SRWebSocket *)webSocket {
     NSLog(@"Websocket Connected");
     [socketStatus setStringValue:@"Connected!"];
 }
 
-- (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error;
-{
+- (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error {
     NSLog(@":( Websocket Failed With Error %@", error);
     
     [socketStatus setStringValue:@"Connection Failed! (see logs)"];
     _webSocket = nil;
 }
 
-
-- (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(NSString *)message;
-{
+- (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(NSString *)message {
     NSError* error;
     NSDictionary* info = [NSJSONSerialization JSONObjectWithData:[message dataUsingEncoding:NSUTF8StringEncoding] options:0 error:&error];
     NSString *type = [info objectForKey:@"type"];
     
-    // If authentication message
-    if ([type isEqualToString:@"auth"]) {
-        clientID = [[info objectForKey:@"id"] intValue];
+    NSLog(@"Websocket message : %@", message);
+    
+    // If hello message
+    if ([type isEqualToString:@"hello"]) {
+        clientID = [[[info objectForKey:@"data"] objectForKey:@"id"] intValue];
+        
+        NSLog(@"Websocket message : %i", clientID);
+        
+        // confirm client connection
+        [self confirmClientConnection];
+        
+    // If welcome message
+    } else if ([type isEqualToString:@"welcome"]) {
+        // Start recording actions
+        [self startRecording];
     }
     
     if (error) {
@@ -517,8 +552,7 @@ int clientID = 0;
     }
 }
 
-- (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean;
-{
+- (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
     NSLog(@"WebSocket closed");
     clientID = 0;
     [socketStatus setStringValue:@"Connection Closed! (see logs)"];
