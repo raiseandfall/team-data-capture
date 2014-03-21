@@ -1,4 +1,5 @@
-var WebSocketServer = require('ws').Server;
+var WebSocketServer = require('ws').Server,
+Client = require('./client').Client;
 
 
 
@@ -56,16 +57,6 @@ var Socket = function() {
     self.sockets = [];
     self.wss = new WebSocketServer( { server: app } );
     self.wss.on('connection', self.connection );
-  };
-};
-
-/**
- *  Define the Socket Object.
- */
-var Client = function(ws) {
-  this.ws = ws;
-  this.send = function(data){
-    this.ws.send(data);
   };
 };
 
