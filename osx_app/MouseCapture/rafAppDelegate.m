@@ -23,7 +23,9 @@
 @synthesize cursorDeltaYLabel;
 @synthesize keyDownCounterLabel;
 @synthesize leftMouseCounterLabel;
-@synthesize recordingEnabled;
+@synthesize isGlobalRecording;
+@synthesize isKeyboardRecording;
+@synthesize isMouseRecording;
 
 @synthesize cursorPositionX;
 @synthesize cursorPositionY;
@@ -32,21 +34,27 @@
 
 SRWebSocket *_webSocket;
 NSString *TRACKED_CHARS = @"abcdefghijklmnopqrstuvwxyz0123456789";
-NSString *SEPARATORS = @" []{}|,.<>/?!@#$%^&*()_-+=~`\\";
+NSString *SEPARATORS = @" []{}|,.;:<>/?!@#$%^&*()_-+=~`'\"\\";
 NSString *SEPARATORS_KEY_CODES = @"$";
+NSString *currentWord = @"";
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    self.recordingEnabled = YES;
+    self.isGlobalRecording = YES;
     self.logDateFormatter = [[NSDateFormatter alloc] init];
     [self.logDateFormatter setTimeStyle:NSDateFormatterMediumStyle];
     
     // Start recording id enabled
-    if (self.recordingEnabled) {
+    if (self.isGlobalRecording) {
         [self initCounters];
         [self startRecording];
         [self startSocket];
     }
+    
+    // Check if we are closing the logger window
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(onClosingLogger:) name:NSWindowWillCloseNotification
+                                               object:[self window]];
 }
 
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication {
@@ -57,12 +65,128 @@ NSString *SEPARATORS_KEY_CODES = @"$";
     return YES;
 }
 
+/**
+ * @function        onClosingLogger
+ * @description     called when logger window is closed
+**/
+- (void)onClosingLogger:(NSNotification *)notification
+{
+    [[self showLoggerItem] setTitle:@"Show logger"];
+}
 
+
+
+/**
+ * @function        displayPreferencesWindow
+ * @description     display preferences window
+**/
+- (IBAction)displayPreferencesWindow:(id)sender{
+    [[self preferences] makeKeyAndOrderFront:nil];
+}
+
+
+
+
+/*******************
+ * MENU BAR ITEM
+ *******************/
+
+- (void)awakeFromNib {
+    _statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength];
+    
+    NSImage *menuIcon = [NSImage imageNamed:@"Menu Icon"];
+    NSImage *highlightIcon = [NSImage imageNamed:@"Menu Icon"];
+    //[highlightIcon setTemplate:YES];
+    
+    [[self statusItem] setImage:menuIcon];
+    [[self statusItem] setAlternateImage:highlightIcon];
+    [[self statusItem] setMenu:[self menu]];
+    [[self statusItem] setHighlightMode:YES];
+}
+
+/**
+ * @function        toggleAllRecordings
+ * @description     toggle all recordings
+**/
+- (IBAction)toggleAllRecordings:(id)sender {
+    // If recording started already
+    if (!self.isGlobalRecording) {
+        [self startRecording];
+        [[self pauseAllRecordingsItem] setTitle:@"Stop all recordings"];
+        [[self pauseKeyboardRecordingItem] setTitle:@"Stop keyboard recording"];
+        [[self pauseMouseRecordingItem] setTitle:@"Stop mouse recording"];
+    } else {
+        [self stopRecording];
+        [[self pauseAllRecordingsItem] setTitle:@"Start all recordings"];
+        [[self pauseKeyboardRecordingItem] setTitle:@"Start keyboard recording"];
+        [[self pauseMouseRecordingItem] setTitle:@"Start mouse recording"];
+    }
+}
+
+/**
+ * @function        toggleKeyboardRecording
+ * @description     toggle keyboard recording
+**/
+- (IBAction)toggleKeyboardRecording:(id)sender {
+    self.isKeyboardRecording = !self.isKeyboardRecording;
+    
+    if (self.isKeyboardRecording) {
+        [[self pauseKeyboardRecordingItem] setTitle:@"Stop keyboard recording"];
+    } else {
+        [[self pauseKeyboardRecordingItem] setTitle:@"Start keyboard recording"];
+    }
+}
+
+/**
+ * @function        toggleMouseRecording
+ * @description     toggle Mouse recording
+**/
+- (IBAction)toggleMouseRecording:(id)sender {
+    self.isMouseRecording = !self.isMouseRecording;
+    
+    if (self.isMouseRecording) {
+        [[self pauseMouseRecordingItem] setTitle:@"Stop mouse recording"];
+    } else {
+        [[self pauseMouseRecordingItem] setTitle:@"Start mouse recording"];
+    }
+}
+
+/**
+ * @function        showLogger
+ * @description     show logger file
+**/
+- (IBAction)showLogger:(id)sender {
+    if ([[self window] isVisible]) {
+        [[self window] close];
+        [[self showLoggerItem] setTitle:@"Show logger"];
+    } else {
+        [[self window] setLevel: NSStatusWindowLevel];
+        [[self window] makeKeyAndOrderFront:nil];
+        [[self showLoggerItem] setTitle:@"Hide logger"];
+    }
+}
+
+
+
+
+/*******************
+ * WEB SOCKET 
+ *******************/
+
+/**
+ * @function        reconnect
+ * @description     reconnect web socket
+**/
 - (void)reconnect:(id)sender;
 {
     [self _reconnectSocket];
 }
 
+
+/**
+ * @function        init
+ * @description
+**/
 - (void)initCounters {
     self.cursorDeltaX = [NSNumber numberWithFloat:0];
     self.cursorDeltaY = [NSNumber numberWithFloat:0];
@@ -72,11 +196,21 @@ NSString *SEPARATORS_KEY_CODES = @"$";
     self.leftMouseCounter = [NSNumber numberWithInt:0];
 }
 
+
+/**
+ * @function        startSocket
+ * @description     start web socket
+**/
 - (void)startSocket {
     [self _reconnectSocket];
 }
 
--(void) _reconnectSocket {
+
+/**
+ * @function        _reconnectSocket
+ * @description     reconnect to web socket
+**/
+- (void)_reconnectSocket {
     _webSocket.delegate = nil;
     [_webSocket close];
     
@@ -87,33 +221,34 @@ NSString *SEPARATORS_KEY_CODES = @"$";
     [_webSocket open];
 }
 
-- (IBAction)clearButtonPressed:(id)sender {
-    self.keyDownCounter = [NSNumber numberWithInt:0];
-    self.leftMouseCounter = [NSNumber numberWithInt:0];
-    [self.logView setString:@""];
-}
 
-- (IBAction)recordButtonPressed:(id)sender {
-    if (self.recordingEnabled) {
+/**
+ * @function        stopRecording
+ * @description     stop global recording
+ **/
+- (void)stopRecording {
+    if (!self.isGlobalRecording) {
         return;
     }
-    [self startRecording];
-}
-
-- (IBAction)stopButtonPressed:(id)sender {
-    if (!self.recordingEnabled) {
-        return;
-    }
-    self.recordingEnabled = NO;
+    self.isGlobalRecording = NO;
+    self.isKeyboardRecording = NO;
+    self.isMouseRecording = NO;
     [NSEvent removeMonitor:monitorUserInputs];
     
     [self initCounters];
     [self logMessageToLogView:[NSString stringWithFormat:@"Stop Recording"]];
 }
 
+
+/**
+ * @function        startRecording
+ * @description     start global recording
+**/
 - (void)startRecording {
     
-    self.recordingEnabled = YES;
+    self.isGlobalRecording = YES;
+    self.isKeyboardRecording = YES;
+    self.isMouseRecording = YES;
     
     // Fire everytime cursor move
     NSUInteger eventMasks = NSMouseMovedMask | NSLeftMouseDownMask | NSKeyDownMask;
@@ -123,67 +258,92 @@ NSString *SEPARATORS_KEY_CODES = @"$";
             // Mouse move
             case 5:
             {
-                CGPoint location = [NSEvent mouseLocation];
-                CGFloat deltaX = [incomingEvent deltaX];
-                CGFloat deltaY = [incomingEvent deltaY];
-                CGFloat posX = location.x;
-                CGFloat posY = location.y;
+                if ([self isMouseRecording]) {
+                    NSLog(@"mouse move :: mouse recording allowed !!!");
+                    CGPoint location = [NSEvent mouseLocation];
+                    CGFloat deltaX = [incomingEvent deltaX];
+                    CGFloat deltaY = [incomingEvent deltaY];
+                    CGFloat posX = location.x;
+                    CGFloat posY = location.y;
                 
-                NSDictionary *keyData = [NSDictionary dictionaryWithObjectsAndKeys:
-                                         [NSNumber numberWithFloat:posX], @"posX",
-                                         [NSNumber numberWithFloat:posY], @"posY",
-                                         [NSNumber numberWithFloat:deltaX], @"deltaX",
-                                         [NSNumber numberWithFloat:deltaY], @"deltaY",
-                                         nil];
+                    NSDictionary *keyData = [NSDictionary dictionaryWithObjectsAndKeys:
+                                             [NSNumber numberWithFloat:posX], @"posX",
+                                             [NSNumber numberWithFloat:posY], @"posY",
+                                             [NSNumber numberWithFloat:deltaX], @"deltaX",
+                                             [NSNumber numberWithFloat:deltaY], @"deltaY",
+                                             nil];
                 
-                self.cursorDeltaX = [NSNumber numberWithFloat:deltaX];
-                self.cursorDeltaY = [NSNumber numberWithFloat:deltaY];
-                self.cursorPositionX = [NSNumber numberWithFloat:posX];
-                self.cursorPositionY = [NSNumber numberWithFloat:posY];
+                    self.cursorDeltaX = [NSNumber numberWithFloat:deltaX];
+                    self.cursorDeltaY = [NSNumber numberWithFloat:deltaY];
+                    self.cursorPositionX = [NSNumber numberWithFloat:posX];
+                    self.cursorPositionY = [NSNumber numberWithFloat:posY];
                 
-                [self reportToSocket:@"mousemove" :keyData];
-                
+                    [self reportToSocket:@"mousemove" :keyData];
+                }
+                    
                 break;
             }
                 
             // Left click
             case 1:
             {
-                // Report to socket
-                [self reportToSocket:@"click":nil];
+                if ([self isMouseRecording]) {
+                    NSLog(@"click :: mouse recording allowed !!!");
+                    // Report to socket
+                    [self reportToSocket:@"click":nil];
                 
-                [self logMessageToLogView:[NSString stringWithFormat:@"Left click!"]];
-                self.leftMouseCounter = [NSNumber numberWithInt:(1 + [self.leftMouseCounter intValue])];
+                    [self logMessageToLogView:[NSString stringWithFormat:@"Left click!"]];
+                    self.leftMouseCounter = [NSNumber numberWithInt:(1 + [self.leftMouseCounter intValue])];
+                }
                 break;
             }
                 
             // Key down
             case 10:
             {
-                // Character just hit
-                NSString *_char = [[incomingEvent characters] lowercaseString];
-                //char key = [incomingEvent keyCode];
-                NSString *_keyCode = [NSString stringWithFormat:@"%d" , [incomingEvent keyCode]];
-                NSLog(@"key : '%@'", _char);
+                if ([self isKeyboardRecording]) {
+                    // Character just hit
+                    NSString *_char = [[incomingEvent characters] lowercaseString];
+                    int keyCode = (int)[incomingEvent keyCode];
+                    NSString *_keyCode = [NSString stringWithFormat:@"%d" , [incomingEvent keyCode]];
                 
-                unichar character = [_char characterAtIndex:0];
-                NSLog(@"keyCode :: %@", _keyCode);
-                NSLog(@"special character :: %c", character);
+                    //NSLog(@"keyCode :: %@", _keyCode);
                 
-                [self logMessageToLogView:[NSString stringWithFormat:@"Key pressed : %@", _char]];
-                self.keyDownCounter = [NSNumber numberWithInt:(1 + [self.keyDownCounter intValue])];
-                
-                // Only report key if it's a character we want to track
-                if ([self isCharacterTracked:_char]) {
-                    NSDictionary *keyData = [NSDictionary dictionaryWithObjectsAndKeys:
-                                             _char, @"keyPressed",
-                                             nil];
+                    [self logMessageToLogView:[NSString stringWithFormat:@"Key pressed : %@", _char]];
+                    self.keyDownCounter = [NSNumber numberWithInt:(1 + [self.keyDownCounter intValue])];
                     
-                    [self reportToSocket:@"keydown" :keyData];
-                }
-                
-                if ([self isSeparator:_char:_keyCode]) {
+                    BOOL trackChar = [self isCharacterTracked:_char];
                     
+                    // Only report key if it's a character we want to track
+                    if (trackChar) {
+                        NSDictionary *keyData = [NSDictionary dictionaryWithObjectsAndKeys:
+                                                 _char, @"keyPressed",
+                                                 nil];
+                    
+                        [self reportToSocket:@"keydown" :keyData];
+                    }
+                
+                    // If it's a delete key
+                    if (keyCode == 51) {
+                        // Remove last character
+                        if ([currentWord length] > 0) {
+                            currentWord = [currentWord substringToIndex:[currentWord length] - 1];
+                        }
+                        
+                    // If it's a separator & currentWord is not empty
+                    } else if ([self isSeparator:_char:_keyCode:keyCode] && [currentWord length] > 0) {
+                        // Send the word just typed and we re-init currentWord
+                        NSDictionary *keyData = [NSDictionary dictionaryWithObjectsAndKeys:
+                                                 currentWord, @"word",
+                                                 nil];
+                        [self reportToSocket:@"word" :keyData];
+                        currentWord = @"";
+                        
+                    // Stack letter to current word
+                    } else if (trackChar) {
+                        currentWord = [currentWord stringByAppendingString:_char];
+                        NSLog(@"WORD :: %@", currentWord);
+                    }
                 }
                 
                 break;
@@ -201,27 +361,27 @@ NSString *SEPARATORS_KEY_CODES = @"$";
 
 
 /**
- * @function    isCharacterTracked
- **/
+ * @function        isCharacterTracked
+ * @description     check if a character has to be tracked
+**/
 -(BOOL)isCharacterTracked:(NSString*)_char {
-    // Check if it's a character / number / space / comma / period
+    // Check if it's a character to track
     NSCharacterSet *charSet = [NSCharacterSet characterSetWithCharactersInString:TRACKED_CHARS];
     NSRange range = [_char rangeOfCharacterFromSet:charSet];
     
     if (range.location != NSNotFound) {
-        NSLog(@"Allowed character : %@", _char);
         return TRUE;
     } else {
-        NSLog(@"NOT Allowed character : %@", _char);
         return FALSE;
     }
 }
 
 
 /**
- * @function    isSeparator
+ * @function        isSeparator
+ * @description     check if a character is a separator
  **/
--(BOOL)isSeparator:(NSString*)_char :(NSString*)keyCode {
+-(BOOL)isSeparator:(NSString*)_char :(NSString*)_sKeyCode :(int)_iKeyCode {
     // Check if it's a character / number / space / comma / period
     NSCharacterSet *charSet;
     NSRange range;
@@ -229,13 +389,16 @@ NSString *SEPARATORS_KEY_CODES = @"$";
     charSet = [NSCharacterSet characterSetWithCharactersInString:SEPARATORS];
     range = [_char rangeOfCharacterFromSet:charSet];
     
+    // If return key
+    if (_iKeyCode == 36) {
+        return TRUE;
+    }
+    
     if (range.location != NSNotFound) {
-        NSLog(@"Separator ! : %@", _char);
         return TRUE;
     } else {
-        // Check if it's a RETURN ( keyCode $ )
         charSet = [NSCharacterSet characterSetWithCharactersInString:SEPARATORS_KEY_CODES];
-        range = [keyCode rangeOfCharacterFromSet:charSet];
+        range = [_sKeyCode rangeOfCharacterFromSet:charSet];
         
         if (range.location != NSNotFound) {
             return TRUE;
@@ -246,10 +409,43 @@ NSString *SEPARATORS_KEY_CODES = @"$";
 }
 
 
+/**
+ * @function        clearButtonPressed
+ * @description     called when clear button is pressed
+**/
+- (IBAction)clearButtonPressed:(id)sender {
+    self.keyDownCounter = [NSNumber numberWithInt:0];
+    self.leftMouseCounter = [NSNumber numberWithInt:0];
+    [self.logView setString:@""];
+}
+
+/**
+ * @function        recordButtonPressed
+ * @description     called when record button is pressed
+**/
+- (IBAction)recordButtonPressed:(id)sender {
+    if (self.isGlobalRecording) {
+        return;
+    }
+    [self toggleAllRecordings:nil];
+}
+
+/**
+ * @function        stopButtonPressed
+ * @description     called when stop button is pressed
+**/
+- (IBAction)stopButtonPressed:(id)sender {
+    if (!self.isGlobalRecording) {
+        return;
+    }
+    [self toggleAllRecordings:nil];
+}
+
+/**
+ * @function        reportToSocket
+ * @description     report event to web socket
+**/
 -(void)reportToSocket:(NSString*)type :(NSDictionary*)eventData {
-    
-    //NSLog(@"reportToSocket :: %@", type);
-    
     NSError *error;
     NSDictionary *finalDataObject;
     NSString *requestJson;
@@ -272,7 +468,10 @@ NSString *SEPARATORS_KEY_CODES = @"$";
     [_webSocket send:requestJson];
 }
 
-
+/**
+ * @function        logMessageToLogView
+ * @description     log message to UI
+**/
 -(void)logMessageToLogView:(NSString*)message {
     [logView setString: [[logView string] stringByAppendingFormat:@"%@: %@\n", [self.logDateFormatter stringFromDate:[NSDate date]],  message]];
     

@@ -10,12 +10,11 @@ var Socket = function() {
   var self = this;
 
   self.message = function (data, flags) {
-    console.log(this);
     console.log('Client : '+ data);
   };
-  
+
   self.close = function () {
-    console.log('Client #%d disconnected', this.clientId);
+    console.log('Client #%d disconnected', self.clientId);
   };
 
   self.error = function (e) {

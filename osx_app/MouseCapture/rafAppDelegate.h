@@ -13,6 +13,7 @@ static id monitorUserInputs;
 @interface rafAppDelegate : NSObject <NSApplicationDelegate>
 
 @property (assign) IBOutlet NSWindow *window;
+@property (assign) IBOutlet NSWindow *preferences;
 @property (strong) IBOutlet NSTextView *logView;
 
 @property (weak) IBOutlet NSToolbarItem *toolbarClearButton;
@@ -36,7 +37,21 @@ static id monitorUserInputs;
 @property (readwrite) NSNumber *keyDownCounter;
 @property (readwrite) NSNumber *leftMouseCounter;
 
-@property (readwrite) BOOL recordingEnabled;
+@property (readwrite) BOOL isGlobalRecording;
+@property (readwrite) BOOL isKeyboardRecording;
+@property (readwrite) BOOL isMouseRecording;
+
+@property (readwrite) IBOutlet NSMenu *menu;
+@property (readwrite) IBOutlet NSMenuItem *pauseAllRecordingsItem;
+@property (readwrite) IBOutlet NSMenuItem *pauseMouseRecordingItem;
+@property (readwrite) IBOutlet NSMenuItem *pauseKeyboardRecordingItem;
+@property (readwrite) IBOutlet NSMenuItem *showLoggerItem;
+@property (readwrite) IBOutlet NSMenuItem *showPreferencesItem;
+@property (readwrite) IBOutlet NSStatusItem *statusItem;
+
+- (IBAction)toggleAllRecordings         :(id)sender;
+- (IBAction)toggleKeyboardRecording     :(id)sender;
+- (IBAction)toggleMouseRecording        :(id)sender;
 
 - (IBAction)reconnect               :(id)sender;
 - (IBAction)clearButtonPressed      :(id)sender;

@@ -88,81 +88,81 @@ var TeamCaptureApp = function(port) {
     };
 
 
-    /*  ================================================================  */
-    /*  App server functions (main app logic here).                       */
-    /*  ================================================================  */
+  /*  ================================================================  */
+  /*  App server functions (main app logic here).                       */
+  /*  ================================================================  */
 
-    /**
-     *  Initialize mongoose
+  /**
+   *  Initialize mongoose
+   */
+  self.initializeMongo = function() {
+
+    mongoose.connect(self.mongodb);
+
+    var db = exports.db = mongoose.connection;
+    db.on('error', console.error.bind(console, 'connection error:'));
+    db.once('open', function callback () {
+      console.log('Connected to teamcapture DB');
+    });
+
+  };
+
+
+  /**
+   *  Initialize the server (express) and create the routes and register
+   *  the handlers.
+   */
+  self.initializeServer = function() {
+
+    self.app = exports.app = express();
+    self.server = exports.server = http.createServer(self.app);
+
+    self.app.configure(function(){
+      self.app.set('views', __dirname + '/views/');
+      self.app.set('view engine', 'jade');
+      self.app.set('strict routing', true);
+      self.app.use(express.favicon(__dirname + '/public/images/favicon.ico'));
+      self.app.use(express.bodyParser());
+      self.app.use(express.methodOverride());
+      self.app.use(self.app.router);
+      self.app.use(express.static(path.join(__dirname, 'public')));
+    });
+  };
+
+  /**
+   *  Initializes the sample application.
+   */
+  self.initialize = function() {
+    self.setupVariables();
+    self.setupTerminationHandlers();
+
+    self.initializeMongo();
+    // Create the express server and routes.
+    self.initializeServer();
+  };
+
+  /**
+   *  Start the server (starts up the sample application).
+   */
+  self.start = function() {
+
+    routes(self.app);
+
+    //  Start the app on the specific interface (and port).
+    self.server.listen(self.port, self.ipaddress, function() {
+      console.log('%s: Node server started on %s:%d ...',
+                  Date(Date.now() ), self.ipaddress, self.port);
+    });
+
+
+    /*
+     * Web Socket
      */
-    self.initializeMongo = function() {
-
-      mongoose.connect(self.mongodb);
-       
-      var db = exports.db = mongoose.connection;
-      db.on('error', console.error.bind(console, 'connection error:'));
-      db.once('open', function callback () {
-        console.log('Connected to teamcapture DB');
-      });
-
-    };
 
 
-    /**
-     *  Initialize the server (express) and create the routes and register
-     *  the handlers.
-     */
-    self.initializeServer = function() {
-      
-      self.app = exports.app = express();
-      self.server = exports.server = http.createServer(self.app);
-
-      self.app.configure(function(){
-          self.app.set('views', __dirname + '/views/');
-          self.app.set('view engine', 'jade');
-          self.app.set('strict routing', true);
-          self.app.use(express.favicon(__dirname + '/public/images/favicon.ico'));
-          self.app.use(express.bodyParser());
-          self.app.use(express.methodOverride());
-          self.app.use(self.app.router);
-          self.app.use(express.static(path.join(__dirname, 'public')));
-      });
-    };
-
-    /**
-     *  Initializes the sample application.
-     */
-    self.initialize = function() {
-      self.setupVariables();
-      self.setupTerminationHandlers();
-
-      self.initializeMongo();
-      // Create the express server and routes.
-      self.initializeServer();
-    };
-
-    /**
-     *  Start the server (starts up the sample application).
-     */
-    self.start = function() {
-
-      routes(self.app);
-      
-      //  Start the app on the specific interface (and port).
-      self.server.listen(self.port, self.ipaddress, function() {
-        console.log('%s: Node server started on %s:%d ...',
-                    Date(Date.now() ), self.ipaddress, self.port);
-      });
-      
-
-      /*
-       * Socket.io
-       */
-
-
-      self.socket = new Socket();
-      self.socket.initialize(self.server);
-    };
+    self.socket = new Socket();
+    self.socket.initialize(self.server);
+  };
 };
 
 exports.TeamCaptureApp = TeamCaptureApp;
