@@ -907,7 +907,9 @@
                 <outlet property="pauseAllRecordingsItem" destination="RLx-lh-0Nr" id="gIw-TS-Mv2"/>
                 <outlet property="pauseKeyboardRecordingItem" destination="Jfd-4c-K9p" id="68L-CG-l7C"/>
                 <outlet property="pauseMouseRecordingItem" destination="9wX-MN-9Q7" id="TZE-Tm-g0G"/>
+                <outlet property="preferences" destination="leQ-Ih-Rku" id="8Nh-la-a1p"/>
                 <outlet property="showLoggerItem" destination="1Pl-3V-A8Y" id="vRL-66-K9H"/>
+                <outlet property="showPreferencesItem" destination="AzF-vF-Qlu" id="EdC-Gv-p3h"/>
                 <outlet property="socketStatus" destination="mcm-DL-X0c" id="pYp-4i-QAX"/>
                 <outlet property="toolbarClearButton" destination="cSK-Jw-jHQ" id="hMu-JJ-Exh"/>
                 <outlet property="toolbarRecordButton" destination="nX3-HP-ZmN" id="kQB-he-sPe"/>
@@ -946,6 +948,13 @@
                     </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="B3a-Ob-G0x"/>
+                <menuItem title="Preferences..." id="AzF-vF-Qlu">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="displayPreferencesWindow:" target="494" id="suq-ft-nIb"/>
+                    </connections>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="PQt-P8-6dp"/>
                 <menuItem title="Exit" id="rfu-NC-RQu">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
@@ -954,6 +963,16 @@
                 </menuItem>
             </items>
         </menu>
+        <window title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="leQ-Ih-Rku">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="196" y="207" width="388" height="319"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1058"/>
+            <view key="contentView" id="TG9-hW-pRf">
+                <rect key="frame" x="0.0" y="0.0" width="388" height="319"/>
+                <autoresizingMask key="autoresizingMask"/>
+            </view>
+        </window>
     </objects>
     <resources>
         <image name="Record-Pressed-icon" width="128" height="128"/>

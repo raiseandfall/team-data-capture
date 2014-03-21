@@ -34,8 +34,9 @@
 
 SRWebSocket *_webSocket;
 NSString *TRACKED_CHARS = @"abcdefghijklmnopqrstuvwxyz0123456789";
-NSString *SEPARATORS = @" []{}|,.<>/?!@#$%^&*()_-+=~`\\";
+NSString *SEPARATORS = @" []{}|,.;:<>/?!@#$%^&*()_-+=~`'\"\\";
 NSString *SEPARATORS_KEY_CODES = @"$";
+NSString *currentWord = @"";
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
@@ -72,6 +73,17 @@ NSString *SEPARATORS_KEY_CODES = @"$";
 {
     [[self showLoggerItem] setTitle:@"Show logger"];
 }
+
+
+
+/**
+ * @function        displayPreferencesWindow
+ * @description     display preferences window
+**/
+- (IBAction)displayPreferencesWindow:(id)sender{
+    [[self preferences] makeKeyAndOrderFront:nil];
+}
+
 
 
 
@@ -290,22 +302,20 @@ NSString *SEPARATORS_KEY_CODES = @"$";
             case 10:
             {
                 if ([self isKeyboardRecording]) {
-                    NSLog(@"keyboard :: mouse recording allowed !!!");
                     // Character just hit
                     NSString *_char = [[incomingEvent characters] lowercaseString];
-                    //char key = [incomingEvent keyCode];
+                    int keyCode = (int)[incomingEvent keyCode];
                     NSString *_keyCode = [NSString stringWithFormat:@"%d" , [incomingEvent keyCode]];
-                    //NSLog(@"key : '%@'", _char);
                 
-                    //unichar character = [_char characterAtIndex:0];
                     //NSLog(@"keyCode :: %@", _keyCode);
-                    //NSLog(@"special character :: %c", character);
                 
                     [self logMessageToLogView:[NSString stringWithFormat:@"Key pressed : %@", _char]];
                     self.keyDownCounter = [NSNumber numberWithInt:(1 + [self.keyDownCounter intValue])];
                     
+                    BOOL trackChar = [self isCharacterTracked:_char];
+                    
                     // Only report key if it's a character we want to track
-                    if ([self isCharacterTracked:_char]) {
+                    if (trackChar) {
                         NSDictionary *keyData = [NSDictionary dictionaryWithObjectsAndKeys:
                                                  _char, @"keyPressed",
                                                  nil];
@@ -313,8 +323,26 @@ NSString *SEPARATORS_KEY_CODES = @"$";
                         [self reportToSocket:@"keydown" :keyData];
                     }
                 
-                    if ([self isSeparator:_char:_keyCode]) {
-                    
+                    // If it's a delete key
+                    if (keyCode == 51) {
+                        // Remove last character
+                        if ([currentWord length] > 0) {
+                            currentWord = [currentWord substringToIndex:[currentWord length] - 1];
+                        }
+                        
+                    // If it's a separator & currentWord is not empty
+                    } else if ([self isSeparator:_char:_keyCode:keyCode] && [currentWord length] > 0) {
+                        // Send the word just typed and we re-init currentWord
+                        NSDictionary *keyData = [NSDictionary dictionaryWithObjectsAndKeys:
+                                                 currentWord, @"word",
+                                                 nil];
+                        [self reportToSocket:@"word" :keyData];
+                        currentWord = @"";
+                        
+                    // Stack letter to current word
+                    } else if (trackChar) {
+                        currentWord = [currentWord stringByAppendingString:_char];
+                        NSLog(@"WORD :: %@", currentWord);
                     }
                 }
                 
@@ -337,15 +365,13 @@ NSString *SEPARATORS_KEY_CODES = @"$";
  * @description     check if a character has to be tracked
 **/
 -(BOOL)isCharacterTracked:(NSString*)_char {
-    // Check if it's a character / number / space / comma / period
+    // Check if it's a character to track
     NSCharacterSet *charSet = [NSCharacterSet characterSetWithCharactersInString:TRACKED_CHARS];
     NSRange range = [_char rangeOfCharacterFromSet:charSet];
     
     if (range.location != NSNotFound) {
-        //NSLog(@"Allowed character : %@", _char);
         return TRUE;
     } else {
-        //NSLog(@"NOT Allowed character : %@", _char);
         return FALSE;
     }
 }
@@ -355,7 +381,7 @@ NSString *SEPARATORS_KEY_CODES = @"$";
  * @function        isSeparator
  * @description     check if a character is a separator
  **/
--(BOOL)isSeparator:(NSString*)_char :(NSString*)keyCode {
+-(BOOL)isSeparator:(NSString*)_char :(NSString*)_sKeyCode :(int)_iKeyCode {
     // Check if it's a character / number / space / comma / period
     NSCharacterSet *charSet;
     NSRange range;
@@ -363,13 +389,16 @@ NSString *SEPARATORS_KEY_CODES = @"$";
     charSet = [NSCharacterSet characterSetWithCharactersInString:SEPARATORS];
     range = [_char rangeOfCharacterFromSet:charSet];
     
+    // If return key
+    if (_iKeyCode == 36) {
+        return TRUE;
+    }
+    
     if (range.location != NSNotFound) {
-        //NSLog(@"Separator ! : %@", _char);
         return TRUE;
     } else {
-        // Check if it's a RETURN ( keyCode $ )
         charSet = [NSCharacterSet characterSetWithCharactersInString:SEPARATORS_KEY_CODES];
-        range = [keyCode rangeOfCharacterFromSet:charSet];
+        range = [_sKeyCode rangeOfCharacterFromSet:charSet];
         
         if (range.location != NSNotFound) {
             return TRUE;
