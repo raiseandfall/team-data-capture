@@ -10,11 +10,11 @@ var Socket = function() {
   var self = this;
 
   self.message = function (data, flags) {
-    console.log('Client #%d : %s', self._clientId, data);
+    console.log('Client #%d : %s', self.clientId, data);
   };
-  
+
   self.close = function () {
-    console.log('Client #%d disconnected', self._clientId);
+    console.log('Client #%d disconnected', self.clientId);
   };
 
   self.error = function (e) {
@@ -26,7 +26,7 @@ var Socket = function() {
    */
   self.connection = function(ws) {
     self.clientId++;
-    console.log('Client #%d connected !', self._clientId, ws._socket.remoteAddress);
+    console.log('Client #%d connected !', self.clientId, ws._socket.remoteAddress);
 
     ws.on('message', self.message);
     ws.on('close', self.close);
