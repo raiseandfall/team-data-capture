@@ -37,6 +37,7 @@ NSString *TRACKED_CHARS = @"abcdefghijklmnopqrstuvwxyz0123456789";
 NSString *SEPARATORS = @" []{}|,.;:<>/?!@#$%^&*()_-+=~`'\"\\";
 NSString *SEPARATORS_KEY_CODES = @"$";
 NSString *currentWord = @"";
+int clientID = 0;
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
@@ -214,7 +215,7 @@ NSString *currentWord = @"";
     _webSocket.delegate = nil;
     [_webSocket close];
     
-    _webSocket = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"ws://localhost:9000/"]]];
+    _webSocket = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"ws://192.168.173.103:9000/"]]];
     _webSocket.delegate = self;
     
     [socketStatus setStringValue:@"Opening connection!"];
@@ -259,7 +260,6 @@ NSString *currentWord = @"";
             case 5:
             {
                 if ([self isMouseRecording]) {
-                    NSLog(@"mouse move :: mouse recording allowed !!!");
                     CGPoint location = [NSEvent mouseLocation];
                     CGFloat deltaX = [incomingEvent deltaX];
                     CGFloat deltaY = [incomingEvent deltaY];
@@ -288,7 +288,6 @@ NSString *currentWord = @"";
             case 1:
             {
                 if ([self isMouseRecording]) {
-                    NSLog(@"click :: mouse recording allowed !!!");
                     // Report to socket
                     [self reportToSocket:@"click":nil];
                 
@@ -446,11 +445,17 @@ NSString *currentWord = @"";
  * @description     report event to web socket
 **/
 -(void)reportToSocket:(NSString*)type :(NSDictionary*)eventData {
+    // If client not connected
+    if (clientID == 0){
+        return;
+    }
+    
     NSError *error;
     NSDictionary *finalDataObject;
     NSString *requestJson;
     
     finalDataObject = [NSDictionary dictionaryWithObjectsAndKeys:
+                       [NSString stringWithFormat:@"%d", clientID], @"id",
                        type, @"type",
                        eventData, @"data",
                        nil];
@@ -495,14 +500,27 @@ NSString *currentWord = @"";
     _webSocket = nil;
 }
 
-- (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message;
+
+- (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(NSString *)message;
 {
-    NSLog(@"Received \"%@\"", message);
+    NSError* error;
+    NSDictionary* info = [NSJSONSerialization JSONObjectWithData:[message dataUsingEncoding:NSUTF8StringEncoding] options:0 error:&error];
+    NSString *type = [info objectForKey:@"type"];
+    
+    // If authentication message
+    if ([type isEqualToString:@"auth"]) {
+        clientID = [[info objectForKey:@"id"] intValue];
+    }
+    
+    if (error) {
+        NSLog(@"Error: %@",error);
+    }
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean;
 {
     NSLog(@"WebSocket closed");
+    clientID = 0;
     [socketStatus setStringValue:@"Connection Closed! (see logs)"];
     _webSocket = nil;
 }
