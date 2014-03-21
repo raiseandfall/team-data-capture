@@ -11,6 +11,11 @@ var Socket = function() {
 
   self.message = function (data, flags) {
     console.log('Client : '+ data);
+    datajson = JSON.parse(data);
+    console.log('Client : '+ JSON.parse(data).type);
+    var data = '{"type": "confirm"}';
+    self.sockets[datajson.id].send(data);
+
   };
 
   self.close = function () {
@@ -29,14 +34,12 @@ var Socket = function() {
 
     console.log('Client #'+self.clientId+' connected !');
 
+    var client = new Client(ws);
     // store the new socket in sockets
-    self.sockets[self.clientId] = ws;
+    self.sockets[self.clientId] = client;
 
-    var data = {
-      "type": "id",
-      "id": self.clientId
-    }
-    ws.send(data);
+    var data = '{"type": "auth","id": '+self.clientId+'}';
+    client.send(data);
 
     if(ws){
       ws.on('message', self.message);
@@ -61,6 +64,9 @@ var Socket = function() {
  */
 var Client = function(ws) {
   this.ws = ws;
+  this.send = function(data){
+    this.ws.send(data);
+  };
 };
 
 exports.Socket = Socket;

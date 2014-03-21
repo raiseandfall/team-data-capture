@@ -214,7 +214,7 @@ NSString *currentWord = @"";
     _webSocket.delegate = nil;
     [_webSocket close];
     
-    _webSocket = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"ws://localhost:9000/"]]];
+    _webSocket = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"ws://192.168.173.103:9000/"]]];
     _webSocket.delegate = self;
     
     [socketStatus setStringValue:@"Opening connection!"];
