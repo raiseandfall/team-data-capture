@@ -40,7 +40,7 @@ var TeamCaptureApp = function(port) {
         if (typeof self.ipaddress === "undefined") {
             //  Log errors on OpenShift but continue w/ 127.0.0.1 - this
             //  allows us to run/test the app locally.
-            self.ipaddress = "127.0.0.1";
+            self.ipaddress = "192.168.173.103";
         }
 
         if (typeof self.mongodb_host === "undefined") {
