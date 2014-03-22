@@ -43,7 +43,9 @@ NSString *SEPARATORS_KEY_CODES = @"$";
 NSString *currentWord = @"";
 int clientID = 0;
 NSDictionary *ACTION_TYPES;
-NSString *WEBSOCKET_URL = @"ws://192.168.173.103:9000/";
+NSString *WEBSOCKET_PROTOCOL = @"ws";
+NSString *WEBSOCKET_HOST = @"192.168.173.103";
+NSString *WEBSOCKET_PORT = @"9000";
 
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
@@ -221,7 +223,7 @@ NSString *WEBSOCKET_URL = @"ws://192.168.173.103:9000/";
     _webSocket.delegate = nil;
     [_webSocket close];
     
-    _webSocket = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:WEBSOCKET_URL]]];
+    _webSocket = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%@:%@", WEBSOCKET_PROTOCOL, WEBSOCKET_HOST, WEBSOCKET_PORT]]]];
     _webSocket.delegate = self;
     
     [socketStatus setStringValue:@"Opening connection!"];
