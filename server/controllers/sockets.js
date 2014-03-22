@@ -12,10 +12,17 @@ var Socket = function() {
   self.message = function (data) {
     var datajson = JSON.parse(data),
       client = self.sockets[datajson.id];
-        console.log('Client : '+ data);
     switch(datajson.type){
       case APP.TYPE.AUTH:
         client.welcome(datajson.data);
+        break;
+      case APP.ACTION.MOUSE_MOVE:
+      case APP.ACTION.CLICK:
+      case APP.ACTION.KEY_DOWN:
+      case APP.ACTION.MOUSE_WHEEL:
+      case APP.ACTION.WORD:
+        console.log('Client : '+ data);
+        client.saveAction(datajson);
         break;
     }
   };

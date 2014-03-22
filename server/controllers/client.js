@@ -1,4 +1,6 @@
 var Socket = require('../providers/socket').Socket,
+  Session = require('../providers/session').Session,
+  Action = require('../providers/action').Action,
   APP = require('../config.js').APP;
   utils = require('../utils.js');
 /**
@@ -52,18 +54,47 @@ Client.prototype.saveSocket = function(){
 };
 Client.prototype.saveSessions = function(){
   var response = '{"type":"'+APP.TYPE.WELCOME+'"}',
-    self = this,
-    nbActions = utils.sizeof(APP.ACTION);  
+    self = this;
 
-  console.log('nbActions:'+nbActions)
-  self.send(response);
+  var session = new Session({
+    mac: self.mac
+  });
+  session.save(function(err, session){
+    if(err) {
+      throw new Error(err, 'Creating a Session: An error has occurred');
+    }else{
+      console.log(self.username + ' just started a new session '+session);
+      self.session_id = session._id
+      self.send(response);
+    }
+  });
 }
 
-Client.prototype.saveSession = function(index){
-  var response = '{"type":"'+APP.TYPE.WELCOME+'"}',
-    self = this;  
-  self.send(response);
+Client.prototype.saveAction = function(data){
+  var self = this;
+
+  var action = new Action({
+    mac: self.mac,
+    type: data.type,
+    data: data.data
+  });
+  action.save(function(err, action){
+    if(err) {
+      throw new Error(err, 'Creating a Action: An error has occurred');
+    }else{
+      //console.log(self.username + ' just did a new action '+data.type);
+    }
+  });
+
+  Session.findOne({'_id':self.session_id}).exec(function(err, session){
+    if(err){
+      throw new Error(err, 'Creating a Action: An error has occurred when retrieving the Session');
+    }else{
+      session.addAction(data);
+    }
+  });
 }
+
 
 Client.prototype.send = function(data){
   console.log('send : '+data);

@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var actionSchema = mongoose.Schema({
-    socket_id:String,
+    mac:String,
     session_id:String,
     type: String,
     data: Object
@@ -9,4 +9,4 @@ var actionSchema = mongoose.Schema({
 
 
 var Action = mongoose.model('Action', actionSchema);
-exports.ActionSchema = Action;
+exports.Action = Action;
