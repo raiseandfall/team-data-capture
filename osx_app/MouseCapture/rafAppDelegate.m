@@ -266,22 +266,30 @@ NSDictionary *ACTION_TYPES;
             {
                 if ([self isMouseRecording]) {
                     CGPoint location = [NSEvent mouseLocation];
-                    CGFloat deltaX = [incomingEvent deltaX];
-                    CGFloat deltaY = [incomingEvent deltaY];
-                    CGFloat posX = location.x;
-                    CGFloat posY = location.y;
+                    //CGFloat deltaX = [incomingEvent deltaX];
+                    //CGFloat deltaY = [incomingEvent deltaY];
+                    //CGFloat posX = location.x;
+                    //CGFloat posY = location.y;
+                    
+                    NSDictionary *pos = [NSDictionary dictionaryWithObjectsAndKeys:
+                                         [NSNumber numberWithFloat:location.x], @"x",
+                                         [NSNumber numberWithFloat:location.y], @"y",
+                                         nil];
+                    
+                    NSDictionary *delta = [NSDictionary dictionaryWithObjectsAndKeys:
+                                         [NSNumber numberWithFloat:[incomingEvent deltaX]], @"x",
+                                         [NSNumber numberWithFloat:[incomingEvent deltaY]], @"y",
+                                         nil];
                 
                     NSMutableDictionary *keyData = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                                    [NSNumber numberWithFloat:posX], @"posX",
-                                                    [NSNumber numberWithFloat:posY], @"posY",
-                                                    [NSNumber numberWithFloat:deltaX], @"deltaX",
-                                                    [NSNumber numberWithFloat:deltaY], @"deltaY",
+                                                    pos, @"pos",
+                                                    delta, @"delta",
                                                     nil];
                 
-                    self.cursorDeltaX = [NSNumber numberWithFloat:deltaX];
-                    self.cursorDeltaY = [NSNumber numberWithFloat:deltaY];
-                    self.cursorPositionX = [NSNumber numberWithFloat:posX];
-                    self.cursorPositionY = [NSNumber numberWithFloat:posY];
+                    self.cursorDeltaX = [NSNumber numberWithFloat:[incomingEvent deltaX]];
+                    self.cursorDeltaY = [NSNumber numberWithFloat:[incomingEvent deltaY]];
+                    self.cursorPositionX = [NSNumber numberWithFloat:location.x];
+                    self.cursorPositionY = [NSNumber numberWithFloat:location.y];
                 
                     [self reportToSocket:@"MOUSE_MOVE" :keyData];
                 }
@@ -344,7 +352,7 @@ NSDictionary *ACTION_TYPES;
                     // Stack letter to current word
                     } else if (trackChar) {
                         currentWord = [currentWord stringByAppendingString:_char];
-                        NSLog(@"WORD :: %@", currentWord);
+                        //NSLog(@"WORD :: %@", currentWord);
                     }
                 }
                 
@@ -464,11 +472,16 @@ NSDictionary *ACTION_TYPES;
         [eventData setValue:timeStampValue forKey:@"date"];
     }
     
-    NSDictionary *finalDataObject = [NSDictionary dictionaryWithObjectsAndKeys:
-                                     callType, @"type",
-                                     eventData, @"data",
-                                    [NSString stringWithFormat:@"%d", clientID], @"id",
-                                     nil];
+    NSMutableDictionary *finalDataObject = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                            callType, @"type",
+                                            [NSString stringWithFormat:@"%d", clientID], @"id",
+                                            nil];
+    
+    // Add event data if not null
+    if (eventData != nil) {
+        [finalDataObject setValue:eventData
+                           forKey:@"data"];
+    }
     
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:finalDataObject
                                                        options:NSJSONWritingPrettyPrinted
