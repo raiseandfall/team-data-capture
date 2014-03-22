@@ -6,7 +6,9 @@ exports.APP = {
 	TYPE: {
 		HELLO: 'hello',
 		AUTH: 'auth',
-		WELCOME: 'welcome',
+		WELCOME: 'welcome'
+	},
+	ACTION:{
 		MOUSE_MOVE: 'mousemove',
 		CLICK: 'click',
 		KEY_DOWN: 'keydown',
