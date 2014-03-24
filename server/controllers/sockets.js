@@ -26,8 +26,8 @@ var Socket = function() {
       case APP.ACTION.MOUSE_WHEEL:
       case APP.ACTION.WORD:
         client.saveAction(datajson);
-        for (ws in self.websockets){
-          ws.send(data);
+        for (var i = 0; i<self.websockets.length; i++){
+          self.websockets[i].send(data);
         }
         break;
     }
