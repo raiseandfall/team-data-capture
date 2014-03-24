@@ -161,6 +161,7 @@ var TeamCaptureApp = function(port) {
 
 
     self.socket = new Socket();
+    console.log('self.server:'+self.server);
     self.socket.initialize(self.server);
   };
 };

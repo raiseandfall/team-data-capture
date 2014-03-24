@@ -14,6 +14,7 @@ var Socket = function() {
       client = self.sockets[datajson.id];
     switch(datajson.type){
       case APP.TYPE.AUTH:
+        console.log('Client : '+ data);
         client.welcome(datajson.data);
         break;
       case APP.ACTION.MOUSE_MOVE:
@@ -21,7 +22,6 @@ var Socket = function() {
       case APP.ACTION.KEY_DOWN:
       case APP.ACTION.MOUSE_WHEEL:
       case APP.ACTION.WORD:
-        console.log('Client : '+ data);
         client.saveAction(datajson);
         break;
     }

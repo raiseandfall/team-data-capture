@@ -1,19 +1,9 @@
-var mongoose = require('mongoose');
-
-var sessionSchema = mongoose.Schema({
-    mac:String,
-    session_id:String,
-    type: String,
-    datas: Array
+var host = window.document.location.host.replace(/:.*/, '');
+var ws = new WebSocket('ws://' + host + ':9000/');
+ws.on('open', function() {
+    ws.send('something');
 });
-
-
-sessionSchema.methods.addAction = function (action) {
-  // we add the id of the tone in the station
-  this.datas.push(action);
-  this.save();
-  //console.log('action added to session');
-}
-
-var Session = mongoose.model('Session', sessionSchema);
-exports.Session = Session;
+ws.on('message', function(data, flags) {
+    // flags.binary will be set if a binary data is received
+    // flags.masked will be set if the data was masked
+});
