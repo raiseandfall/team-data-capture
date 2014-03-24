@@ -43,6 +43,9 @@ NSString *SEPARATORS_KEY_CODES = @"$";
 NSString *currentWord = @"";
 int clientID = 0;
 NSDictionary *ACTION_TYPES;
+NSString *WEBSOCKET_PROTOCOL = @"ws";
+NSString *WEBSOCKET_HOST = @"192.168.173.103";
+NSString *WEBSOCKET_PORT = @"9000";
 
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
@@ -220,7 +223,7 @@ NSDictionary *ACTION_TYPES;
     _webSocket.delegate = nil;
     [_webSocket close];
     
-    _webSocket = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"ws://192.168.173.103:9000/"]]];
+    _webSocket = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%@:%@", WEBSOCKET_PROTOCOL, WEBSOCKET_HOST, WEBSOCKET_PORT]]]];
     _webSocket.delegate = self;
     
     [socketStatus setStringValue:@"Opening connection!"];
@@ -235,6 +238,9 @@ NSDictionary *ACTION_TYPES;
     if (!self.isGlobalRecording) {
         return;
     }
+    
+    NSLog(@"stopRecording");
+    
     self.isGlobalRecording = NO;
     self.isKeyboardRecording = NO;
     self.isMouseRecording = NO;
@@ -266,10 +272,6 @@ NSDictionary *ACTION_TYPES;
             {
                 if ([self isMouseRecording]) {
                     CGPoint location = [NSEvent mouseLocation];
-                    //CGFloat deltaX = [incomingEvent deltaX];
-                    //CGFloat deltaY = [incomingEvent deltaY];
-                    //CGFloat posX = location.x;
-                    //CGFloat posY = location.y;
                     
                     NSDictionary *pos = [NSDictionary dictionaryWithObjectsAndKeys:
                                          [NSNumber numberWithFloat:location.x], @"x",
@@ -352,7 +354,6 @@ NSDictionary *ACTION_TYPES;
                     // Stack letter to current word
                     } else if (trackChar) {
                         currentWord = [currentWord stringByAppendingString:_char];
-                        //NSLog(@"WORD :: %@", currentWord);
                     }
                 }
                 
@@ -495,10 +496,10 @@ NSDictionary *ACTION_TYPES;
 
 
 /**
- * @function        confirmClientConnection
- * @description     confirm client connection : send MAC Address & user name
+ * @function        confirmHandshake
+ * @description     confirm handhake : send MAC Address & user name
 **/
-- (void)confirmClientConnection {
+- (void)confirmHandshake {
     MacAddress *macAddress = [[MacAddress alloc] init];
     
     NSMutableDictionary *connectionData = [NSMutableDictionary dictionaryWithObjectsAndKeys:
@@ -525,13 +526,13 @@ NSDictionary *ACTION_TYPES;
 
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket {
     NSLog(@"Websocket Connected");
-    [socketStatus setStringValue:@"Connected!"];
+    [socketStatus setStringValue:@"Websocket Connected!"];
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error {
     NSLog(@":( Websocket Failed With Error %@", error);
     
-    [socketStatus setStringValue:@"Connection Failed! (see logs)"];
+    [socketStatus setStringValue:@"Websocket Connection Failed! (see logs)"];
     _webSocket = nil;
 }
 
@@ -547,7 +548,7 @@ NSDictionary *ACTION_TYPES;
         clientID = [[[info objectForKey:@"data"] objectForKey:@"id"] intValue];
         
         // confirm client connection
-        [self confirmClientConnection];
+        [self confirmHandshake];
         
     // If welcome message
     } else if ([type isEqualToString:@"welcome"]) {
@@ -563,7 +564,7 @@ NSDictionary *ACTION_TYPES;
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
     NSLog(@"WebSocket closed");
     clientID = 0;
-    [socketStatus setStringValue:@"Connection Closed! (see logs)"];
+    [socketStatus setStringValue:@"Websocket Connection Closed! (see logs)"];
     _webSocket = nil;
 }
 
