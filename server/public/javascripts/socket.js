@@ -1,29 +1,15 @@
-//var host = window.document.location.host.replace(/:.*/, '');
-/*var ws = new WebSocket('ws://' + host + ':9000/');
-
-ws.onopen = function(){
-	console.log('onopen');
-};
-ws.onmessage = function(data, flags) {
-    // flags.binary will be set if a binary data is received
-    // flags.masked will be set if the data was masked
-	console.log('onmessage', data.data);
-  var datajson = JSON.parse(data.data);
-	switch(datajson.type){
-		case 'hello':
-			response = '{"type":"webauth", "id": "'+datajson.data.id+'"}'
-    	ws.send(response);
-			break;
-	}
-};*/
+"use strict"
 
 var Socket = (function(WebSocket){
 	var APP = {
 		TYPE: {
 			HELLO: 'hello',
 			AUTH: 'auth',
-			WEBAUTH: 'webauth',
 			WELCOME: 'welcome'
+		},
+		CLIENT: {
+			WEB: 'web',
+			APP: 'app',
 		},
 		ACTION:{
 			MOUSE_MOVE: 'mousemove',
@@ -33,6 +19,7 @@ var Socket = (function(WebSocket){
 			WORD:	'word'
 		}	
 	};
+
 	var onopen = function () {
 		console.log('onopen 2');
 	};
@@ -41,14 +28,14 @@ var Socket = (function(WebSocket){
 	    // flags.binary will be set if a binary data is received
 	    // flags.masked will be set if the data was masked
 
-	  var datajson = JSON.parse(data.data);
-
-		var event = new CustomEvent("onmessage", {"detail":data.data});
-		this.dispatchEvent(event);
+	  var datajson = JSON.parse(data.data),
+	  	ev = new CustomEvent("onmessage", {"detail":data.data}),
+			response;
+		this.dispatchEvent(ev);
 
 		switch(datajson.type){
 			case APP.TYPE.HELLO:
-				response = '{"type":"webauth", "id": "'+datajson.data.id+'"}'
+				response = '{"type":"'+APP.TYPE.AUTH+'", "id": "'+datajson.data.id+'", "client": "'+APP.CLIENT.WEB+'"}'
 	    	this.send(response);
 				break;
 		}

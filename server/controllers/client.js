@@ -20,12 +20,17 @@ Client.prototype.sayHello = function(id){
 };
 
 Client.prototype.welcome = function(data, type_client){
+  var response;
   console.log('welcome');
   switch(type_client){
     case APP.CLIENT.APP:
       this.mac = data.mac;
       this.username = data.username;
       this.saveSocket();
+      break;
+    case APP.CLIENT.WEB:
+      response = '{"type":"'+APP.TYPE.WELCOME+'"}';
+      this.send(response);
       break;
   }
 };

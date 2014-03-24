@@ -15,13 +15,10 @@ var Socket = function() {
     switch(datajson.type){
       case APP.TYPE.AUTH:
         console.log('Client : '+ data);
-        client.welcome(datajson.data, APP.CLIENT.APP);
-        break;
-      case APP.TYPE.WEBAUTH:
-        console.log('Client : '+ data);
-        client.welcome(datajson.data, APP.CLIENT.WEB);
-        self.websockets.push(client);
-        //client.welcome(datajson.data);
+        client.welcome(datajson.data, datajson.client);
+        if(datajson.client = APP.CLIENT.WEB){
+          self.websockets.push(client);
+        }
         break;
       case APP.ACTION.MOUSE_MOVE:
       case APP.ACTION.CLICK:
@@ -29,6 +26,9 @@ var Socket = function() {
       case APP.ACTION.MOUSE_WHEEL:
       case APP.ACTION.WORD:
         client.saveAction(datajson);
+        for (ws in self.websockets){
+          ws.send(data);
+        }
         break;
     }
   };
@@ -68,6 +68,7 @@ var Socket = function() {
   self.initialize = function(app) {
     self.clientId = 0;
     self.sockets = [];
+    self.websockets = [];
     self.wss = new WebSocketServer( { server: app } );
     self.wss.on('connection', self.connection );
   };
