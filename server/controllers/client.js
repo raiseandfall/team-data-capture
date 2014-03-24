@@ -19,11 +19,15 @@ Client.prototype.sayHello = function(id){
   this.send(data);
 };
 
-Client.prototype.welcome = function(data){
+Client.prototype.welcome = function(data, type_client){
   console.log('welcome');
-  this.mac = data.mac;
-  this.username = data.username;
-  this.saveSocket();
+  switch(type_client){
+    case APP.CLIENT.APP:
+      this.mac = data.mac;
+      this.username = data.username;
+      this.saveSocket();
+      break;
+  }
 };
 
 Client.prototype.saveSocket = function(){
