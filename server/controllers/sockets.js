@@ -15,7 +15,13 @@ var Socket = function() {
     switch(datajson.type){
       case APP.TYPE.AUTH:
         console.log('Client : '+ data);
-        client.welcome(datajson.data);
+        client.welcome(datajson.data, APP.CLIENT.APP);
+        break;
+      case APP.TYPE.WEBAUTH:
+        console.log('Client : '+ data);
+        client.welcome(datajson.data, APP.CLIENT.WEB);
+        self.websockets.push(client);
+        //client.welcome(datajson.data);
         break;
       case APP.ACTION.MOUSE_MOVE:
       case APP.ACTION.CLICK:

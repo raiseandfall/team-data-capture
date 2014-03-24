@@ -6,7 +6,12 @@ exports.APP = {
 	TYPE: {
 		HELLO: 'hello',
 		AUTH: 'auth',
+		WEBAUTH: 'webauth',
 		WELCOME: 'welcome'
+	},
+	CLIENT: {
+		APP: 'appclient',
+		WEB: 'webclient'
 	},
 	ACTION:{
 		MOUSE_MOVE: 'mousemove',

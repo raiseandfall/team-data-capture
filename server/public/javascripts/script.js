@@ -1,9 +1,7 @@
 var host = window.document.location.host.replace(/:.*/, '');
-var ws = new WebSocket('ws://' + host + ':9000/');
-ws.on('open', function() {
-    ws.send('something');
-});
-ws.on('message', function(data, flags) {
-    // flags.binary will be set if a binary data is received
-    // flags.masked will be set if the data was masked
-});
+var ws = new Socket();
+ws.connect(host, '9000');
+
+ws.onmessage = function(e) {
+	console.log(e.detail);
+};
