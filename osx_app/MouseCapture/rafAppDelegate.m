@@ -484,6 +484,12 @@ NSString *WEBSOCKET_PORT = @"9000";
                            forKey:@"data"];
     }
     
+    // Add client=app if auth type
+    if ([type isEqualToString:@"auth"]) {
+        [finalDataObject setValue:@"app"
+                           forKey:@"client"];
+    }
+    
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:finalDataObject
                                                        options:NSJSONWritingPrettyPrinted
                                                          error:&error];
