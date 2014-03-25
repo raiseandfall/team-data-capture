@@ -44,10 +44,28 @@ NSString *currentWord = @"";
 int clientID = 0;
 NSDictionary *ACTION_TYPES;
 NSString *WEBSOCKET_PROTOCOL = @"ws";
-NSString *WEBSOCKET_HOST = @"192.168.173.103";
+NSString *WEBSOCKET_HOST = @"192.168.173.123";
 NSString *WEBSOCKET_PORT = @"9000";
 
+NSString *LABEL_SHOW_LOGS = @"Show logs";
+NSString *LABEL_HIDE_LOGS = @"Hide logs";
 
+NSString *LABEL_SERVER_UP = @"Server up";
+NSString *LABEL_SERVER_DOWN = @"Server down";
+
+NSString *LABEL_RECORDING_MOUSE = @"Recording mouse";
+NSString *LABEL_NOT_RECORDING_MOUSE = @"Not recording mouse";
+
+NSString *LABEL_RECORDING_KEYBOARD = @"Recording keyboard";
+NSString *LABEL_NOT_RECORDING_KEYBOARD = @"Not recording keyboard";
+
+NSString *LABEL_START_ALL_RECORDINGS = @"Start all recordings";
+NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
+
+/**
+ * @function        applicationDidFinishLaunching
+ * @description     called when app finished launching
+**/
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     self.isGlobalRecording = YES;
@@ -89,7 +107,7 @@ NSString *WEBSOCKET_PORT = @"9000";
 **/
 - (void)onClosingLogger:(NSNotification *)notification
 {
-    [[self showLoggerItem] setTitle:@"Show logger"];
+    [[self showLoggerItem] setTitle:LABEL_SHOW_LOGS];
 }
 
 /**
@@ -110,7 +128,6 @@ NSString *WEBSOCKET_PORT = @"9000";
     
     NSImage *menuIcon = [NSImage imageNamed:@"Menu Icon"];
     NSImage *highlightIcon = [NSImage imageNamed:@"Menu Icon"];
-    //[highlightIcon setTemplate:YES];
     
     [[self statusItem] setImage:menuIcon];
     [[self statusItem] setAlternateImage:highlightIcon];
@@ -124,16 +141,10 @@ NSString *WEBSOCKET_PORT = @"9000";
 **/
 - (IBAction)toggleAllRecordings:(id)sender {
     // If recording started already
-    if (!self.isGlobalRecording) {
+    if (!self.isGlobalRecording && _webSocket != nil) {
         [self startRecording];
-        [[self pauseAllRecordingsItem] setTitle:@"Stop all recordings"];
-        [[self pauseKeyboardRecordingItem] setTitle:@"Stop keyboard recording"];
-        [[self pauseMouseRecordingItem] setTitle:@"Stop mouse recording"];
     } else {
         [self stopRecording];
-        [[self pauseAllRecordingsItem] setTitle:@"Start all recordings"];
-        [[self pauseKeyboardRecordingItem] setTitle:@"Start keyboard recording"];
-        [[self pauseMouseRecordingItem] setTitle:@"Start mouse recording"];
     }
 }
 
@@ -145,9 +156,11 @@ NSString *WEBSOCKET_PORT = @"9000";
     self.isKeyboardRecording = !self.isKeyboardRecording;
     
     if (self.isKeyboardRecording) {
-        [[self pauseKeyboardRecordingItem] setTitle:@"Stop keyboard recording"];
+        [[self pauseKeyboardRecordingItem] setTitle:LABEL_RECORDING_KEYBOARD];
+        [[self pauseKeyboardRecordingItem] setState:NSOnState];
     } else {
-        [[self pauseKeyboardRecordingItem] setTitle:@"Start keyboard recording"];
+        [[self pauseKeyboardRecordingItem] setTitle:LABEL_NOT_RECORDING_KEYBOARD];
+        [[self pauseKeyboardRecordingItem] setState:NSOffState];
     }
 }
 
@@ -159,9 +172,11 @@ NSString *WEBSOCKET_PORT = @"9000";
     self.isMouseRecording = !self.isMouseRecording;
     
     if (self.isMouseRecording) {
-        [[self pauseMouseRecordingItem] setTitle:@"Stop mouse recording"];
+        [[self pauseMouseRecordingItem] setTitle:LABEL_RECORDING_MOUSE];
+        [[self pauseMouseRecordingItem] setState:NSOnState];
     } else {
-        [[self pauseMouseRecordingItem] setTitle:@"Start mouse recording"];
+        [[self pauseMouseRecordingItem] setTitle:LABEL_NOT_RECORDING_MOUSE];
+        [[self pauseMouseRecordingItem] setState:NSOffState];
     }
 }
 
@@ -172,11 +187,11 @@ NSString *WEBSOCKET_PORT = @"9000";
 - (IBAction)showLogger:(id)sender {
     if ([[self window] isVisible]) {
         [[self window] close];
-        [[self showLoggerItem] setTitle:@"Show logger"];
+        [[self showLoggerItem] setTitle:LABEL_SHOW_LOGS];
     } else {
         [[self window] setLevel: NSStatusWindowLevel];
         [[self window] makeKeyAndOrderFront:nil];
-        [[self showLoggerItem] setTitle:@"Hide logger"];
+        [[self showLoggerItem] setTitle:LABEL_HIDE_LOGS];
     }
 }
 
@@ -247,6 +262,14 @@ NSString *WEBSOCKET_PORT = @"9000";
     [NSEvent removeMonitor:monitorUserInputs];
     
     [self initCounters];
+    
+    // Change indicators in menu bar
+    [[self pauseAllRecordingsItem] setTitle:LABEL_START_ALL_RECORDINGS];
+    [[self pauseKeyboardRecordingItem] setTitle:LABEL_NOT_RECORDING_KEYBOARD];
+    [[self pauseKeyboardRecordingItem] setState:NSOffState];
+    [[self pauseMouseRecordingItem] setTitle:LABEL_NOT_RECORDING_MOUSE];
+    [[self pauseMouseRecordingItem] setState:NSOffState];
+    
     [self logMessageToLogView:[NSString stringWithFormat:@"Stop Recording"]];
 }
 
@@ -366,6 +389,13 @@ NSString *WEBSOCKET_PORT = @"9000";
             }
         }
     }];
+    
+    // Change indicators in menu bar
+    [[self pauseAllRecordingsItem] setTitle:LABEL_STOP_ALL_RECORDINGS];
+    [[self pauseKeyboardRecordingItem] setTitle:LABEL_RECORDING_KEYBOARD];
+    [[self pauseKeyboardRecordingItem] setState:NSOnState];
+    [[self pauseMouseRecordingItem] setTitle:LABEL_RECORDING_MOUSE];
+    [[self pauseMouseRecordingItem] setState:NSOnState];
     
     [self logMessageToLogView:[NSString stringWithFormat:@"Start Recording"]];
 }
@@ -531,15 +561,21 @@ NSString *WEBSOCKET_PORT = @"9000";
 #pragma mark - SRWebSocketDelegate
 
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket {
-    NSLog(@"Websocket Connected");
+    NSLog(@"Websocket :: Connected");
     [socketStatus setStringValue:@"Websocket Connected!"];
+    
+    [[self serverStatusItem] setTitle:LABEL_SERVER_UP];
+    [[self serverStatusItem] setState:NSOnState];
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error {
-    NSLog(@":( Websocket Failed With Error %@", error);
+    NSLog(@"Websocket :: Failed With Error %@", error);
     
     [socketStatus setStringValue:@"Websocket Connection Failed! (see logs)"];
     _webSocket = nil;
+    
+    [[self serverStatusItem] setTitle:LABEL_SERVER_DOWN];
+    [[self serverStatusItem] setState:NSOffState];
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(NSString *)message {
@@ -547,7 +583,7 @@ NSString *WEBSOCKET_PORT = @"9000";
     NSDictionary* info = [NSJSONSerialization JSONObjectWithData:[message dataUsingEncoding:NSUTF8StringEncoding] options:0 error:&error];
     NSString *type = [info objectForKey:@"type"];
     
-    NSLog(@"Websocket message : %@", message);
+    NSLog(@"Websocket :: didReceiveMessage : %@", message);
     
     // If hello message
     if ([type isEqualToString:@"hello"]) {
@@ -568,9 +604,11 @@ NSString *WEBSOCKET_PORT = @"9000";
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
-    NSLog(@"WebSocket closed");
+    NSLog(@"Websocket :: closed : %@", reason);
     clientID = 0;
     [socketStatus setStringValue:@"Websocket Connection Closed! (see logs)"];
+    [self logMessageToLogView:reason];
+    [[self serverStatusItem] setState:NSOffState];
     _webSocket = nil;
 }
 

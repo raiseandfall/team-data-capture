@@ -908,6 +908,7 @@
                 <outlet property="pauseKeyboardRecordingItem" destination="Jfd-4c-K9p" id="68L-CG-l7C"/>
                 <outlet property="pauseMouseRecordingItem" destination="9wX-MN-9Q7" id="TZE-Tm-g0G"/>
                 <outlet property="preferences" destination="leQ-Ih-Rku" id="8Nh-la-a1p"/>
+                <outlet property="serverStatusItem" destination="xYW-mj-vsw" id="ELp-ax-ZAX"/>
                 <outlet property="showLoggerItem" destination="1Pl-3V-A8Y" id="vRL-66-K9H"/>
                 <outlet property="showPreferencesItem" destination="AzF-vF-Qlu" id="EdC-Gv-p3h"/>
                 <outlet property="socketStatus" destination="mcm-DL-X0c" id="pYp-4i-QAX"/>
@@ -921,13 +922,15 @@
         <userDefaultsController representsSharedInstance="YES" id="yJF-dN-bmB"/>
         <menu id="t0p-o8-Lw1">
             <items>
-                <menuItem title="Stop keyboard recording" id="Jfd-4c-K9p">
+                <menuItem title="Recording Keyboard" onStateImage="NSStatusAvailable" offStateImage="NSStatusUnavailable" mixedStateImage="NSStatusNone" id="Jfd-4c-K9p">
+                    <attributedString key="attributedTitle"/>
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="toggleKeyboardRecording:" target="494" id="jKR-Et-6Iv"/>
                     </connections>
                 </menuItem>
-                <menuItem title="Stop mouse recording" id="9wX-MN-9Q7">
+                <menuItem title="Recording Mouse" onStateImage="NSStatusAvailable" offStateImage="NSStatusUnavailable" mixedStateImage="NSStatusNone" id="9wX-MN-9Q7">
+                    <attributedString key="attributedTitle"/>
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="toggleMouseRecording:" target="494" id="TK3-aS-7K3"/>
@@ -935,13 +938,20 @@
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="Oa4-Cy-3a7"/>
                 <menuItem title="Stop all recordings" id="RLx-lh-0Nr">
+                    <attributedString key="attributedTitle"/>
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="toggleAllRecordings:" target="494" id="W3G-Lk-qVN"/>
                     </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="wPM-Xg-ndS"/>
-                <menuItem title="Show logger" id="1Pl-3V-A8Y">
+                <menuItem title="Server Up" onStateImage="NSStatusAvailable" offStateImage="NSStatusUnavailable" mixedStateImage="NSStatusNone" id="xYW-mj-vsw">
+                    <attributedString key="attributedTitle"/>
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="ftT-Zw-Ww5"/>
+                <menuItem title="Show logs" id="1Pl-3V-A8Y">
+                    <attributedString key="attributedTitle"/>
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="showLogger:" target="494" id="cuU-y6-mXJ"/>
@@ -949,6 +959,7 @@
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="B3a-Ob-G0x"/>
                 <menuItem title="Preferences..." id="AzF-vF-Qlu">
+                    <attributedString key="attributedTitle"/>
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="displayPreferencesWindow:" target="494" id="suq-ft-nIb"/>
@@ -956,6 +967,7 @@
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="PQt-P8-6dp"/>
                 <menuItem title="Exit" id="rfu-NC-RQu">
+                    <attributedString key="attributedTitle"/>
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="terminate:" target="-1" id="8S2-qP-aZj"/>
@@ -975,6 +987,9 @@
         </window>
     </objects>
     <resources>
+        <image name="NSStatusAvailable" width="16" height="16"/>
+        <image name="NSStatusNone" width="16" height="16"/>
+        <image name="NSStatusUnavailable" width="16" height="16"/>
         <image name="Record-Pressed-icon" width="128" height="128"/>
         <image name="editclear" width="128" height="128"/>
         <image name="jvst_logo_blueOnTransparent" width="418" height="418"/>
