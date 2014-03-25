@@ -8,10 +8,19 @@ module.exports = function(grunt) {
     jshint: {
       files: [
         '**/*.js',
-        '!node_modules/**/*js'
+        '!node_modules/**/*js',
+        '!public/**/*.js'
       ],
       options: {
         jshintrc: '.jshintrc',
+      },
+      jspublic: {
+        options: {
+          jshintrc: 'public/javascripts/.jshintrc',
+        },
+        files: {
+          src: ['public/**/*.js']
+        },
       }
     },
     // grunt-develop
@@ -23,7 +32,10 @@ module.exports = function(grunt) {
     // grunt-contrib-watch
     watch: {
       jslint: {
-        files: ['<%= jshint.files %>'],
+        files: [
+          '**/*.js',
+          '!node_modules/**/*js'
+        ],
         tasks: ['jshint'],
         options: {
           interrupt: true
@@ -32,6 +44,16 @@ module.exports = function(grunt) {
       nodeunit: {
         files: 'test/**/*.js',
         tasks: ['nodeunit']
+      },
+      livereload: {
+        options: {
+          livereload: true
+        },
+        files: [
+          'public/javascripts/{,*/}*.js',
+          'public/stylesheets/{,*/}*.css',
+          'views/{,*/}*.jade'
+        ]
       }
     },
     // grunt-contrib-nodeunit

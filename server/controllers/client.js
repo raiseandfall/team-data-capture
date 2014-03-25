@@ -1,37 +1,38 @@
+'use strict';
+
 var Socket = require('../providers/socket').Socket,
   Session = require('../providers/session').Session,
   Action = require('../providers/action').Action,
   APP = require('../config.js').APP;
-  utils = require('../utils.js');
 /**
  *  Define the Socket Object.
  */
-var Client = function(ws) {
-  this.ws = ws;
+var Client = function (ws) {
+    this.ws = ws;
 };
 /**
 * set the username of the  
 */
 
-Client.prototype.sayHello = function(id){
-  var data = '{"type": "hello","data":{"id": '+id+'}}';
+Client.prototype.sayHello = function (id) {
+  var data = '{"type": "hello","data":{"id": ' + id + '}}';
   this.id = id;
   this.send(data);
 };
 
-Client.prototype.welcome = function(data, type_client){
+Client.prototype.welcome = function (data, type_client) {
   var response;
   console.log('welcome');
-  switch(type_client){
-    case APP.CLIENT.APP:
-      this.mac = data.mac;
-      this.username = data.username;
-      this.saveSocket();
-      break;
-    case APP.CLIENT.WEB:
-      response = '{"type":"'+APP.TYPE.WELCOME+'"}';
-      this.send(response);
-      break;
+  switch (type_client) {
+  case APP.CLIENT.APP:
+    this.mac = data.mac;
+    this.username = data.username;
+    this.saveSocket();
+    break;
+  case APP.CLIENT.WEB:
+    response = '{"type":"' + APP.TYPE.WELCOME + '"}';
+    this.send(response);
+    break;
   }
 };
 
@@ -49,7 +50,7 @@ Client.prototype.saveSocket = function(){
           username: self.username,
           mac: self.mac
         });
-        socket.save(function(err, socket){
+        socket.save(function(err){
           if(err) {
             throw new Error(err, 'Creating a Socket: An error has occurred');
           }else{
@@ -73,11 +74,11 @@ Client.prototype.saveSessions = function(){
       throw new Error(err, 'Creating a Session: An error has occurred');
     }else{
       console.log(self.username + ' just started a new session '+session);
-      self.session_id = session._id
+      self.session_id = session._id;
       self.send(response);
     }
   });
-}
+};
 
 Client.prototype.saveAction = function(data){
   var self = this;
@@ -87,7 +88,7 @@ Client.prototype.saveAction = function(data){
     type: data.type,
     data: data.data
   });
-  action.save(function(err, action){
+  action.save(function(err){
     if(err) {
       throw new Error(err, 'Creating a Action: An error has occurred');
     }else{
@@ -102,11 +103,10 @@ Client.prototype.saveAction = function(data){
       session.addAction(data);
     }
   });
-}
+};
 
 
 Client.prototype.send = function(data){
-  console.log('send : '+data);
   this.ws.send(data);
 };
 

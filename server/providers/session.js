@@ -1,3 +1,5 @@
+'use strict';
+
 var mongoose = require('mongoose');
 
 var sessionSchema = mongoose.Schema({
@@ -13,7 +15,7 @@ sessionSchema.methods.addAction = function (action) {
   this.datas.push(action);
   this.save();
   //console.log('action added to session');
-}
+};
 
 var Session = mongoose.model('Session', sessionSchema);
 exports.Session = Session;
