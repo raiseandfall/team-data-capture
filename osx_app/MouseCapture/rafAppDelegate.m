@@ -282,6 +282,7 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
     NSUInteger eventMasks = NSMouseMovedMask | NSLeftMouseDownMask | NSKeyDownMask;
     
     monitorUserInputs = [NSEvent addGlobalMonitorForEventsMatchingMask:eventMasks handler:^(NSEvent *incomingEvent) {
+        NSLog(@"isKeyboardRecording %lu", [incomingEvent type]);
         switch ([incomingEvent type]) {
             // Mouse move
             case 5:
@@ -332,6 +333,7 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
             case 10:
             {
                 if ([self isKeyboardRecording]) {
+                    
                     // Character just hit
                     NSString *_char = [[incomingEvent characters] lowercaseString];
                     int keyCode = (int)[incomingEvent keyCode];
@@ -516,7 +518,7 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
     if (jsonData) {
         requestJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
         
-        NSLog(@"reportToSocket :: %@", requestJson);
+        //NSLog(@"reportToSocket :: %@", requestJson);
         
         [_webSocket send:requestJson];
     }

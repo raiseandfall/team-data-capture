@@ -6,6 +6,7 @@ var Socket = (function(WebSocket){
 			AUTH: 'auth',
 			WELCOME: 'welcome',
 			NEW_USER: 'newuser',
+			CLOSE_USER: 'closeuser',
 			WEB: 'web',
 			APP: 'app',
 			MOUSE_MOVE: 'mousemove',
@@ -33,8 +34,17 @@ var Socket = (function(WebSocket){
 				response = '{"type":"'+EVENT.AUTH+'", "id": "'+datajson.data.id+'", "client": "'+EVENT.WEB+'"}';
 				this.send(response);
 				break;
+			case EVENT.WELCOME:
+				console.log(data);
+				break;
 			case EVENT.NEW_USER:
 					ev = new CustomEvent(EVENT.NEW_USER, {'detail':data.data});
+					this.dispatchEvent(ev);
+				break;
+			case EVENT.CLOSE_USER:
+					ev = new CustomEvent(EVENT.CLOSE_USER, {'detail':data.data});
+					console.log(EVENT.CLOSE_USER+'_', datajson.data.id);
+					ev = new CustomEvent(EVENT.CLOSE_USER+'_'+datajson.data.id, {'detail':data.data});
 					this.dispatchEvent(ev);
 				break;
 			case EVENT.MOUSE_MOVE:
@@ -62,16 +72,7 @@ var Socket = (function(WebSocket){
 
 			this.events.onopen = onopen;
 			this.events.onmessage = onmessage;
-
-			//this.events.addEventListener(EVENT.MESSAGE, function(e) { self.onmessage(e); });
 		};
-
-		/*this.onmessage = function(e){
-			console.log('onmessage', e.detail);
-		};
-		this.mousemove = function(e){
-			console.log('mousemove', e.detail);
-		};*/
 	};
 
 })(WebSocket);

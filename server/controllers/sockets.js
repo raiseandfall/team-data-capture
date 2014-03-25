@@ -18,16 +18,14 @@ var Socket = function() {
       i;
     switch(datajson.type){
       case APP.TYPE.AUTH:
-        console.log('Client : '+ data);
-        client.welcome(datajson.data, datajson.client);
+
+        client.welcome(datajson.data, datajson.client, self.sockets);
         if(datajson.client === APP.CLIENT.WEB){
-          console.log('self.websockets.push(client)');
           self.websockets.push(client);
         }
-
         if(datajson.client === APP.CLIENT.APP){
+          response = '{"type":"'+APP.TYPE.NEW_USER+'", "data":{"id":"'+datajson.id+'", "username":"'+datajson.data.username+'"}}';
           for (i = 0; i<self.websockets.length; i++){
-            response = '{"type":"'+APP.TYPE.NEW_USER+'", "data":{"id":"'+datajson.id+'"}}';
             self.websockets[i].send(response);
           }
         }
@@ -46,12 +44,29 @@ var Socket = function() {
   };
 
   self.close = function () {
-    var l=self.websockets.length,
-      i;
-    for (i = 0; i<l; i++){
-      if(self.websockets[i].ws ===this) {
+    var weblength=self.websockets.length,
+      applength=self.sockets.length,
+      i,
+      j,
+      response;
+    for (i = 0; i<weblength; i++){
+      if(self.websockets[i].ws === this) {
         self.websockets.splice(i, 1);
-        console.log('Client #%d disconnected', i+1);
+        console.log('Client #%d disconnect', i);
+        return;
+      }
+    }
+    for (i = 0; i<applength; i++){
+      if(self.sockets[i]){
+        if((self.sockets[i].ws === this)&&(self.sockets[i].type === APP.CLIENT.APP)) {
+          console.log('close', self.sockets[i].username);
+          response = '{"type":"'+APP.TYPE.CLOSE_USER+'", "data":{"id":"'+self.sockets[i].id+'", "username":"'+self.sockets[i].username+'"}}';
+          for (j = 0; j<self.websockets.length; j++){
+            console.log('send', response);
+            self.websockets[j].send(response);
+          }
+          return;
+        }
       }
     }
   };

@@ -79,6 +79,15 @@ ws.events.addEventListener(ws.EVENT.NEW_USER, function(e) {
 
 	var id = datajson.data.id; 
 
+	/** closeuser_[id]
+	* also ws.EVENT.MOUSE_MOVE+'_'+id
+	* Call everytime an action mouse move from the socket [id] is sent from the server
+	*/
+	ws.events.addEventListener(ws.EVENT.CLOSE_USER+'_'+id, function(e) {	
+		var datajson = JSON.parse(e.detail);
+		console.log('listener: ', 'closeuser_'+id, e);
+	});
+
 	/** mousemove_[id]
 	* also ws.EVENT.MOUSE_MOVE+'_'+id
 	* Call everytime an action mouse move from the socket [id] is sent from the server
