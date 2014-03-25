@@ -1,5 +1,8 @@
 'use strict';
 
+
+console.log('Developed with love by frenchies at JVST Inc');
+
 var host = window.document.location.host.replace(/:.*/, '');
 var ws = new Socket();
 ws.connect(host, '9000');

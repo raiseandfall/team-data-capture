@@ -1,0 +1,22 @@
+{
+  "name": "teamcapture",
+  "main": "server.js",
+  "version": "0.0.1",
+  "homepage": "https://github.com/raiseandfall/team-data-capture",
+  "authors": [
+    "Thibaut Delille <thibaut@jvst.us>"
+  ],
+  "description": "Better than NSA - track the mouse of your whole team",
+  "license": "MIT",
+  "directory": "public/bower_components",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "d3": "~3.4.3"
+  }
+}

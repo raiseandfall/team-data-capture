@@ -20,7 +20,7 @@ var Socket = (function(WebSocket){
 		}	
 	};
   var onopen = function () {
-		console.log('onopen 2');
+		console.log('connection open');
 	};
 
 	var onmessage = function (data, flags) {
