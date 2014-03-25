@@ -54,8 +54,8 @@ NSString *LABEL_SERVER_UP = @"Connected to Server";
 NSString *LABEL_SERVER_DOWN = @"Server Unavailable";
 NSString *LABEL_RECORDING_MOUSE = @"Recording mouse";
 NSString *LABEL_NOT_RECORDING_MOUSE = @"Not recording mouse";
-NSString *LABEL_RECORDING_KEYBOARD = @"Recording keyboard";
-NSString *LABEL_NOT_RECORDING_KEYBOARD = @"Not recording keyboard";
+NSString *LABEL_RECORDING_KEYBOARD = @"Recording keyboard hits";
+NSString *LABEL_NOT_RECORDING_KEYBOARD = @"Not recording keyboard hits";
 NSString *LABEL_START_ALL_RECORDINGS = @"Start all recordings";
 NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
 
@@ -145,19 +145,29 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
 }
 
 /**
+ * @function        drawIndicators
+ * @description     draw menu bar indicators
+**/
+- (void)drawIndicators {
+    self.isGlobalRecording = self.isMouseRecording || self.isKeyboardRecording;
+    
+    [[self pauseKeyboardRecordingItem] setTitle:self.isKeyboardRecording ? LABEL_RECORDING_KEYBOARD : LABEL_NOT_RECORDING_KEYBOARD];
+    [[self pauseKeyboardRecordingItem] setState:self.isKeyboardRecording];
+    
+    [[self pauseMouseRecordingItem] setTitle:self.isMouseRecording ? LABEL_RECORDING_MOUSE : LABEL_NOT_RECORDING_MOUSE];
+    [[self pauseMouseRecordingItem] setState:self.isMouseRecording];
+
+    [[self pauseAllRecordingsItem] setTitle:self.isGlobalRecording ? LABEL_STOP_ALL_RECORDINGS : LABEL_START_ALL_RECORDINGS];
+    [[self pauseAllRecordingsItem] setState:self.isGlobalRecording];
+}
+
+/**
  * @function        toggleKeyboardRecording
  * @description     toggle keyboard recording
 **/
 - (IBAction)toggleKeyboardRecording:(id)sender {
     self.isKeyboardRecording = !self.isKeyboardRecording;
-    
-    if (self.isKeyboardRecording) {
-        [[self pauseKeyboardRecordingItem] setTitle:LABEL_RECORDING_KEYBOARD];
-        [[self pauseKeyboardRecordingItem] setState:NSOnState];
-    } else {
-        [[self pauseKeyboardRecordingItem] setTitle:LABEL_NOT_RECORDING_KEYBOARD];
-        [[self pauseKeyboardRecordingItem] setState:NSOffState];
-    }
+    [self drawIndicators];
 }
 
 /**
@@ -166,14 +176,7 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
 **/
 - (IBAction)toggleMouseRecording:(id)sender {
     self.isMouseRecording = !self.isMouseRecording;
-    
-    if (self.isMouseRecording) {
-        [[self pauseMouseRecordingItem] setTitle:LABEL_RECORDING_MOUSE];
-        [[self pauseMouseRecordingItem] setState:NSOnState];
-    } else {
-        [[self pauseMouseRecordingItem] setTitle:LABEL_NOT_RECORDING_MOUSE];
-        [[self pauseMouseRecordingItem] setState:NSOffState];
-    }
+    [self drawIndicators];
 }
 
 /**
@@ -259,11 +262,7 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
     [self initCounters];
     
     // Change indicators in menu bar
-    [[self pauseAllRecordingsItem] setTitle:LABEL_START_ALL_RECORDINGS];
-    [[self pauseKeyboardRecordingItem] setTitle:LABEL_NOT_RECORDING_KEYBOARD];
-    [[self pauseKeyboardRecordingItem] setState:NSOffState];
-    [[self pauseMouseRecordingItem] setTitle:LABEL_NOT_RECORDING_MOUSE];
-    [[self pauseMouseRecordingItem] setState:NSOffState];
+    [self drawIndicators];
     
     [self logMessageToLogView:[NSString stringWithFormat:@"Stop Recording"]];
 }
@@ -384,12 +383,8 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
         }
     }];
     
-    // Change indicators in menu bar
-    [[self pauseAllRecordingsItem] setTitle:LABEL_STOP_ALL_RECORDINGS];
-    [[self pauseKeyboardRecordingItem] setTitle:LABEL_RECORDING_KEYBOARD];
-    [[self pauseKeyboardRecordingItem] setState:NSOnState];
-    [[self pauseMouseRecordingItem] setTitle:LABEL_RECORDING_MOUSE];
-    [[self pauseMouseRecordingItem] setState:NSOnState];
+    // Update menu bar indicators
+    [self drawIndicators];
     
     [self logMessageToLogView:[NSString stringWithFormat:@"Start Recording"]];
 }
@@ -520,6 +515,9 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
     
     if (jsonData) {
         requestJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        
+        NSLog(@"reportToSocket :: %@", requestJson);
+        
         [_webSocket send:requestJson];
     }
 }
