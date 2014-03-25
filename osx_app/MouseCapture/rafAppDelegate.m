@@ -34,7 +34,6 @@
 @synthesize keyDownCounter;
 @synthesize leftMouseCounter;
 
-
 // VARIABLES
 SRWebSocket *_webSocket;
 NSString *TRACKED_CHARS = @"abcdefghijklmnopqrstuvwxyz0123456789";
@@ -43,22 +42,20 @@ NSString *SEPARATORS_KEY_CODES = @"$";
 NSString *currentWord = @"";
 int clientID = 0;
 NSDictionary *ACTION_TYPES;
+BOOL ALLOW_WORDS_TRACKING = FALSE;
+
 NSString *WEBSOCKET_PROTOCOL = @"ws";
 NSString *WEBSOCKET_HOST = @"192.168.173.123";
 NSString *WEBSOCKET_PORT = @"9000";
 
 NSString *LABEL_SHOW_LOGS = @"Show logs";
 NSString *LABEL_HIDE_LOGS = @"Hide logs";
-
-NSString *LABEL_SERVER_UP = @"Server up";
-NSString *LABEL_SERVER_DOWN = @"Server down";
-
+NSString *LABEL_SERVER_UP = @"Connected to Server";
+NSString *LABEL_SERVER_DOWN = @"Server Unavailable";
 NSString *LABEL_RECORDING_MOUSE = @"Recording mouse";
 NSString *LABEL_NOT_RECORDING_MOUSE = @"Not recording mouse";
-
 NSString *LABEL_RECORDING_KEYBOARD = @"Recording keyboard";
 NSString *LABEL_NOT_RECORDING_KEYBOARD = @"Not recording keyboard";
-
 NSString *LABEL_START_ALL_RECORDINGS = @"Start all recordings";
 NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
 
@@ -105,8 +102,7 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
  * @function        onClosingLogger
  * @description     called when logger window is closed
 **/
-- (void)onClosingLogger:(NSNotification *)notification
-{
+- (void)onClosingLogger:(NSNotification *)notification {
     [[self showLoggerItem] setTitle:LABEL_SHOW_LOGS];
 }
 
@@ -204,8 +200,7 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
  * @function        reconnect
  * @description     reconnect web socket
 **/
-- (void)reconnect:(id)sender;
-{
+- (void)reconnect:(id)sender {
     [self _reconnectSocket];
 }
 
@@ -278,7 +273,6 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
  * @description     start global recording
 **/
 - (void)startRecording {
-    
     self.isGlobalRecording = YES;
     self.isKeyboardRecording = YES;
     self.isMouseRecording = YES;
@@ -350,33 +344,33 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
                     BOOL trackChar = [self isCharacterTracked:_char];
                     
                     // Only report key if it's a character we want to track
-                    if (trackChar) {
-                        NSMutableDictionary *keyData = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                                        _char, @"keyPressed",
-                                                        nil];
+                    NSMutableDictionary *keyData = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                                    _char, @"keyPressed",
+                                                    nil];
+                    [self reportToSocket:@"KEY_DOWN" :keyData];
                     
-                        [self reportToSocket:@"KEY_DOWN" :keyData];
-                    }
-                
-                    // If it's a delete key
-                    if (keyCode == 51) {
-                        // Remove last character
-                        if ([currentWord length] > 0) {
-                            currentWord = [currentWord substringToIndex:[currentWord length] - 1];
+                    // If allow works tracking
+                    if (ALLOW_WORDS_TRACKING) {
+                        // If it's a delete key
+                        if (keyCode == 51) {
+                            // Remove last character
+                            if ([currentWord length] > 0) {
+                                currentWord = [currentWord substringToIndex:[currentWord length] - 1];
+                            }
+                        
+                        // If it's a separator & currentWord is not empty
+                        } else if ([self isSeparator:_char:_keyCode:keyCode] && [currentWord length] > 0) {
+                            // Send the word just typed and we re-init currentWord
+                            NSMutableDictionary *keyData = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                                            currentWord, @"word",
+                                                            nil];
+                            [self reportToSocket:@"WORD" :keyData];
+                            currentWord = @"";
+                        
+                        // Stack letter to current word
+                        } else if (trackChar) {
+                            currentWord = [currentWord stringByAppendingString:_char];
                         }
-                        
-                    // If it's a separator & currentWord is not empty
-                    } else if ([self isSeparator:_char:_keyCode:keyCode] && [currentWord length] > 0) {
-                        // Send the word just typed and we re-init currentWord
-                        NSMutableDictionary *keyData = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                                        currentWord, @"word",
-                                                        nil];
-                        [self reportToSocket:@"WORD" :keyData];
-                        currentWord = @"";
-                        
-                    // Stack letter to current word
-                    } else if (trackChar) {
-                        currentWord = [currentWord stringByAppendingString:_char];
                     }
                 }
                 
