@@ -1,3 +1,5 @@
+'use strict';
+
 var WebSocketServer = require('ws').Server,
   Client = require('./client').Client,
   APP = require('../config.js').APP;
@@ -11,13 +13,23 @@ var Socket = function() {
 
   self.message = function (data) {
     var datajson = JSON.parse(data),
-      client = self.sockets[datajson.id];
+      client = self.sockets[datajson.id],
+      response,
+      i;
     switch(datajson.type){
       case APP.TYPE.AUTH:
         console.log('Client : '+ data);
         client.welcome(datajson.data, datajson.client);
-        if(datajson.client = APP.CLIENT.WEB){
+        if(datajson.client === APP.CLIENT.WEB){
+          console.log('self.websockets.push(client)');
           self.websockets.push(client);
+        }
+
+        if(datajson.client === APP.CLIENT.APP){
+          for (i = 0; i<self.websockets.length; i++){
+            response = '{"type":"'+APP.TYPE.NEW_USER+'", "data":{"id":"'+datajson.id+'"}}';
+            self.websockets[i].send(response);
+          }
         }
         break;
       case APP.ACTION.MOUSE_MOVE:
@@ -26,7 +38,7 @@ var Socket = function() {
       case APP.ACTION.MOUSE_WHEEL:
       case APP.ACTION.WORD:
         client.saveAction(datajson);
-        for (var i = 0; i<self.websockets.length; i++){
+        for (i = 0; i<self.websockets.length; i++){
           self.websockets[i].send(data);
         }
         break;
@@ -34,7 +46,14 @@ var Socket = function() {
   };
 
   self.close = function () {
-    console.log('Client #%d disconnected', self.clientId);
+    var l=self.websockets.length,
+      i;
+    for (i = 0; i<l; i++){
+      if(self.websockets[i].ws ===this) {
+        self.websockets.splice(i, 1);
+        console.log('Client #%d disconnected', i+1);
+      }
+    }
   };
 
   self.error = function (e) {

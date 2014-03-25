@@ -19,7 +19,7 @@ module.exports = function(grunt) {
           jshintrc: 'public/javascripts/.jshintrc',
         },
         files: {
-          src: ['public/**/*.js']
+          src: ['public/javascripts/*.js']
         },
       }
     },

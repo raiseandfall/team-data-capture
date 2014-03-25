@@ -6,7 +6,8 @@ exports.APP = {
 	TYPE: {
 		HELLO: 'hello',
 		AUTH: 'auth',
-		WELCOME: 'welcome'
+		WELCOME: 'welcome',
+		NEW_USER: 'newuser'
 	},
 	CLIENT: {
 		APP: 'app',

@@ -107,6 +107,7 @@ Client.prototype.saveAction = function(data){
 
 
 Client.prototype.send = function(data){
+  //console.log(data);
   this.ws.send(data);
 };
 
