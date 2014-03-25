@@ -44,7 +44,7 @@ NSString *currentWord = @"";
 int clientID = 0;
 NSDictionary *ACTION_TYPES;
 NSString *WEBSOCKET_PROTOCOL = @"ws";
-NSString *WEBSOCKET_HOST = @"192.168.173.123";
+NSString *WEBSOCKET_HOST = @"192.168.173.103";
 NSString *WEBSOCKET_PORT = @"9000";
 
 NSString *LABEL_SHOW_LOGS = @"Show logs";
