@@ -50,6 +50,8 @@ static id monitorUserInputs;
 @property (readwrite) IBOutlet NSMenuItem *showPreferencesItem;
 @property (readwrite) IBOutlet NSStatusItem *statusItem;
 
+- (void)drawIndicators;
+
 - (IBAction)toggleAllRecordings         :(id)sender;
 - (IBAction)toggleKeyboardRecording     :(id)sender;
 - (IBAction)toggleMouseRecording        :(id)sender;

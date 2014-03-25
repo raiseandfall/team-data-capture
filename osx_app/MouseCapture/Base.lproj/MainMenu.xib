@@ -922,14 +922,14 @@
         <userDefaultsController representsSharedInstance="YES" id="yJF-dN-bmB"/>
         <menu id="t0p-o8-Lw1">
             <items>
-                <menuItem title="Recording Keyboard" onStateImage="NSStatusAvailable" offStateImage="NSStatusUnavailable" mixedStateImage="NSStatusNone" id="Jfd-4c-K9p">
+                <menuItem title="Not recording keyboard hits" onStateImage="NSStatusAvailable" offStateImage="NSStatusUnavailable" mixedStateImage="NSStatusNone" id="Jfd-4c-K9p">
                     <attributedString key="attributedTitle"/>
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="toggleKeyboardRecording:" target="494" id="jKR-Et-6Iv"/>
                     </connections>
                 </menuItem>
-                <menuItem title="Recording Mouse" onStateImage="NSStatusAvailable" offStateImage="NSStatusUnavailable" mixedStateImage="NSStatusNone" id="9wX-MN-9Q7">
+                <menuItem title="Not recording mouse" onStateImage="NSStatusAvailable" offStateImage="NSStatusUnavailable" mixedStateImage="NSStatusNone" id="9wX-MN-9Q7">
                     <attributedString key="attributedTitle"/>
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
