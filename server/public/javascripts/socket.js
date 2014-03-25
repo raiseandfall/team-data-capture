@@ -1,29 +1,19 @@
 'use strict';
 
 var Socket = (function(WebSocket){
-	var APP = {
-		TYPE: {
+	var EVENT = {
 			HELLO: 'hello',
 			AUTH: 'auth',
 			WELCOME: 'welcome',
-			NEW_USER: 'newuser'
-		},
-		CLIENT: {
+			NEW_USER: 'newuser',
 			WEB: 'web',
 			APP: 'app',
-		},
-		ACTION:{
 			MOUSE_MOVE: 'mousemove',
 			CLICK: 'click',
 			KEY_DOWN: 'keydown',
 			MOUSE_WHEEL: 'mousewheel',
-			WORD:	'word'
-		},
-		EVENTS: {
-			ON_MESSAGE: 'onMessage',
-			ON_MOUSE_MOVE: 'onMouseMove',
-			ON_NEW_USER: 'onNewUser'
-		}
+			WORD:	'word',
+			MESSAGE: 'onmessage'
 	};
   var onopen = function () {
 		console.log('connection open');
@@ -34,23 +24,29 @@ var Socket = (function(WebSocket){
     // flags.masked will be set if the data was masked
 
 		var datajson = JSON.parse(data.data),
-			ev = new CustomEvent(APP.EVENTS.ON_MESSAGE, {'detail':data.data}),
+			ev = new CustomEvent(EVENT.MESSAGE, {'detail':data.data}),
 			response;
 		this.dispatchEvent(ev);
 
 		switch(datajson.type){
-			case APP.TYPE.HELLO:
-				response = '{"type":"'+APP.TYPE.AUTH+'", "id": "'+datajson.data.id+'", "client": "'+APP.CLIENT.WEB+'"}';
+			case EVENT.HELLO:
+				response = '{"type":"'+EVENT.AUTH+'", "id": "'+datajson.data.id+'", "client": "'+EVENT.WEB+'"}';
 				this.send(response);
 				break;
-			case APP.TYPE.NEW_USER:
-					ev = new CustomEvent(APP.EVENTS.ON_NEW_USER, {'detail':data.data});
+			case EVENT.NEW_USER:
+					ev = new CustomEvent(EVENT.NEW_USER, {'detail':data.data});
 					this.dispatchEvent(ev);
 				break;
-			case APP.ACTION.MOUSE_MOVE:
-					ev = new CustomEvent(APP.EVENTS.ON_MOUSE_MOVE, {'detail':data.data});
+			case EVENT.MOUSE_MOVE:
+			case EVENT.CLICK:
+			case EVENT.KEY_DOWN:
+			case EVENT.MOUSE_WHEEL:
+			case EVENT.WORD:
+					// send a general event for all mousemove
+					ev = new CustomEvent(datajson.type, {'detail':data.data});
 					this.dispatchEvent(ev);
-					ev = new CustomEvent(APP.EVENTS.ON_MOUSE_MOVE+'.'+datajson.data.id, {'detail':data.data});
+					// send a specific event for this id
+					ev = new CustomEvent(datajson.type+'_'+datajson.id, {'detail':data.data});
 					this.dispatchEvent(ev);
 				break;
 		}
@@ -59,7 +55,7 @@ var Socket = (function(WebSocket){
 	return function(){
 		var self = this;
 
-		this.APP = APP;
+		this.EVENT = EVENT;
 
 		this.connect = function(host, port){
 			this.events = new WebSocket('ws://' + host + ':' + port + '/');
@@ -67,17 +63,15 @@ var Socket = (function(WebSocket){
 			this.events.onopen = onopen;
 			this.events.onmessage = onmessage;
 
-
-
-			this.events.addEventListener(APP.EVENTS.ON_MESSAGE, function(e) { self.onmessage(e); });
+			//this.events.addEventListener(EVENT.MESSAGE, function(e) { self.onmessage(e); });
 		};
 
-		this.onmessage = function(e){
+		/*this.onmessage = function(e){
 			console.log('onmessage', e.detail);
 		};
 		this.mousemove = function(e){
 			console.log('mousemove', e.detail);
-		};
+		};*/
 	};
 
 })(WebSocket);

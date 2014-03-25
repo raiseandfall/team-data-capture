@@ -81,7 +81,7 @@ Client.prototype.saveSessions = function(){
 };
 
 Client.prototype.saveAction = function(data){
-  var self = this;
+/*  var self = this;
 
   var action = new Action({
     mac: self.mac,
@@ -102,7 +102,7 @@ Client.prototype.saveAction = function(data){
     }else{
       session.addAction(data);
     }
-  });
+  });*/
 };
 
 
