@@ -65,6 +65,8 @@ NSString *LABEL_RECORDING_MOUSE = @"Recording mouse";
 NSString *LABEL_NOT_RECORDING_MOUSE = @"Not recording mouse";
 NSString *LABEL_RECORDING_KEYBOARD = @"Recording keyboard hits";
 NSString *LABEL_NOT_RECORDING_KEYBOARD = @"Not recording keyboard hits";
+NSString *LABEL_RECORDING_SCROLL = @"Recording scroll";
+NSString *LABEL_NOT_RECORDING_SCROLL = @"Not recording scroll";
 NSString *LABEL_START_ALL_RECORDINGS = @"Start all recordings";
 NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
 
@@ -253,14 +255,26 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
 **/
 - (void)drawIndicators {
     self.isGlobalRecording = self.isMouseRecording || self.isKeyboardRecording || self.isScrollRecording;
-    
+
     [[self pauseKeyboardRecordingItem] setTitle:self.isKeyboardRecording ? LABEL_RECORDING_KEYBOARD : LABEL_NOT_RECORDING_KEYBOARD];
     [[self pauseKeyboardRecordingItem] setState:self.isKeyboardRecording];
+    
+    [[self pauseScrollRecordingItem] setTitle:self.isScrollRecording ? LABEL_RECORDING_SCROLL : LABEL_NOT_RECORDING_SCROLL];
+    [[self pauseScrollRecordingItem] setState:self.isScrollRecording];
     
     [[self pauseMouseRecordingItem] setTitle:self.isMouseRecording ? LABEL_RECORDING_MOUSE : LABEL_NOT_RECORDING_MOUSE];
     [[self pauseMouseRecordingItem] setState:self.isMouseRecording];
 
     [[self pauseAllRecordingsItem] setTitle:self.isGlobalRecording ? LABEL_STOP_ALL_RECORDINGS : LABEL_START_ALL_RECORDINGS];
+}
+
+/**
+ * @function        toggleScrollRecording
+ * @description     toggle scroll recording
+ **/
+- (IBAction)toggleScrollRecording:(id)sender {
+    self.isScrollRecording = !self.isScrollRecording;
+    [self drawIndicators];
 }
 
 /**

@@ -907,6 +907,7 @@
                 <outlet property="pauseAllRecordingsItem" destination="RLx-lh-0Nr" id="gIw-TS-Mv2"/>
                 <outlet property="pauseKeyboardRecordingItem" destination="Jfd-4c-K9p" id="68L-CG-l7C"/>
                 <outlet property="pauseMouseRecordingItem" destination="9wX-MN-9Q7" id="TZE-Tm-g0G"/>
+                <outlet property="pauseScrollRecordingItem" destination="5jY-Bn-qe0" id="QXh-I1-J5I"/>
                 <outlet property="preferences" destination="leQ-Ih-Rku" id="8Nh-la-a1p"/>
                 <outlet property="serverStatusItem" destination="xYW-mj-vsw" id="ELp-ax-ZAX"/>
                 <outlet property="showLoggerItem" destination="1Pl-3V-A8Y" id="vRL-66-K9H"/>
@@ -934,6 +935,12 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="toggleMouseRecording:" target="494" id="TK3-aS-7K3"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Not recording scroll" onStateImage="NSStatusAvailable" offStateImage="NSStatusUnavailable" mixedStateImage="NSStatusNone" id="5jY-Bn-qe0">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="toggleScrollRecording:" target="494" id="Inh-up-xzd"/>
                     </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="Oa4-Cy-3a7"/>

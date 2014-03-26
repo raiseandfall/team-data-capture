@@ -44,6 +44,7 @@ static id monitorUserInputs;
 
 @property (readwrite) IBOutlet NSMenu *menu;
 @property (readwrite) IBOutlet NSMenuItem *pauseAllRecordingsItem;
+@property (readwrite) IBOutlet NSMenuItem *pauseScrollRecordingItem;
 @property (readwrite) IBOutlet NSMenuItem *pauseMouseRecordingItem;
 @property (readwrite) IBOutlet NSMenuItem *pauseKeyboardRecordingItem;
 @property (readwrite) IBOutlet NSMenuItem *serverStatusItem;
@@ -59,6 +60,7 @@ static id monitorUserInputs;
 - (IBAction)toggleAllRecordings         :(id)sender;
 - (IBAction)toggleKeyboardRecording     :(id)sender;
 - (IBAction)toggleMouseRecording        :(id)sender;
+- (IBAction)toggleScrollRecording       :(id)sender;
 
 - (IBAction)reconnect               :(id)sender;
 - (IBAction)clearButtonPressed      :(id)sender;
