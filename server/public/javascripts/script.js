@@ -25,8 +25,15 @@ ws.events.addEventListener(ws.EVENT.MESSAGE, function(e) {
 * also ws.EVENT.WELCOME
 * Call everytime the socket recieve a message from the server
 */
-ws.events.addEventListener(ws.EVENT.WELCOME, function(e) {	
-	//console.log('listener: welcome', e);
+ws.events.addEventListener(ws.EVENT.WELCOME, function(e) {
+	var datajson = JSON.parse(e.detail),
+		l = datajson.data.length,
+		ss,
+		i;
+	console.log('listener: welcome', l);
+	for(i = 0; i < l; i++){
+		ss = new Spaceship(datajson.data[i].id, ws);
+	}
 });
 
 
@@ -84,7 +91,7 @@ ws.events.addEventListener(ws.EVENT.WORD, function(e) {
 
 ws.events.addEventListener(ws.EVENT.NEW_USER, function(e) {	
 	var datajson = JSON.parse(e.detail);
-	console.log('listener: ', ws.EVENT.NEW_USER, datajson.data);
+	//console.log('listener: ', ws.EVENT.NEW_USER, datajson.data);
 
 	var id = datajson.data.id; 
 
@@ -95,7 +102,7 @@ ws.events.addEventListener(ws.EVENT.NEW_USER, function(e) {
 	*/
 	ws.events.addEventListener(ws.EVENT.CLOSE_USER+'_'+id, function(e) {	
 		var datajson = JSON.parse(e.detail);
-		console.log('listener: ', 'closeuser_'+id, e);
+		//console.log('listener: ', 'closeuser_'+id, e);
 	});
 
 	/** mousemove_[id]
@@ -111,7 +118,7 @@ ws.events.addEventListener(ws.EVENT.NEW_USER, function(e) {
 	* Call everytime an action click from the socket [id] is sent from the server
 	*/
 	ws.events.addEventListener(ws.EVENT.CLICK+'_'+id, function(e) {	
-		console.log('listener: ', 'click_'+id, e);
+		//console.log('listener: ', 'click_'+id, e);
 	});
 
 	/** mousewheel_[id]
@@ -119,7 +126,7 @@ ws.events.addEventListener(ws.EVENT.NEW_USER, function(e) {
 	* Call everytime an action mouse wheel from the socket [id] is sent from the server
 	*/
 	ws.events.addEventListener(ws.EVENT.MOUSE_WHEEL+'_'+id, function(e) {	
-		console.log('listener: ', 'mousewheel_'+id, e);
+		//console.log('listener: ', 'mousewheel_'+id, e);
 	});
 
 	/** keypress_[id]
@@ -127,7 +134,7 @@ ws.events.addEventListener(ws.EVENT.NEW_USER, function(e) {
 	* Call everytime an action keypress from the socket [id] is sent from the server
 	*/
 	ws.events.addEventListener(ws.EVENT.KEY_PRESS+'_'+id, function(e) {	
-		console.log('listener: ', 'keypress_'+id, e);
+		//console.log('listener: ', 'keypress_'+id, e);
 	});
 
 	/** word_[id]
@@ -135,7 +142,7 @@ ws.events.addEventListener(ws.EVENT.NEW_USER, function(e) {
 	* Call everytime an action word from the socket [id] is sent from the server
 	*/
 	ws.events.addEventListener(ws.EVENT.WORD+'_'+id, function(e) {	
-		console.log('listener: ', 'word_'+id, e);
+		//console.log('listener: ', 'word_'+id, e);
 	});
 });
 

@@ -62,7 +62,7 @@ var Socket = function() {
           console.log('close', self.sockets[i].username);
           response = '{"type":"'+APP.TYPE.CLOSE_USER+'", "data":{"id":"'+self.sockets[i].id+'", "username":"'+self.sockets[i].username+'"}}';
           for (j = 0; j<self.websockets.length; j++){
-            console.log('send', response);
+            self.sockets[i] = null;
             self.websockets[j].send(response);
           }
           return;
