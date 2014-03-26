@@ -652,7 +652,6 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
                                                          error:&error];
     if (jsonData) {
         requestJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        NSLog(@"requestJson : %@", requestJson);
         [_webSocket send:requestJson];
     }
 }
@@ -688,7 +687,7 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
 #pragma mark - SRWebSocketDelegate
 
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket {
-    NSLog(@"Websocket :: Connected");
+    //NSLog(@"Websocket :: Connected");
     [socketStatus setStringValue:@"Websocket Connected!"];
     
     [[self serverStatusItem] setTitle:LABEL_SERVER_UP];
@@ -696,7 +695,7 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error {
-    NSLog(@"WebSocket :: Failed With Error %@", error);
+    //NSLog(@"WebSocket :: Failed With Error %@", error);
     
     [socketStatus setStringValue:@"WebSocket Connection Failed! (see logs)"];
     _webSocket = nil;
@@ -715,7 +714,7 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
     NSDictionary* info = [NSJSONSerialization JSONObjectWithData:[message dataUsingEncoding:NSUTF8StringEncoding] options:0 error:&error];
     NSString *type = [info objectForKey:@"type"];
     
-    NSLog(@"Websocket :: didReceiveMessage : %@", message);
+    //NSLog(@"Websocket :: didReceiveMessage : %@", message);
     
     // If hello message
     if ([type isEqualToString:@"hello"]) {
@@ -736,7 +735,7 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
-    NSLog(@"Websocket :: closed : %@", reason);
+    //NSLog(@"Websocket :: closed : %@", reason);
     clientID = 0;
     
     // Push notification
