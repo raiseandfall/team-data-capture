@@ -61,8 +61,8 @@ exports.port = '[your port]';
 
 ### API
 
-We build a little api that allow you to recieve all of the events sent by the os application.
-Code speak more than word:
+We build a little api that allow you to recieve all of the events sent by the os application.  
+Example:
 ```
 var host = window.document.location.host.replace(/:.*/, ''),
 port='9000';
@@ -79,13 +79,15 @@ Here is the list of the events:
 * `welcome`: trigger when the client connect the socket. it recieve the list of app_client connected.
 * `newuser`: trigger when a new app_client connect.
 * `closeuser`: trigger when a app_client disconnect.
-* `closeuser_[id]`: trigger when the app_client with the id=[id] disconnect.
 * `mousemove`: trigger when a app_client move the mouse.
-* `mousemove_[id]`: trigger when the app_client with the id=[id] move the mouse.
 * `click`: trigger when a app_client click.
-* `click_[id]`: trigger when the app_client with the id=[id] click.
 * `keypress`: trigger when a app_client press a key.
-* `keypress_[id]`: trigger when the app_client with the id=[id] press a key.
 * `mousewheel`: trigger when a app_client scroll.
+
+user specific event:
+* `closeuser_[id]`: trigger when the app_client with the id=[id] disconnect.
+* `mousemove_[id]`: trigger when the app_client with the id=[id] move the mouse.
+* `click_[id]`: trigger when the app_client with the id=[id] click.
+* `keypress_[id]`: trigger when the app_client with the id=[id] press a key.
 * `mousewheel_[id]`: trigger when the app_client with the id=[id] scroll.
 
