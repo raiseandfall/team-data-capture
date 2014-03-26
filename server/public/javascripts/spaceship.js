@@ -1,6 +1,8 @@
 'use strict';
 var Spaceship = function(id, ws) {
+
     var type = 'svg';
+
     var two = new Two({
       type: Two.Types[type],
       fullscreen: true,
@@ -16,63 +18,63 @@ var Spaceship = function(id, ws) {
     var mouse = new Two.Vector();
     var drag = 0.33;
     var radius = 50;
-    var speedTrail = 5;
     var nIntervId;
     var trace = true;
     var index = 0;
 
-    //var colorCos = '233, 10, 10';
-    //var colorSin = '255, 255, 70';
     var colorCos = '255, 255, 255';
     var colorSin = '255, 255, 255';
     var radiusTrail = 20;
     var depth = 0.5;
-    var frequence = 100; 
+    var frequence = 200; 
     var twist = 5; 
     var distance = 0.5; 
-    var sizeTrail = 500; 
+    var sizeTrail = 480; 
+    var speedTrail = 5;
 
 
-    /*for(var j = 0; j<18; j++){
-      var degrees = j*10;
-      console.log(j+'0:'+Math.cos(radians));
-    }*/
-
-    var shadow = two.makeCircle(two.width / 2, two.height / 2, radius);
+    /*var shadow = two.makeCircle(two.width / 2, two.height / 2, radius);
     shadow.noStroke().fill = 'rgba(0, 0, 0, 0.2)';
     shadow.offset = new Two.Vector(- radius / 2, radius * 2);
-    shadow.scale = 0.85;
+    shadow.scale = 0.85;*/
 
     var ball = two.makeCircle(two.width / 2, two.height / 2, radius);
     ball.noStroke().fill = 'white';
 
-    for(var i = 0; i<ball.vertices.length; i++){
+    /*for(var i = 0; i<ball.vertices.length; i++){
       var v = ball.vertices[i];
       v.origin = new Two.Vector().copy(v);
-    }
+    }*/
 
     //move the the rubberball with the mouse position
     ws.events.addEventListener(ws.EVENT.MOUSE_MOVE+'_'+id, function(e) {  
       var datajson =  JSON.parse(e.detail);
-      mouse.x = Math.round(datajson.data.pos.x);
-      mouse.y = Math.round(datajson.data.pos.y);
-      shadow.offset.x = 5 * radius * (mouse.x - two.width / 2) / two.width;
-      shadow.offset.y = 5 * radius * (mouse.y - two.height / 2) / two.height;
+
+      mouse.x = Math.round(datajson.data.pos.x)*two.width / datajson.data.screen.width;
+      mouse.y = two.height - Math.round(datajson.data.pos.y)*two.height / datajson.data.screen.height;
+
+      //shadow.offset.x = 5 * radius * (mouse.x - two.width / 2) / two.width;
+      //shadow.offset.y = 5 * radius * (mouse.y - two.height / 2) / two.height;
 
     });
 
     ws.events.addEventListener(ws.EVENT.CLOSE_USER+'_'+id, function(e) {  
+      clearInterval(nIntervId);
       two.clear();
     });
 
     ws.events.addEventListener(ws.EVENT.CLICK+'_'+id, function(e) { 
     });
-    
+
+    /**
+    *
+    */
+
     function addTrailItem(){
       var itemTrailCos = {};
       itemTrailCos.v = new Two.Vector();  
       itemTrailCos.elt = two.makeCircle(mouse.x, mouse.y, radiusTrail);
-      itemTrailCos.elt.noStroke().fill = 'rgba('+colorSin+', 1)';
+      itemTrailCos.elt.noStroke().fill = 'rgba('+colorSin+', 0)';
       itemTrailCos.index = 0;
       itemTrailCos.type = 'cos';
       itemTrailCos.xInit = mouse.x;
@@ -83,7 +85,7 @@ var Spaceship = function(id, ws) {
       var itemTrailSin = {};
       itemTrailSin.v = new Two.Vector();  
       itemTrailSin.elt = two.makeCircle(mouse.x, mouse.y, radiusTrail);
-      itemTrailSin.elt.noStroke().fill = 'rgba('+colorSin+', 1)';
+      itemTrailSin.elt.noStroke().fill = 'rgba('+colorSin+', 0)';
       itemTrailSin.index = 0;
       itemTrailSin.type = 'sin';
       itemTrailSin.xInit = mouse.x;
@@ -101,7 +103,7 @@ var Spaceship = function(id, ws) {
 
       delta.copy(mouse).subSelf(ball.translation);
 
-      for(var i = 0; i<ball.vertices.length; i++){
+      /*for(var i = 0; i<ball.vertices.length; i++){
         var v = ball.vertices[i];
 
         var dist = v.origin.distanceTo(delta);
@@ -118,22 +120,15 @@ var Spaceship = function(id, ws) {
 
         shadow.vertices[i].copy(v);
 
-      }
+      }*/
 
       ball.translation.addSelf(delta);
 
-      shadow.translation.copy(ball.translation);
-      shadow.translation.addSelf(shadow.offset);
+      //shadow.translation.copy(ball.translation);
+      //shadow.translation.addSelf(shadow.offset);
 
-      /*if(aTrail.length && trace){
-        var temp = aTrail[0];
-        var degrees = (temp.index*15)%360;
-        var radians = degrees * (Math.PI/180);
-        var cos = Math.cos(radians);
-        console.log(degrees+':'+cos);
-      }*/
 
-      for(i = 0; i<aTrail.length; i++){
+      for(var i = 0; i<aTrail.length; i++){
         var itemTrail = aTrail[i];
         itemTrail.x -= speedTrail;
 
@@ -163,17 +158,19 @@ var Spaceship = function(id, ws) {
           color = colorSin;
         }
 
-        var percent = 1-(itemTrail.xInit-itemTrail.x)/sizeTrail;
-        itemTrail.elt.scale = percent*itemTrail.z/2;
-        itemTrail.elt.noStroke().fill = 'rgba('+color+', '+percent*(itemTrail.z)+')';
-
-        //itemTrail.elt.translation.addSelf(itemTrail.v);
-        itemTrail.elt.translation.set(itemTrail.x, itemTrail.y);
-        itemTrail.index++;
         if(itemTrail.x <= itemTrail.xInit - sizeTrail){
-          aTrail.splice(i, 1);
-          itemTrail.elt.remove();
-          trace = false;
+          itemTrail.xInit = mouse.x;
+          itemTrail.x = mouse.x;
+          itemTrail.y = mouse.y;
+          itemTrail.index = 0;
+          clearInterval(nIntervId);
+        }else{
+          var percent = 1-(itemTrail.xInit-itemTrail.x)/sizeTrail;
+          itemTrail.elt.scale = percent*itemTrail.z/2;
+          itemTrail.elt.noStroke().fill = 'rgba('+color+', '+percent*(itemTrail.z)+')';
+          itemTrail.elt.translation.set(itemTrail.x, itemTrail.y);
+          
+          itemTrail.index++;
         }
       }
     });
