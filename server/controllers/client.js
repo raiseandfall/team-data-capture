@@ -3,7 +3,7 @@
 var Socket = require('../providers/socket').Socket,
   Session = require('../providers/session').Session,
   Action = require('../providers/action').Action,
-  APP = require('../config.js').APP;
+  APP = require('../constants.js').APP;
 /**
  *  Define the Socket Object.
  */
@@ -20,9 +20,14 @@ Client.prototype.sayHello = function (id) {
   this.send(data);
 };
 
-Client.prototype.welcome = function (data, type_client) {
-  var response;
+Client.prototype.welcome = function (data, type_client, sockets) {
+  var l = sockets.length,
+    ids = '',
+    response, i;
   console.log('welcome');
+
+  this.type = type_client;
+
   switch (type_client) {
   case APP.CLIENT.APP:
     this.mac = data.mac;
@@ -30,7 +35,14 @@ Client.prototype.welcome = function (data, type_client) {
     this.saveSocket();
     break;
   case APP.CLIENT.WEB:
-    response = '{"type":"' + APP.TYPE.WELCOME + '"}';
+    for (i=0; i<l;i++){
+      if(sockets[i]&&sockets[i].type === APP.CLIENT.APP){
+        ids += ids!=='' ? ',' : '';
+        ids += '{ "id":"'+sockets[i].id+'",';
+        ids += ' "username":"'+sockets[i].username+'"}';
+      }
+    }
+    response = '{"type":"' + APP.TYPE.WELCOME + '", "data": ['+ids+']}';
     this.send(response);
     break;
   }

@@ -1,14 +1,16 @@
+'use strict';
+
 var TeamCaptureApp = require('../app').TeamCaptureApp,
     Socket = require('../controllers/sockets').Socket,
     app = new TeamCaptureApp(4000),
     socket = new Socket(),
     events = require('events'),
     idLog = 0,
-    APP = require('../config.js').APP;
+    APP = require('../constants.js').APP;
 
 exports['read ipaddress'] = function (test) {
 		app.initialize();
-    test.equal(app.ipaddress, "192.168.173.103");
+    test.equal(app.ipaddress, '192.168.173.103');
     test.done();
 };
 

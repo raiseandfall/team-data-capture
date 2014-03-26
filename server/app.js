@@ -1,21 +1,17 @@
+'use strict';
+
 var express = require('express'),
     http = require('http'),
     path = require('path'),
-    favicon = require('static-favicon'),
-    logger = require('morgan'),
-    cookieParser = require('cookie-parser'),
-    bodyParser = require('body-parser'),
     mongoose = require('mongoose'),
     routes = require('./routes'),
-    users = require('./routes/user'),
-    app = express(),
     Socket = require('./controllers/sockets').Socket;
 
 
 /**
  *  Define the team capture application.
  */
-var TeamCaptureApp = function(port) {
+var TeamCaptureApp = function(ipaddress, port) {
 
     //  Scope.
     var self = this;
@@ -37,20 +33,20 @@ var TeamCaptureApp = function(port) {
         self.mongodb_username = process.env.OPENSHIFT_MONGODB_DB_USERNAME;
         self.mongodb_password = process.env.OPENSHIFT_MONGODB_DB_PASSWORD;
 
-        if (typeof self.ipaddress === "undefined") {
+        if (typeof self.ipaddress === 'undefined') {
             //  Log errors on OpenShift but continue w/ 127.0.0.1 - this
             //  allows us to run/test the app locally.
-            self.ipaddress = "192.168.173.103";
+            self.ipaddress = ipaddress;
         }
 
-        if (typeof self.mongodb_host === "undefined") {
+        if (typeof self.mongodb_host === 'undefined') {
             //  Log errors on OpenShift but continue w/ 127.0.0.1 - this
             //  allows us to run/test the app locally.
-            self.mongodb = "mongodb://localhost/teamcapture";
-            self.mongodb_db = "teamcapture";
+            self.mongodb = 'mongodb://localhost/teamcapture';
+            self.mongodb_db = 'teamcapture';
         }else{
-            self.mongodb = "mongodb://[user]:[password]@"+self.mongodb_host+":"+self.mongodb_port+"/public";
-            self.mongodb_db = "public";
+            self.mongodb = 'mongodb://[user]:[password]@'+self.mongodb_host+':'+self.mongodb_port+'/public';
+            self.mongodb_db = 'public';
         }
     };
 
@@ -64,7 +60,7 @@ var TeamCaptureApp = function(port) {
      *  @param {string} sig  Signal to terminate on.
      */
     self.terminator = function(sig){
-        if (typeof sig === "string") {
+        if (typeof sig === 'string') {
            console.log('%s: Received %s - terminating sample app ...',
                        Date(Date.now()), sig);
            process.exit(1);
