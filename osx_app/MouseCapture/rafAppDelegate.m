@@ -54,7 +54,7 @@ NSRect firstScreenFrame;
 NSRect secondScreenFrame;
 
 NSString *WEBSOCKET_PROTOCOL = @"ws";
-NSString *WEBSOCKET_HOST = @"192.168.173.123";
+NSString *WEBSOCKET_HOST = @"192.168.173.103";
 NSString *WEBSOCKET_PORT = @"9000";
 
 NSString *LABEL_SHOW_LOGS = @"Show logs";
@@ -85,7 +85,7 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
     // Start recording id enabled
     if (self.isGlobalRecording) {
         [self initCounters];
-        [self startSocket];
+        [self _connectSocket];
     }
     
     [self calculateGlobalResolution];
@@ -316,11 +316,24 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
  *******************/
 
 /**
- * @function        reconnect
- * @description     reconnect web socket
+ * @function        connectSocket
+ * @description     connect to web socket
 **/
-- (void)reconnect:(id)sender {
-    [self _reconnectSocket];
+- (void)connectSocket:(id)sender {
+    [self _connectSocket];
+}
+
+/**
+ * @function        disconnectSocket
+ * @description     disconnect web socket
+**/
+- (void)disconnectSocket:(id)sender {
+    _webSocket.delegate = nil;
+    [_webSocket close];
+    _webSocket = nil;
+
+    [self.btnConnect setEnabled:NO];
+    [self.btnDisconnect setEnabled:YES];
 }
 
 /**
@@ -337,18 +350,10 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
 }
 
 /**
- * @function        startSocket
- * @description     start web socket
+ * @function        _connectSocket
+ * @description     connect to web socket
 **/
-- (void)startSocket {
-    [self _reconnectSocket];
-}
-
-/**
- * @function        _reconnectSocket
- * @description     reconnect to web socket
-**/
-- (void)_reconnectSocket {
+- (void)_connectSocket {
     _webSocket.delegate = nil;
     [_webSocket close];
     
