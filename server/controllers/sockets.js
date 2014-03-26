@@ -2,7 +2,7 @@
 
 var WebSocketServer = require('ws').Server,
   Client = require('./client').Client,
-  APP = require('../config.js').APP;
+  APP = require('../constants.js').APP;
 
 /**
  *  Define the Socket Object.

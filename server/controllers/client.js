@@ -3,7 +3,7 @@
 var Socket = require('../providers/socket').Socket,
   Session = require('../providers/session').Session,
   Action = require('../providers/action').Action,
-  APP = require('../config.js').APP;
+  APP = require('../constants.js').APP;
 /**
  *  Define the Socket Object.
  */

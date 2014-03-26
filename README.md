@@ -15,10 +15,10 @@ An OSX app to retrieve users' input data & use it for something with Node.JS.
 5. .app file will be in `Products/Applications/`
 
 ##### ACCESSIBILITY
-To get the keyboard event to work, you'll need to authorize Xcode ( if dev mode ) or the compiled app to control your computer
-1. Go to System Preferences
-2. Open Security & Privacy section
-3. Add the app or Xcode ( if dev mode ) to the Accessibility list
+To get the keyboard event to work, you'll need to authorize Xcode ( if dev mode ) or the compiled app to control your computer  
+1. Go to System Preferences  
+2. Open Security & Privacy section  
+3. Add the app or Xcode ( if dev mode ) to the Accessibility list  
 
 ### Server
 ```
@@ -40,4 +40,8 @@ The main configuration values are the web socket parameters.
 A Preferences pane is currently in development to allow change of parameters without re-compiling the app.
 
 ### Server
-A Config file will soon be added.
+set your ip address and port in server/config.js
+```
+exports.ipaddress = '[your ipaddress]';
+exports.port = '[your port]';
+```
