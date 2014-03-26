@@ -94,4 +94,4 @@ User specific event:
 * `mousemove_[id]`: trigger when the app_client with the id=[id] move the mouse.
 * `click_[id]`: trigger when the app_client with the id=[id] click.
 * `keypress_[id]`: trigger when the app_client with the id=[id] press a key.
-* `scroll[id]`: trigger when the app_client with the id=[id] scroll.
+* `scroll_[id]`: trigger when the app_client with the id=[id] scroll.
