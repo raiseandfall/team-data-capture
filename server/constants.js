@@ -21,4 +21,4 @@ exports.APP = {
 		MOUSE_WHEEL: 'mousewheel',
 		WORD:	'word'
 	}
-} 
+};

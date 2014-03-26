@@ -7,7 +7,6 @@ var host = window.document.location.host.replace(/:.*/, ''),
 port='9000';
 var ws = new Socket();
 ws.connect(host, port);
-//var ss = new Spaceship();
 
 /**********************************
 *              Events             *
@@ -89,6 +88,7 @@ ws.events.addEventListener(ws.EVENT.NEW_USER, function(e) {
 
 	var id = datajson.data.id; 
 
+	var ss = new Spaceship(id, ws);
 	/** closeuser_[id]
 	* also ws.EVENT.MOUSE_MOVE+'_'+id
 	* Call everytime an action mouse move from the socket [id] is sent from the server
