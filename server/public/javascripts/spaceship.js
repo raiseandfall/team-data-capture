@@ -1,7 +1,7 @@
 'use strict';
 var Spaceship = function(id, ws) {
 
-    var type = 'svg';
+    var type = 'canvas';
 
     var two = new Two({
       type: Two.Types[type],
