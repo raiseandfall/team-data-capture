@@ -1,16 +1,5 @@
 'use strict';
-var Spaceship = function(id, ws) {
-
-    var type = 'svg';
-
-    var two = new Two({
-      type: Two.Types[type],
-      fullscreen: true,
-      autostart: true
-    }).appendTo(document.body);
-
-
-    Two.Resoultion = 32;
+var Spaceship = function(id, ws, two) {
 
     var aTrail = [];
 
@@ -26,7 +15,7 @@ var Spaceship = function(id, ws) {
     var colorSin = '255, 255, 255';
     var radiusTrail = 20;
     var depth = 0.5;
-    var frequence = 200; 
+    var frequence = 240; 
     var twist = 5; 
     var distance = 0.5; 
     var sizeTrail = 480; 
@@ -60,7 +49,7 @@ var Spaceship = function(id, ws) {
 
     ws.events.addEventListener(ws.EVENT.CLOSE_USER+'_'+id, function(e) {  
       clearInterval(nIntervId);
-      two.clear();
+      ball.remove();
     });
 
     ws.events.addEventListener(ws.EVENT.CLICK+'_'+id, function(e) { 
@@ -74,7 +63,7 @@ var Spaceship = function(id, ws) {
       var itemTrailCos = {};
       itemTrailCos.v = new Two.Vector();  
       itemTrailCos.elt = two.makeCircle(mouse.x, mouse.y, radiusTrail);
-      itemTrailCos.elt.noStroke().fill = 'rgba('+colorSin+', 0)';
+      itemTrailCos.elt.noStroke().fill = 'rgba('+colorSin+', 1)';
       itemTrailCos.index = 0;
       itemTrailCos.type = 'cos';
       itemTrailCos.xInit = mouse.x;
@@ -85,7 +74,7 @@ var Spaceship = function(id, ws) {
       var itemTrailSin = {};
       itemTrailSin.v = new Two.Vector();  
       itemTrailSin.elt = two.makeCircle(mouse.x, mouse.y, radiusTrail);
-      itemTrailSin.elt.noStroke().fill = 'rgba('+colorSin+', 0)';
+      itemTrailSin.elt.noStroke().fill = 'rgba('+colorSin+', 1)';
       itemTrailSin.index = 0;
       itemTrailSin.type = 'sin';
       itemTrailSin.xInit = mouse.x;
@@ -167,7 +156,7 @@ var Spaceship = function(id, ws) {
         }else{
           var percent = 1-(itemTrail.xInit-itemTrail.x)/sizeTrail;
           itemTrail.elt.scale = percent*itemTrail.z/2;
-          itemTrail.elt.noStroke().fill = 'rgba('+color+', '+percent*(itemTrail.z)+')';
+          itemTrail.elt.opacity = percent*(itemTrail.z);
           itemTrail.elt.translation.set(itemTrail.x, itemTrail.y);
           
           itemTrail.index++;

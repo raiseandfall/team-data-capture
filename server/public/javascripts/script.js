@@ -8,6 +8,18 @@ port='9000';
 var ws = new Socket();
 ws.connect(host, port);
 
+
+var type = 'canvas';
+
+var two = new Two({
+  type: Two.Types[type],
+  fullscreen: true,
+  autostart: true
+}).appendTo(document.body);
+
+
+Two.Resoultion = 32;
+
 /**********************************
 *              Events             *
 **********************************/
@@ -32,7 +44,7 @@ ws.events.addEventListener(ws.EVENT.WELCOME, function(e) {
 		i;
 	console.log('listener: welcome', l);
 	for(i = 0; i < l; i++){
-		ss = new Spaceship(datajson.data[i].id, ws);
+		ss = new Spaceship(datajson.data[i].id, ws, two);
 	}
 });
 
@@ -96,7 +108,7 @@ ws.events.addEventListener(ws.EVENT.NEW_USER, function(e) {
 	var id = datajson.data.id; 
 	//var username = datajson.data.username; 
 
-	var ss = new Spaceship(id, ws);
+	var ss = new Spaceship(id, ws, two);
 	/** closeuser_[id]
 	* also ws.EVENT.MOUSE_MOVE+'_'+id
 	* Call everytime an action mouse move from the socket [id] is sent from the server
