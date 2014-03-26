@@ -94,6 +94,7 @@ ws.events.addEventListener(ws.EVENT.NEW_USER, function(e) {
 	//console.log('listener: ', ws.EVENT.NEW_USER, datajson.data);
 
 	var id = datajson.data.id; 
+	//var username = datajson.data.username; 
 
 	var ss = new Spaceship(id, ws);
 	/** closeuser_[id]
