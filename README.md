@@ -84,7 +84,7 @@ Here is the list of the events:
 * `keypress`: trigger when a app_client press a key.
 * `mousewheel`: trigger when a app_client scroll.
 
-user specific event:
+User specific event:
 * `closeuser_[id]`: trigger when the app_client with the id=[id] disconnect.
 * `mousemove_[id]`: trigger when the app_client with the id=[id] move the mouse.
 * `click_[id]`: trigger when the app_client with the id=[id] click.
