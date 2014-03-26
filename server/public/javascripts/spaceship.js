@@ -10,10 +10,22 @@ var Spaceship = function(id, ws) {
 
     Two.Resoultion = 32;
 
+    var aTrail = [];
+
     var delta = new Two.Vector();
     var mouse = new Two.Vector();
     var drag = 0.33;
     var radius = 50;
+    var radiusTrail = 20;
+    var speedTrail = 10;
+    var nIntervId;
+    var trace = true;
+    var index = 0;
+
+    /*for(var j = 0; j<18; j++){
+      var degrees = j*10;
+      console.log(j+'0:'+Math.cos(radians));
+    }*/
 
     var shadow = two.makeCircle(two.width / 2, two.height / 2, radius);
     shadow.noStroke().fill = 'rgba(0, 0, 0, 0.2)';
@@ -40,6 +52,24 @@ var Spaceship = function(id, ws) {
     ws.events.addEventListener(ws.EVENT.CLOSE_USER+'_'+id, function(e) {  
       two.clear();
     });
+
+    ws.events.addEventListener(ws.EVENT.CLICK+'_'+id, function(e) { 
+    });
+    
+    function addTrailItem(index){
+      var itemTrail = {};
+      itemTrail.v = new Two.Vector();  
+      itemTrail.elt = two.makeCircle(mouse.x, mouse.y, radiusTrail);
+      itemTrail.elt.noStroke().fill = 'rgba(233, 10, 10, 1)';
+      itemTrail.index = 6;
+      itemTrail.type = (index++)%2;
+      itemTrail.x = mouse.x;
+      itemTrail.y = mouse.y;
+      itemTrail.z = 1;
+      aTrail.push(itemTrail);
+    }
+
+    nIntervId = setInterval(addTrailItem, 200);
 
     two.bind('update', function() {
 
@@ -68,5 +98,51 @@ var Spaceship = function(id, ws) {
 
       shadow.translation.copy(ball.translation);
       shadow.translation.addSelf(shadow.offset);
+
+      /*if(aTrail.length && trace){
+        var temp = aTrail[0];
+        var degrees = (temp.index*15)%360;
+        var radians = degrees * (Math.PI/180);
+        var cos = Math.cos(radians);
+        console.log(degrees+':'+cos);
+      }*/
+
+      for(i = 0; i<aTrail.length; i++){
+        var itemTrail = aTrail[i];
+        itemTrail.x -= speedTrail;
+
+        var degrees = (itemTrail.index*15)%360;
+        var radians = degrees * (Math.PI/180);
+
+        //if(itemTrail.type){
+          itemTrail.y += Math.cos(radians)*10;
+          if(degrees>0&&degrees<=180){
+            itemTrail.z+=0.1;
+          }
+          if(degrees>180&&degrees<=360){
+            itemTrail.z-=0.1;
+          }
+        /*}else{
+          itemTrail.y += Math.sin(radians)*10;
+          if(degrees<90&&degrees>=270){
+            itemTrail.z+=0.1;
+          }
+          if(degrees>=90&&degrees<270){
+            itemTrail.z-=0.1;
+          }
+        }*/
+
+        itemTrail.elt.scale = itemTrail.z/2;
+        itemTrail.elt.noStroke().fill = 'rgba(233, 10, 10, '+itemTrail.z+')';
+
+        //itemTrail.elt.translation.addSelf(itemTrail.v);
+        itemTrail.elt.translation.set(itemTrail.x, itemTrail.y);
+        itemTrail.index++;
+        if(itemTrail.x <= -two.width){
+          aTrail.splice(i, 1);
+          itemTrail.elt.remove();
+          trace = false;
+        }
+      }
     });
 };
