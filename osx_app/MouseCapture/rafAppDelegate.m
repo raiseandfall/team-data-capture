@@ -28,6 +28,7 @@
 @synthesize leftMouseCounterLabel;
 @synthesize isGlobalRecording;
 @synthesize isKeyboardRecording;
+@synthesize isScrollRecording;
 @synthesize isMouseRecording;
 
 @synthesize cursorPositionX;
@@ -42,8 +43,8 @@ NSString *SEPARATORS_KEY_CODES = @"$";
 NSString *currentWord = @"";
 int clientID = 0;
 NSDictionary *ACTION_TYPES;
-BOOL ALLOW_WORDS_TRACKING = FALSE;
-BOOL ALLOW_NOTIFICATIONS = TRUE;
+BOOL ALLOW_WORDS_TRACKING = NO;
+BOOL ALLOW_NOTIFICATIONS = YES;
 
 Notifier *notifier;
 SRWebSocket *_webSocket;
@@ -64,6 +65,8 @@ NSString *LABEL_RECORDING_MOUSE = @"Recording mouse";
 NSString *LABEL_NOT_RECORDING_MOUSE = @"Not recording mouse";
 NSString *LABEL_RECORDING_KEYBOARD = @"Recording keyboard hits";
 NSString *LABEL_NOT_RECORDING_KEYBOARD = @"Not recording keyboard hits";
+NSString *LABEL_RECORDING_SCROLL = @"Recording scroll";
+NSString *LABEL_NOT_RECORDING_SCROLL = @"Not recording scroll";
 NSString *LABEL_START_ALL_RECORDINGS = @"Start all recordings";
 NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
 
@@ -93,7 +96,7 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
                        @"click", @"CLICK",
                        @"keydown", @"KEY_DOWN",
                        @"word", @"WORD",
-                       @"mousewheel", @"MOUSE_WHEEL",
+                       @"scroll", @"SCROLL",
                         nil];
     
     // Check if we are closing the logger window
@@ -171,12 +174,12 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
     float localY = 0;
     
     if ((adjustedX >= firstScreenMinX && adjustedX <= firstScreenMaxX) && (adjustedY >= firstScreenMinY && adjustedY <= firstScreenMaxY)) {
-        NSLog(@"CURSOR ON FIRST SCREEN :: globalPos : %f, %f - localPos : %f, %f", adjustedX, adjustedY, (adjustedX - firstScreenMinX), (adjustedY - firstScreenMinY));
+        //NSLog(@"CURSOR ON FIRST SCREEN :: globalPos : %f, %f - localPos : %f, %f", adjustedX, adjustedY, (adjustedX - firstScreenMinX), (adjustedY - firstScreenMinY));
         currentScreen = firstScreenFrame;
         localX = adjustedX - firstScreenMinX;
         localY = adjustedY - firstScreenMinY;
     } else {
-        NSLog(@"CURSOR ON SECOND SCREEN :: globalPos : %f, %f - localPos : %f, %f", adjustedX, adjustedY, (adjustedX - secondScreenMinX), (adjustedY - secondScreenMinY));
+        //NSLog(@"CURSOR ON SECOND SCREEN :: globalPos : %f, %f - localPos : %f, %f", adjustedX, adjustedY, (adjustedX - secondScreenMinX), (adjustedY - secondScreenMinY));
         currentScreen = secondScreenFrame;
         localX = adjustedX - secondScreenMinX;
         localY = adjustedY - secondScreenMinY;
@@ -251,15 +254,27 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
  * @description     draw menu bar indicators
 **/
 - (void)drawIndicators {
-    self.isGlobalRecording = self.isMouseRecording || self.isKeyboardRecording;
-    
+    self.isGlobalRecording = self.isMouseRecording || self.isKeyboardRecording || self.isScrollRecording;
+
     [[self pauseKeyboardRecordingItem] setTitle:self.isKeyboardRecording ? LABEL_RECORDING_KEYBOARD : LABEL_NOT_RECORDING_KEYBOARD];
     [[self pauseKeyboardRecordingItem] setState:self.isKeyboardRecording];
+    
+    [[self pauseScrollRecordingItem] setTitle:self.isScrollRecording ? LABEL_RECORDING_SCROLL : LABEL_NOT_RECORDING_SCROLL];
+    [[self pauseScrollRecordingItem] setState:self.isScrollRecording];
     
     [[self pauseMouseRecordingItem] setTitle:self.isMouseRecording ? LABEL_RECORDING_MOUSE : LABEL_NOT_RECORDING_MOUSE];
     [[self pauseMouseRecordingItem] setState:self.isMouseRecording];
 
     [[self pauseAllRecordingsItem] setTitle:self.isGlobalRecording ? LABEL_STOP_ALL_RECORDINGS : LABEL_START_ALL_RECORDINGS];
+}
+
+/**
+ * @function        toggleScrollRecording
+ * @description     toggle scroll recording
+ **/
+- (IBAction)toggleScrollRecording:(id)sender {
+    self.isScrollRecording = !self.isScrollRecording;
+    [self drawIndicators];
 }
 
 /**
@@ -358,6 +373,7 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
     self.isGlobalRecording = NO;
     self.isKeyboardRecording = NO;
     self.isMouseRecording = NO;
+    self.isScrollRecording = NO;
     [NSEvent removeMonitor:monitorUserInputs];
     
     [self initCounters];
@@ -376,11 +392,12 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
     self.isGlobalRecording = YES;
     self.isKeyboardRecording = YES;
     self.isMouseRecording = YES;
+    self.isScrollRecording = YES;
     
     NSLog(@"startRecording");
     
     // Fire everytime cursor move
-    NSUInteger eventMasks = NSMouseMovedMask | NSLeftMouseDownMask | NSKeyDownMask;
+    NSUInteger eventMasks = NSMouseMovedMask | NSLeftMouseDownMask | NSKeyDownMask | NSScrollWheelMask;
     
     monitorUserInputs = [NSEvent addGlobalMonitorForEventsMatchingMask:eventMasks handler:^(NSEvent *incomingEvent) {
         switch ([incomingEvent type]) {
@@ -398,7 +415,7 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
                                          [NSNumber numberWithFloat:[incomingEvent deltaY]], @"y",
                                          nil];
                 
-                    NSMutableDictionary *keyData = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                    NSMutableDictionary *moveData = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                                     [localPosition objectForKey:@"position"], @"pos",
                                                     delta, @"delta",
                                                     [localPosition objectForKey:@"screen"], @"screen",
@@ -409,7 +426,7 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
                     self.cursorPositionX = [NSNumber numberWithFloat:location.x];
                     self.cursorPositionY = [NSNumber numberWithFloat:location.y];
                 
-                    [self reportToSocket:@"MOUSE_MOVE" :keyData];
+                    [self reportToSocket:@"MOUSE_MOVE" :moveData];
                 }
                 break;
             }
@@ -474,6 +491,29 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
                 break;
             }
                 
+            // Scroll wheel ( X & Y )
+            case 22:
+            {
+                if ([self isScrollRecording]) {
+                    float deltaX = [incomingEvent deltaX];
+                    float deltaY = [incomingEvent deltaY];
+                    
+                    // Let's not send scroll if null
+                    if (deltaX != 0 || deltaY != 0) {
+                        NSDictionary *delta = [NSDictionary dictionaryWithObjectsAndKeys:
+                                               [NSNumber numberWithFloat:[incomingEvent deltaX]], @"x",
+                                               [NSNumber numberWithFloat:[incomingEvent deltaY]], @"y",
+                                               nil];
+                    
+                        NSMutableDictionary *scrollData = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                                           delta, @"delta",
+                                                           nil];
+                    
+                        [self reportToSocket:@"SCROLL" :scrollData];
+                    }
+                }
+            }
+                
             default:
             {
                 break;
@@ -498,9 +538,9 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
     NSRange range = [_char rangeOfCharacterFromSet:charSet];
     
     if (range.location != NSNotFound) {
-        return TRUE;
+        return YES;
     } else {
-        return FALSE;
+        return NO;
     }
 }
 
@@ -519,19 +559,19 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
     
     // If return key
     if (_iKeyCode == 36) {
-        return TRUE;
+        return YES;
     }
     
     if (range.location != NSNotFound) {
-        return TRUE;
+        return YES;
     } else {
         charSet = [NSCharacterSet characterSetWithCharactersInString:SEPARATORS_KEY_CODES];
         range = [_sKeyCode rangeOfCharacterFromSet:charSet];
         
         if (range.location != NSNotFound) {
-            return TRUE;
+            return YES;
         } else {
-            return FALSE;
+            return NO;
         }
     }
 }
@@ -647,7 +687,7 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
 #pragma mark - SRWebSocketDelegate
 
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket {
-    NSLog(@"Websocket :: Connected");
+    //NSLog(@"Websocket :: Connected");
     [socketStatus setStringValue:@"Websocket Connected!"];
     
     [[self serverStatusItem] setTitle:LABEL_SERVER_UP];
@@ -655,14 +695,14 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error {
-    NSLog(@"WebSocket :: Failed With Error %@", error);
+    //NSLog(@"WebSocket :: Failed With Error %@", error);
     
     [socketStatus setStringValue:@"WebSocket Connection Failed! (see logs)"];
     _webSocket = nil;
     
     // Push notification
     if (ALLOW_NOTIFICATIONS) {
-        [notifier push:@"Connection to WebSocket failed" :@"The connection to the WebSocket failed. Please retry." :TRUE :nil];
+        [notifier push:@"Connection to WebSocket failed" :@"The connection to the WebSocket failed. Please retry." :YES :nil];
     }
     
     [[self serverStatusItem] setTitle:LABEL_SERVER_DOWN];
@@ -674,7 +714,7 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
     NSDictionary* info = [NSJSONSerialization JSONObjectWithData:[message dataUsingEncoding:NSUTF8StringEncoding] options:0 error:&error];
     NSString *type = [info objectForKey:@"type"];
     
-    NSLog(@"Websocket :: didReceiveMessage : %@", message);
+    //NSLog(@"Websocket :: didReceiveMessage : %@", message);
     
     // If hello message
     if ([type isEqualToString:@"hello"]) {
@@ -695,12 +735,12 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
-    NSLog(@"Websocket :: closed : %@", reason);
+    //NSLog(@"Websocket :: closed : %@", reason);
     clientID = 0;
     
     // Push notification
     if (ALLOW_NOTIFICATIONS) {
-        [notifier push:@"WebSocket just closed" :@"The WebSocket just closed, the app lost connection. Please retry." :TRUE :nil];
+        [notifier push:@"WebSocket just closed" :@"The WebSocket just closed, the app lost connection. Please retry." :YES :nil];
     }
     
     [socketStatus setStringValue:@"Websocket Connection Closed! (see logs)"];
