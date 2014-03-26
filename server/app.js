@@ -16,7 +16,7 @@ var TeamCaptureApp = function(ipaddress, port) {
     //  Scope.
     var self = this;
 
-
+    console.log('ipaddress',ipaddress,port);
     /*  ================================================================  */
     /*  Helper functions.                                                 */
     /*  ================================================================  */

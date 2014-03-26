@@ -16,43 +16,38 @@ var Spaceship = function(id, ws) {
     var mouse = new Two.Vector();
     var drag = 0.33;
     var radius = 50;
-    var radiusTrail = 20;
-    var speedTrail = 10;
+    var speedTrail = 5;
     var nIntervId;
     var trace = true;
     var index = 0;
 
-    /*for(var j = 0; j<18; j++){
-      var degrees = j*10;
-      console.log(j+'0:'+Math.cos(radians));
-    }*/
-
-    var shadow = two.makeCircle(two.width / 2, two.height / 2, radius);
-    shadow.noStroke().fill = 'rgba(0, 0, 0, 0.2)';
-    shadow.offset = new Two.Vector(- radius / 2, radius * 2);
-    shadow.scale = 0.85;
-
-    /*var ball = two.makeCircle(two.width / 2, two.height / 2, radius);
-    ball.noStroke().fill = 'white';*/
+    var colorCos = '255, 255, 255';
+    var colorSin = '255, 255, 255';
+    var radiusTrail = 20;
+    var depth = 0.5;
+    var frequence = 100;
+    var twist = 5;
+    var distance = 0.5;
+    var sizeTrail = 500;
+    var i = 0;
 
     var xmlns = 'http://www.w3.org/2000/svg';
     var svgUfo = document.createElementNS(xmlns, 'svg');
     svgUfo.innerHTML = '<path fill="#FFFFFF" stroke="#000000" stroke-miterlimit="10" d="M248.523,130c0,0-16.417,22.479-27.523,49.5c-12.93,31.459-20.608,68.755-16.973,78.933c6.757,18.919,92.406,10.433,89.189,0c1.064-2.704,0.899-9.63-0.38-18.933c-2.193-15.945-7.663-38.876-15.836-59.5C266.255,152.886,248.523,130,248.523,130z"/><path fill="#FFFFFF" stroke="#000000" stroke-miterlimit="10" d="M226.833,167.549c2.688-5.936,43.033-3.462,43.914-1.495C272.803,170.64,279.5,186,277,180c-2.442-5.86-52.708-2.76-55.087-2.516C221.913,177.484,221.655,178.979,226.833,167.549z"/><ellipse fill="#FFFFFF" stroke="#000000" stroke-miterlimit="10" cx="247.5" cy="212.75" rx="23" ry="22"/><ellipse fill="#458BA3" stroke="#000000" stroke-miterlimit="10" cx="247.5" cy="212.75" rx="20.209" ry="18.459"/><polygon fill="#C90000" stroke="#000000" stroke-miterlimit="10" points="241,253.75 258.5,253.75 249.75,305.75 "/><polygon fill="#C90000" stroke="#000000" stroke-miterlimit="10" points="204.124,239.5 195,293.5 209.585,264.099 "/><polygon fill="#C90000" stroke="#000000" stroke-miterlimit="10" points="306,296.25 306,296.25 292.964,240.472 289.006,263.013"/><polygon fill="#515151" stroke="#000000" stroke-miterlimit="10" points="219.252,267.462 216.833,272.5 233.833,275.5 233.833,269.661 "/><polygon fill="#515151" stroke="#000000" stroke-miterlimit="10" points="265.382,268.361 263.5,273.834 280.5,269.661 277.551,266.5 "/><line fill="none" stroke="#000000" stroke-miterlimit="10" x1="253.5" y1="202.125" x2="235.125" y2="210.75"/><line fill="none" stroke="#000000" stroke-miterlimit="10" x1="254.5" y1="207.125" x2="236.125" y2="215.75"/>';
-    var ball = two.interpret(svgUfo).center();
-    ball.rotation = Math.PI/2;
+    var ufo = two.interpret(svgUfo).center();
+    ufo.rotation = Math.PI/2;
+    ufo.translation.y = -111;
+    ufo.translation.x = 176;
 
-    for(var i = 0; i<ball.vertices.length; i++){
-      var v = ball.vertices[i];
-      v.origin = new Two.Vector().copy(v);
-    }
+    var ball = two.makeGroup();
+    ball.add(ufo);
 
     //move the the rubberball with the mouse position
     ws.events.addEventListener(ws.EVENT.MOUSE_MOVE+'_'+id, function(e) {
       var datajson =  JSON.parse(e.detail);
       mouse.x = Math.round(datajson.data.pos.x);
       mouse.y = Math.round(datajson.data.pos.y);
-      shadow.offset.x = 5 * radius * (mouse.x - two.width / 2) / two.width;
-      shadow.offset.y = 5 * radius * (mouse.y - two.height / 2) / two.height;
+
     });
 
     ws.events.addEventListener(ws.EVENT.CLOSE_USER+'_'+id, function(e) {
@@ -62,89 +57,78 @@ var Spaceship = function(id, ws) {
     ws.events.addEventListener(ws.EVENT.CLICK+'_'+id, function(e) {
     });
 
-    function addTrailItem(index){
-      var itemTrail = {};
-      itemTrail.v = new Two.Vector();
-      itemTrail.elt = two.makeCircle(mouse.x, mouse.y, radiusTrail);
-      itemTrail.elt.noStroke().fill = 'rgba(233, 10, 10, 1)';
-      itemTrail.index = 6;
-      itemTrail.type = (index++)%2;
-      itemTrail.x = mouse.x;
-      itemTrail.y = mouse.y;
-      itemTrail.z = 1;
-      aTrail.push(itemTrail);
+    function addTrailItem(){
+      var itemTrailCos = {};
+      itemTrailCos.v = new Two.Vector();
+      itemTrailCos.elt = two.makeCircle(mouse.x, mouse.y, radiusTrail);
+      itemTrailCos.elt.noStroke().fill = 'rgba('+colorSin+', 1)';
+      itemTrailCos.index = 0;
+      itemTrailCos.type = 'cos';
+      itemTrailCos.xInit = mouse.x;
+      itemTrailCos.x = mouse.x;
+      itemTrailCos.y = mouse.y;
+      itemTrailCos.z = 1;
+
+      var itemTrailSin = {};
+      itemTrailSin.v = new Two.Vector();
+      itemTrailSin.elt = two.makeCircle(mouse.x, mouse.y, radiusTrail);
+      itemTrailSin.elt.noStroke().fill = 'rgba('+colorSin+', 1)';
+      itemTrailSin.index = 0;
+      itemTrailSin.type = 'sin';
+      itemTrailSin.xInit = mouse.x;
+      itemTrailSin.x = mouse.x;
+      itemTrailSin.y = mouse.y;
+      itemTrailSin.z = 1;
+
+      aTrail.push(itemTrailCos);
+      aTrail.push(itemTrailSin);
     }
 
-    nIntervId = setInterval(addTrailItem, 200);
+    nIntervId = setInterval(addTrailItem, frequence);
 
     two.bind('update', function() {
 
       delta.copy(mouse).subSelf(ball.translation);
 
-      for(var i = 0; i<ball.vertices.length; i++){
-        var v = ball.vertices[i];
-
-        var dist = v.origin.distanceTo(delta);
-        var pct = dist / radius;
-
-        var x = delta.x * pct;
-        var y = delta.y * pct;
-
-        var destx = v.origin.x - x;
-        var desty = v.origin.y - y;
-
-        v.x += (destx - v.x) * drag;
-        v.y += (desty - v.y) * drag;
-
-        shadow.vertices[i].copy(v);
-
-      }
-
       ball.translation.addSelf(delta);
-
-      shadow.translation.copy(ball.translation);
-      shadow.translation.addSelf(shadow.offset);
-
-      /*if(aTrail.length && trace){
-        var temp = aTrail[0];
-        var degrees = (temp.index*15)%360;
-        var radians = degrees * (Math.PI/180);
-        var cos = Math.cos(radians);
-        console.log(degrees+':'+cos);
-      }*/
 
       for(i = 0; i<aTrail.length; i++){
         var itemTrail = aTrail[i];
         itemTrail.x -= speedTrail;
 
-        var degrees = (itemTrail.index*15)%360;
+        var degrees = (itemTrail.index*twist)%360;
         var radians = degrees * (Math.PI/180);
+        var color = '';
 
-        //if(itemTrail.type){
-          itemTrail.y += Math.cos(radians)*10;
+        if(itemTrail.type === 'cos'){
+          itemTrail.y += Math.cos(radians)*twist*distance;
           if(degrees>0&&degrees<=180){
-            itemTrail.z+=0.1;
+            itemTrail.z = degrees/180 + depth;
           }
           if(degrees>180&&degrees<=360){
-            itemTrail.z-=0.1;
-          }
-        /*}else{
-          itemTrail.y += Math.sin(radians)*10;
-          if(degrees<90&&degrees>=270){
-            itemTrail.z+=0.1;
-          }
-          if(degrees>=90&&degrees<270){
-            itemTrail.z-=0.1;
-          }
-        }*/
 
-        itemTrail.elt.scale = itemTrail.z/2;
-        itemTrail.elt.noStroke().fill = 'rgba(233, 10, 10, '+itemTrail.z+')';
+            itemTrail.z = 1 - (degrees-180)/180 + depth;
+          }
+          color = colorCos;
+        }
+        if(itemTrail.type === 'sin'){
+          itemTrail.y += -Math.cos(radians)*twist*distance;
+          if(degrees>0&&degrees<=180){
+            itemTrail.z = 1 - degrees/180 + depth;
+          }
+          if(degrees>180&&degrees<=360){
+            itemTrail.z = (degrees-180)/180 + depth;
+          }
+          color = colorSin;
+        }
 
-        //itemTrail.elt.translation.addSelf(itemTrail.v);
+        var percent = 1-(itemTrail.xInit-itemTrail.x)/sizeTrail;
+        itemTrail.elt.scale = percent*itemTrail.z/2;
+        itemTrail.elt.noStroke().fill = 'rgba('+color+', '+percent*(itemTrail.z)+')';
+
         itemTrail.elt.translation.set(itemTrail.x, itemTrail.y);
         itemTrail.index++;
-        if(itemTrail.x <= -two.width){
+        if(itemTrail.x <= itemTrail.xInit - sizeTrail){
           aTrail.splice(i, 1);
           itemTrail.elt.remove();
           trace = false;
