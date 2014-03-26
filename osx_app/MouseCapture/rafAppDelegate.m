@@ -1,6 +1,6 @@
 //
 //  rafAppDelegate.m
-//  MouseCapture
+//  Team Data Capture
 //
 //  Created by Matthieu COLLE on 2/22/14.
 //  Copyright (c) 2014 Matthieu COLLE. All rights reserved.
@@ -8,6 +8,7 @@
 
 #import "rafAppDelegate.h"
 #import "MacAddress.h"
+#import "Notifier.h"
 
 // SocketRocket
 #import <SocketRocket/SRWebSocket.h>
@@ -43,9 +44,12 @@ NSString *currentWord = @"";
 int clientID = 0;
 NSDictionary *ACTION_TYPES;
 BOOL ALLOW_WORDS_TRACKING = FALSE;
+BOOL ALLOW_NOTIFICATIONS = TRUE;
+
+Notifier *notifier;
 
 NSString *WEBSOCKET_PROTOCOL = @"ws";
-NSString *WEBSOCKET_HOST = @"192.168.173.103";
+NSString *WEBSOCKET_HOST = @"192.168.173.123";
 NSString *WEBSOCKET_PORT = @"9000";
 
 NSString *LABEL_SHOW_LOGS = @"Show logs";
@@ -68,6 +72,8 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
     self.isGlobalRecording = YES;
     self.logDateFormatter = [[NSDateFormatter alloc] init];
     [self.logDateFormatter setTimeStyle:NSDateFormatterMediumStyle];
+    
+    notifier = [[Notifier alloc] init];
     
     // Start recording id enabled
     if (self.isGlobalRecording) {
@@ -131,6 +137,10 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
     [[self statusItem] setHighlightMode:YES];
 }
 
+- (IBAction)fakeAction:(id)sender {
+    NSLog(@"%@ %s", self, __func__);
+}
+
 /**
  * @function        toggleAllRecordings
  * @description     toggle all recordings
@@ -158,7 +168,6 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
     [[self pauseMouseRecordingItem] setState:self.isMouseRecording];
 
     [[self pauseAllRecordingsItem] setTitle:self.isGlobalRecording ? LABEL_STOP_ALL_RECORDINGS : LABEL_START_ALL_RECORDINGS];
-    [[self pauseAllRecordingsItem] setState:self.isGlobalRecording];
 }
 
 /**
@@ -517,9 +526,6 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
     
     if (jsonData) {
         requestJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        
-        //NSLog(@"reportToSocket :: %@", requestJson);
-        
         [_webSocket send:requestJson];
     }
 }
@@ -563,10 +569,15 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error {
-    NSLog(@"Websocket :: Failed With Error %@", error);
+    NSLog(@"WebSocket :: Failed With Error %@", error);
     
-    [socketStatus setStringValue:@"Websocket Connection Failed! (see logs)"];
+    [socketStatus setStringValue:@"WebSocket Connection Failed! (see logs)"];
     _webSocket = nil;
+    
+    // Push notification
+    if (ALLOW_NOTIFICATIONS) {
+        [notifier push:@"Connection to WebSocket failed" :@"The connection to the WebSocket failed. Please retry." :TRUE :nil];
+    }
     
     [[self serverStatusItem] setTitle:LABEL_SERVER_DOWN];
     [[self serverStatusItem] setState:NSOffState];
@@ -600,6 +611,12 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
     NSLog(@"Websocket :: closed : %@", reason);
     clientID = 0;
+    
+    // Push notification
+    if (ALLOW_NOTIFICATIONS) {
+        [notifier push:@"WebSocket just closed" :@"The WebSocket just closed, the app lost connection. Please retry." :TRUE :nil];
+    }
+    
     [socketStatus setStringValue:@"Websocket Connection Closed! (see logs)"];
     [self logMessageToLogView:reason];
     [[self serverStatusItem] setState:NSOffState];
