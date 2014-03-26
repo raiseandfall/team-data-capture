@@ -35,7 +35,7 @@ exports['start server'] = function (test) {
 
 exports['connect socket'] = function (test) {
 	var ev = new events.EventEmitter();
-  
+
   socket.initialize(app.server);
 
 	console.log = function (str) {
