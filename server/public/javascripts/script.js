@@ -7,19 +7,29 @@ var host = window.document.location.host.replace(/:.*/, ''),
 port='9000';
 var ws = new Socket();
 ws.connect(host, port);
-var ss = new Spaceship();
+//var ss = new Spaceship();
 
 /**********************************
 *              Events             *
 **********************************/
 /**
-* onMessage
+* onmessage
 * also ws.EVENT.MESSAGE
 * Call everytime the socket recieve a message from the server
 */
 ws.events.addEventListener(ws.EVENT.MESSAGE, function(e) {	
-	//console.log('listener: onMessage', e);
+	//console.log('listener: onmessage', e);
 });
+
+/**
+* welcome
+* also ws.EVENT.WELCOME
+* Call everytime the socket recieve a message from the server
+*/
+ws.events.addEventListener(ws.EVENT.WELCOME, function(e) {	
+	//console.log('listener: welcome', e);
+});
+
 
 /**
 * mousemove

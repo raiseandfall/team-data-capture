@@ -35,7 +35,8 @@ var Socket = (function(WebSocket){
 				this.send(response);
 				break;
 			case EVENT.WELCOME:
-				console.log(data);
+					ev = new CustomEvent(EVENT.WELCOME, {'detail':data.data});
+					this.dispatchEvent(ev);
 				break;
 			case EVENT.NEW_USER:
 					ev = new CustomEvent(EVENT.NEW_USER, {'detail':data.data});
