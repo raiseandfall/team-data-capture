@@ -16,11 +16,22 @@ var Spaceship = function(id, ws) {
     var mouse = new Two.Vector();
     var drag = 0.33;
     var radius = 50;
-    var radiusTrail = 20;
-    var speedTrail = 10;
+    var speedTrail = 5;
     var nIntervId;
     var trace = true;
     var index = 0;
+
+    //var colorCos = '233, 10, 10';
+    //var colorSin = '255, 255, 70';
+    var colorCos = '255, 255, 255';
+    var colorSin = '255, 255, 255';
+    var radiusTrail = 20;
+    var depth = 0.5;
+    var frequence = 100; 
+    var twist = 5; 
+    var distance = 0.5; 
+    var sizeTrail = 500; 
+
 
     /*for(var j = 0; j<18; j++){
       var degrees = j*10;
@@ -47,6 +58,7 @@ var Spaceship = function(id, ws) {
       mouse.y = Math.round(datajson.data.pos.y);
       shadow.offset.x = 5 * radius * (mouse.x - two.width / 2) / two.width;
       shadow.offset.y = 5 * radius * (mouse.y - two.height / 2) / two.height;
+
     });
 
     ws.events.addEventListener(ws.EVENT.CLOSE_USER+'_'+id, function(e) {  
@@ -56,20 +68,34 @@ var Spaceship = function(id, ws) {
     ws.events.addEventListener(ws.EVENT.CLICK+'_'+id, function(e) { 
     });
     
-    function addTrailItem(index){
-      var itemTrail = {};
-      itemTrail.v = new Two.Vector();  
-      itemTrail.elt = two.makeCircle(mouse.x, mouse.y, radiusTrail);
-      itemTrail.elt.noStroke().fill = 'rgba(233, 10, 10, 1)';
-      itemTrail.index = 6;
-      itemTrail.type = (index++)%2;
-      itemTrail.x = mouse.x;
-      itemTrail.y = mouse.y;
-      itemTrail.z = 1;
-      aTrail.push(itemTrail);
+    function addTrailItem(){
+      var itemTrailCos = {};
+      itemTrailCos.v = new Two.Vector();  
+      itemTrailCos.elt = two.makeCircle(mouse.x, mouse.y, radiusTrail);
+      itemTrailCos.elt.noStroke().fill = 'rgba('+colorSin+', 1)';
+      itemTrailCos.index = 0;
+      itemTrailCos.type = 'cos';
+      itemTrailCos.xInit = mouse.x;
+      itemTrailCos.x = mouse.x;
+      itemTrailCos.y = mouse.y;
+      itemTrailCos.z = 1;
+
+      var itemTrailSin = {};
+      itemTrailSin.v = new Two.Vector();  
+      itemTrailSin.elt = two.makeCircle(mouse.x, mouse.y, radiusTrail);
+      itemTrailSin.elt.noStroke().fill = 'rgba('+colorSin+', 1)';
+      itemTrailSin.index = 0;
+      itemTrailSin.type = 'sin';
+      itemTrailSin.xInit = mouse.x;
+      itemTrailSin.x = mouse.x;
+      itemTrailSin.y = mouse.y;
+      itemTrailSin.z = 1;
+
+      aTrail.push(itemTrailCos);
+      aTrail.push(itemTrailSin);
     }
 
-    nIntervId = setInterval(addTrailItem, 200);
+    nIntervId = setInterval(addTrailItem, frequence);
 
     two.bind('update', function() {
 
@@ -111,34 +137,40 @@ var Spaceship = function(id, ws) {
         var itemTrail = aTrail[i];
         itemTrail.x -= speedTrail;
 
-        var degrees = (itemTrail.index*15)%360;
+        var degrees = (itemTrail.index*twist)%360;
         var radians = degrees * (Math.PI/180);
+        var color = '';
 
-        //if(itemTrail.type){
-          itemTrail.y += Math.cos(radians)*10;
+        if(itemTrail.type === 'cos'){
+          itemTrail.y += Math.cos(radians)*twist*distance;
           if(degrees>0&&degrees<=180){
-            itemTrail.z+=0.1;
+            itemTrail.z = degrees/180 + depth;
           }
           if(degrees>180&&degrees<=360){
-            itemTrail.z-=0.1;
-          }
-        /*}else{
-          itemTrail.y += Math.sin(radians)*10;
-          if(degrees<90&&degrees>=270){
-            itemTrail.z+=0.1;
-          }
-          if(degrees>=90&&degrees<270){
-            itemTrail.z-=0.1;
-          }
-        }*/
 
-        itemTrail.elt.scale = itemTrail.z/2;
-        itemTrail.elt.noStroke().fill = 'rgba(233, 10, 10, '+itemTrail.z+')';
+            itemTrail.z = 1 - (degrees-180)/180 + depth;
+          }
+          color = colorCos;
+        }
+        if(itemTrail.type === 'sin'){
+          itemTrail.y += -Math.cos(radians)*twist*distance;
+          if(degrees>0&&degrees<=180){
+            itemTrail.z = 1 - degrees/180 + depth;
+          }
+          if(degrees>180&&degrees<=360){
+            itemTrail.z = (degrees-180)/180 + depth;
+          }
+          color = colorSin;
+        }
+
+        var percent = 1-(itemTrail.xInit-itemTrail.x)/sizeTrail;
+        itemTrail.elt.scale = percent*itemTrail.z/2;
+        itemTrail.elt.noStroke().fill = 'rgba('+color+', '+percent*(itemTrail.z)+')';
 
         //itemTrail.elt.translation.addSelf(itemTrail.v);
         itemTrail.elt.translation.set(itemTrail.x, itemTrail.y);
         itemTrail.index++;
-        if(itemTrail.x <= -two.width){
+        if(itemTrail.x <= itemTrail.xInit - sizeTrail){
           aTrail.splice(i, 1);
           itemTrail.elt.remove();
           trace = false;
