@@ -52,6 +52,8 @@ static id monitorUserInputs;
 
 - (void)drawIndicators;
 
+- (void)calculateGlobalResolution;
+- (NSDictionary*)getLocalPosition       :(CGPoint)loc;
 - (IBAction)fakeAction                  :(id)sender;
 - (IBAction)toggleAllRecordings         :(id)sender;
 - (IBAction)toggleKeyboardRecording     :(id)sender;

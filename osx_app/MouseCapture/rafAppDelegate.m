@@ -36,7 +36,6 @@
 @synthesize leftMouseCounter;
 
 // VARIABLES
-SRWebSocket *_webSocket;
 NSString *TRACKED_CHARS = @"abcdefghijklmnopqrstuvwxyz0123456789";
 NSString *SEPARATORS = @" []{}|,.;:<>/?!@#$%^&*()_-+=~`'\"\\";
 NSString *SEPARATORS_KEY_CODES = @"$";
@@ -47,9 +46,14 @@ BOOL ALLOW_WORDS_TRACKING = FALSE;
 BOOL ALLOW_NOTIFICATIONS = TRUE;
 
 Notifier *notifier;
+SRWebSocket *_webSocket;
+float thresholdX = 0;
+float thresholdY = 0;
+NSRect firstScreenFrame;
+NSRect secondScreenFrame;
 
 NSString *WEBSOCKET_PROTOCOL = @"ws";
-NSString *WEBSOCKET_HOST = @"192.168.173.103";
+NSString *WEBSOCKET_HOST = @"192.168.173.123";
 NSString *WEBSOCKET_PORT = @"9000";
 
 NSString *LABEL_SHOW_LOGS = @"Show logs";
@@ -81,6 +85,8 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
         [self startSocket];
     }
     
+    [self calculateGlobalResolution];
+    
     // ACTION TYPES
     ACTION_TYPES = [NSDictionary dictionaryWithObjectsAndKeys:
                        @"mousemove", @"MOUSE_MOVE",
@@ -96,12 +102,98 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
                                                object:[self window]];
 }
 
+
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication {
     return NO;
 }
 
 - (BOOL)validateToolbarItem:(NSToolbarItem *)theItem {
     return YES;
+}
+
+/**
+ * @function        calculateGlobalResolution
+ * @description     calculate global resolution ( handles multiple screens )
+**/
+- (void)calculateGlobalResolution {
+    NSRect screenFrame;
+    NSArray *screenArray = [NSScreen screens];
+    NSUInteger screenCount = [screenArray count];
+    float totalWidth = 0;
+    float totalHeight = 0;
+    
+    // Main screen
+    NSScreen *screen = [screenArray objectAtIndex:0];
+    screenFrame = [screen frame];
+    totalWidth = screenFrame.size.width;
+    totalHeight = screenFrame.size.height;
+    firstScreenFrame = screenFrame;
+    
+    // If more than one screen
+    if (screenCount > 1) {
+        NSScreen *screen = [screenArray objectAtIndex:1];
+        screenFrame = [screen frame];
+        float screenX = screenFrame.origin.x;
+        float screenY = screenFrame.origin.y;
+        secondScreenFrame = screenFrame;
+        
+        if (screenX < 0) {
+            thresholdX = fabsf(screenX);
+        }
+        if (screenY < 0) {
+            thresholdY = fabsf(screenY);
+        }
+    }
+}
+
+/**
+ * @function        getLocalPosition
+ * @description     get local position
+**/
+- (NSDictionary*)getLocalPosition :(CGPoint)loc {
+    // Add threshold to get global absolute position
+    float adjustedX = loc.x + thresholdX;
+    float adjustedY = loc.y + thresholdY;
+    
+    // Get current screen from absolute position
+    float firstScreenMinX = firstScreenFrame.origin.x + thresholdX;
+    float firstScreenMaxX = firstScreenMinX + firstScreenFrame.size.width;
+    float firstScreenMinY = firstScreenFrame.origin.y + thresholdY;
+    float firstScreenMaxY = firstScreenMinY + firstScreenFrame.size.height;
+    
+    float secondScreenMinX = secondScreenFrame.origin.x + thresholdX;
+    float secondScreenMinY = secondScreenFrame.origin.y + thresholdY;
+    
+    NSDictionary *localPosition;
+    NSDictionary *currentResolution;
+    CGRect currentScreen;
+    float localX = 0;
+    float localY = 0;
+    
+    if ((adjustedX >= firstScreenMinX && adjustedX <= firstScreenMaxX) && (adjustedY >= firstScreenMinY && adjustedY <= firstScreenMaxY)) {
+        NSLog(@"CURSOR ON FIRST SCREEN :: globalPos : %f, %f - localPos : %f, %f", adjustedX, adjustedY, (adjustedX - firstScreenMinX), (adjustedY - firstScreenMinY));
+        currentScreen = firstScreenFrame;
+        localX = adjustedX - firstScreenMinX;
+        localY = adjustedY - firstScreenMinY;
+    } else {
+        NSLog(@"CURSOR ON SECOND SCREEN :: globalPos : %f, %f - localPos : %f, %f", adjustedX, adjustedY, (adjustedX - secondScreenMinX), (adjustedY - secondScreenMinY));
+        currentScreen = secondScreenFrame;
+        localX = adjustedX - secondScreenMinX;
+        localY = adjustedY - secondScreenMinY;
+    }
+    
+    currentResolution = [NSDictionary dictionaryWithObjectsAndKeys:
+                         [NSNumber numberWithFloat:currentScreen.size.width], @"width",
+                         [NSNumber numberWithFloat:currentScreen.size.height], @"height",
+                         nil];
+    localPosition = [NSDictionary dictionaryWithObjectsAndKeys:
+                     [NSNumber numberWithFloat:localX], @"x",
+                     [NSNumber numberWithFloat:localY], @"y",
+                     nil];
+    
+    return [NSDictionary dictionaryWithObjectsAndKeys:
+            currentResolution, @"screen",
+            localPosition, @"position", nil];
 }
 
 /**
@@ -291,7 +383,6 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
     NSUInteger eventMasks = NSMouseMovedMask | NSLeftMouseDownMask | NSKeyDownMask;
     
     monitorUserInputs = [NSEvent addGlobalMonitorForEventsMatchingMask:eventMasks handler:^(NSEvent *incomingEvent) {
-        NSLog(@"isKeyboardRecording %lu", [incomingEvent type]);
         switch ([incomingEvent type]) {
             // Mouse move
             case 5:
@@ -299,10 +390,8 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
                 if ([self isMouseRecording]) {
                     CGPoint location = [NSEvent mouseLocation];
                     
-                    NSDictionary *pos = [NSDictionary dictionaryWithObjectsAndKeys:
-                                         [NSNumber numberWithFloat:location.x], @"x",
-                                         [NSNumber numberWithFloat:location.y], @"y",
-                                         nil];
+                    // Get local window position
+                    NSDictionary *localPosition = [self getLocalPosition:location];
                     
                     NSDictionary *delta = [NSDictionary dictionaryWithObjectsAndKeys:
                                          [NSNumber numberWithFloat:[incomingEvent deltaX]], @"x",
@@ -310,8 +399,9 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
                                          nil];
                 
                     NSMutableDictionary *keyData = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                                    pos, @"pos",
+                                                    [localPosition objectForKey:@"position"], @"pos",
                                                     delta, @"delta",
+                                                    [localPosition objectForKey:@"screen"], @"screen",
                                                     nil];
                 
                     self.cursorDeltaX = [NSNumber numberWithFloat:[incomingEvent deltaX]];
@@ -321,7 +411,6 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
                 
                     [self reportToSocket:@"MOUSE_MOVE" :keyData];
                 }
-                    
                 break;
             }
                 
@@ -342,7 +431,6 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
             case 10:
             {
                 if ([self isKeyboardRecording]) {
-                    
                     // Character just hit
                     NSString *_char = [[incomingEvent characters] lowercaseString];
                     int keyCode = (int)[incomingEvent keyCode];
@@ -383,7 +471,6 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
                         }
                     }
                 }
-                
                 break;
             }
                 
@@ -523,7 +610,6 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:finalDataObject
                                                        options:NSJSONWritingPrettyPrinted
                                                          error:&error];
-    
     if (jsonData) {
         requestJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
         [_webSocket send:requestJson];
