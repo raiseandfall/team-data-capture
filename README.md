@@ -2,6 +2,11 @@ Team Data Capture
 =================
 
 An OSX app to retrieve users' input data & use it for something with Node.JS.
+So far the app is tracking :
+- scroll
+- left click
+- mouse move
+- key hits
 
 ## Installation
 
@@ -69,7 +74,7 @@ port='9000';
 var ws = new Socket();
 ws.connect(host, port);
 
-ws.events.addEventListener(`onmessage`, function(e) {	
+ws.events.addEventListener(`onmessage`, function(e) {
 	console.log('listener: onmessage', e);
 });
 ```
@@ -82,12 +87,11 @@ Here is the list of the events:
 * `mousemove`: trigger when a app_client move the mouse.
 * `click`: trigger when a app_client click.
 * `keypress`: trigger when a app_client press a key.
-* `mousewheel`: trigger when a app_client scroll.
+* `scroll`: trigger when a app_client scroll.
 
 User specific event:
 * `closeuser_[id]`: trigger when the app_client with the id=[id] disconnect.
 * `mousemove_[id]`: trigger when the app_client with the id=[id] move the mouse.
 * `click_[id]`: trigger when the app_client with the id=[id] click.
 * `keypress_[id]`: trigger when the app_client with the id=[id] press a key.
-* `mousewheel_[id]`: trigger when the app_client with the id=[id] scroll.
-
+* `scroll_[id]`: trigger when the app_client with the id=[id] scroll.

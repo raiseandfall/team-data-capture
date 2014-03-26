@@ -1,14 +1,6 @@
 'use strict';
-var Spaceship = function(id, ws) {
-    var type = 'svg';
-    var two = new Two({
-      type: Two.Types[type],
-      fullscreen: true,
-      autostart: true
-    }).appendTo(document.body);
 
-
-    Two.Resolution = 32;
+var Spaceship = function(id, ws, two) {
 
     var aTrail = [];
 
@@ -16,7 +8,6 @@ var Spaceship = function(id, ws) {
     var mouse = new Two.Vector();
     var drag = 0.33;
     var radius = 50;
-    var speedTrail = 5;
     var nIntervId;
     var trace = true;
     var index = 0;
@@ -25,10 +16,11 @@ var Spaceship = function(id, ws) {
     var colorSin = '255, 255, 255';
     var radiusTrail = 20;
     var depth = 0.5;
-    var frequence = 100;
+    var frequence = 240;
     var twist = 5;
     var distance = 0.5;
-    var sizeTrail = 500;
+    var sizeTrail = 480;
+    var speedTrail = 5;
     var i = 0;
 
     var xmlns = 'http://www.w3.org/2000/svg';
@@ -45,17 +37,21 @@ var Spaceship = function(id, ws) {
     //move the the rubberball with the mouse position
     ws.events.addEventListener(ws.EVENT.MOUSE_MOVE+'_'+id, function(e) {
       var datajson =  JSON.parse(e.detail);
-      mouse.x = Math.round(datajson.data.pos.x);
-      mouse.y = Math.round(datajson.data.pos.y);
-
+      mouse.x = Math.round(datajson.data.pos.x)*two.width / datajson.data.screen.width;
+      mouse.y = two.height - Math.round(datajson.data.pos.y)*two.height / datajson.data.screen.height;
     });
 
     ws.events.addEventListener(ws.EVENT.CLOSE_USER+'_'+id, function(e) {
-      two.clear();
+      clearInterval(nIntervId);
+      ball.remove();
     });
 
     ws.events.addEventListener(ws.EVENT.CLICK+'_'+id, function(e) {
     });
+
+    /**
+    *
+    */
 
     function addTrailItem(){
       var itemTrailCos = {};
@@ -128,10 +124,20 @@ var Spaceship = function(id, ws) {
 
         itemTrail.elt.translation.set(itemTrail.x, itemTrail.y);
         itemTrail.index++;
+        
         if(itemTrail.x <= itemTrail.xInit - sizeTrail){
-          aTrail.splice(i, 1);
-          itemTrail.elt.remove();
-          trace = false;
+          itemTrail.xInit = mouse.x;
+          itemTrail.x = mouse.x;
+          itemTrail.y = mouse.y;
+          itemTrail.index = 0;
+          clearInterval(nIntervId);
+        }else{
+          var percent = 1-(itemTrail.xInit-itemTrail.x)/sizeTrail;
+          itemTrail.elt.scale = percent*itemTrail.z/2;
+          itemTrail.elt.opacity = percent*(itemTrail.z);
+          itemTrail.elt.translation.set(itemTrail.x, itemTrail.y);
+
+          itemTrail.index++;
         }
       }
     });

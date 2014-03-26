@@ -20,6 +20,8 @@ static id monitorUserInputs;
 @property (weak) IBOutlet NSToolbarItem *toolbarRecordButton;
 @property (weak) IBOutlet NSToolbarItem *toolbarStopButton;
 
+@property (weak) IBOutlet NSButton *btnConnect;
+@property (weak) IBOutlet NSButton *btnDisconnect;
 @property (weak) IBOutlet NSTextField *socketStatus;
 @property (weak) IBOutlet NSTextField *cursorDeltaXLabel;
 @property (weak) IBOutlet NSTextField *cursorDeltaYLabel;
@@ -40,9 +42,11 @@ static id monitorUserInputs;
 @property (readwrite) BOOL isGlobalRecording;
 @property (readwrite) BOOL isKeyboardRecording;
 @property (readwrite) BOOL isMouseRecording;
+@property (readwrite) BOOL isScrollRecording;
 
 @property (readwrite) IBOutlet NSMenu *menu;
 @property (readwrite) IBOutlet NSMenuItem *pauseAllRecordingsItem;
+@property (readwrite) IBOutlet NSMenuItem *pauseScrollRecordingItem;
 @property (readwrite) IBOutlet NSMenuItem *pauseMouseRecordingItem;
 @property (readwrite) IBOutlet NSMenuItem *pauseKeyboardRecordingItem;
 @property (readwrite) IBOutlet NSMenuItem *serverStatusItem;
@@ -58,13 +62,15 @@ static id monitorUserInputs;
 - (IBAction)toggleAllRecordings         :(id)sender;
 - (IBAction)toggleKeyboardRecording     :(id)sender;
 - (IBAction)toggleMouseRecording        :(id)sender;
+- (IBAction)toggleScrollRecording       :(id)sender;
 
-- (IBAction)reconnect               :(id)sender;
-- (IBAction)clearButtonPressed      :(id)sender;
-- (IBAction)recordButtonPressed     :(id)sender;
-- (IBAction)stopButtonPressed       :(id)sender;
-- (BOOL)isCharacterTracked          :(NSString*)_char;
-- (BOOL)isSeparator                 :(NSString*)_char   :(NSString*)keyCode;
-- (void)logMessageToLogView         :(NSString*)message;
+- (IBAction)connectSocket               :(id)sender;
+- (IBAction)disconnectSocket            :(id)sender;
+- (IBAction)clearButtonPressed          :(id)sender;
+- (IBAction)recordButtonPressed         :(id)sender;
+- (IBAction)stopButtonPressed           :(id)sender;
+- (BOOL)isCharacterTracked              :(NSString*)_char;
+- (BOOL)isSeparator                     :(NSString*)_char   :(NSString*)keyCode;
+- (void)logMessageToLogView             :(NSString*)message;
 
 @end
