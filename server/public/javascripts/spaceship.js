@@ -3,6 +3,7 @@
 var Spaceship = function(id, ws, two) {
 
     var aTrail = [];
+    var aLaser = [];
 
     var delta = new Two.Vector();
     var mouse = new Two.Vector();
@@ -17,15 +18,13 @@ var Spaceship = function(id, ws, two) {
     var colorSin = '255, 255, 255';
     var radiusTrail = 20;
     var depth = 0.5;
-    var frequence = 240;
+    var frequence = 200;
     var twist = 5;
     var distance = 0.5;
     var sizeTrail = 480;
     var speedTrail = 5;
     var i = 0;
-
     var ufo = new Ship(two);
-
     var ball = two.makeGroup();
     ball.add(ufo.getShip());
 
@@ -40,11 +39,21 @@ var Spaceship = function(id, ws, two) {
 
     ws.events.addEventListener(ws.EVENT.CLOSE_USER+'_'+id, function(e) {
       clearInterval(nIntervId);
+      for(i = 0; i<aTrail.length; i++){
+        aTrail[i].elt.remove();
+      }
+      aTrail = [];
       ball.remove();
     });
 
     ws.events.addEventListener(ws.EVENT.CLICK+'_'+id, function(e) {
-      console.log('CLICK');
+      var laser = {};
+      laser.elt = two.makeRectangle(mouse.x+200, mouse.y, 20, 2);
+      laser.elt.noStroke().fill = '#FFDC99';
+      laser.xInit = mouse.x;
+      laser.x = mouse.x+200;
+      laser.y = mouse.y;
+      aLaser.push(laser);
     });
 
     ws.events.addEventListener(ws.EVENT.MOUSE_WHEEL+'_'+id, function(e) {
@@ -59,7 +68,6 @@ var Spaceship = function(id, ws, two) {
 
     function addTrailItem(){
       var itemTrailCos = {};
-      itemTrailCos.v = new Two.Vector();
       itemTrailCos.elt = two.makeCircle(mouse.x, mouse.y, radiusTrail);
       itemTrailCos.elt.noStroke().fill = 'rgba('+colorSin+', 1)';
       itemTrailCos.index = 0;
@@ -70,7 +78,6 @@ var Spaceship = function(id, ws, two) {
       itemTrailCos.z = 1;
 
       var itemTrailSin = {};
-      itemTrailSin.v = new Two.Vector();
       itemTrailSin.elt = two.makeCircle(mouse.x, mouse.y, radiusTrail);
       itemTrailSin.elt.noStroke().fill = 'rgba('+colorSin+', 1)';
       itemTrailSin.index = 0;
@@ -93,6 +100,16 @@ var Spaceship = function(id, ws, two) {
       ball.translation.addSelf(delta);
 
       ball.rotation = Math.PI/2*(rotation.y/100);
+      for(i = 0; i<aLaser.length; i++){
+        var laser = aLaser[i];
+        laser.x += speedLaser;
+        laser.elt.translation.set(laser.x, laser.y);
+
+        if(laser.x > two.width){
+          laser.elt.remove();
+          aLaser.splice(i,0);
+        }
+      }
 
       for(i = 0; i<aTrail.length; i++){
         var itemTrail = aTrail[i];
