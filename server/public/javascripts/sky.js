@@ -7,15 +7,16 @@ var Sky = function(two){
     y,
     nbStar,
     radius,
-    aGroup = [];
+    aGroup = [],
+    nbLayer = 2;
 
 
-    for (var i = 0; i < 4; i++){
+    for (var i = 0; i < 2*nbLayer; i++){
 	    group = {};
 	    group.elt = two.makeGroup();
 	    group.speed = Math.ceil((i+1)/2);
 	    group.xGroup = two.width*(i%2);
-			nbStar = Math.round(Math.random()*20)+20;
+			nbStar = Math.round(Math.random()*20)+10;
 	    for (var j = 0 ; j < nbStar; j++){
 				x = Math.round(Math.random()*two.width);
 				y = Math.round(Math.random()*two.height);
@@ -34,7 +35,7 @@ var Sky = function(two){
 		console.log(aGroup[3]);
 
     two.bind('update', function() {
-	    for (var i = 0; i < 4; i++){
+	    for (var i = 0; i < 2*nbLayer; i++){
 				var groupItem = aGroup[i];
 				groupItem.xGroup = groupItem.xGroup - groupItem.speed; 
 				console.log(i+':'+groupItem.xGroup);
