@@ -84,9 +84,11 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
     
     // Version number
     NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
-    NSString *version = [info objectForKey:@"CFBundleShortVersionString"];
-    NSNumber *buildNumber = [info objectForKey:@"CFBundleVersion"];
-    [[self versionNumber] setStringValue:[NSString stringWithFormat:@"v%@ b%@", version, buildNumber]];
+    NSString *versioning = [NSString stringWithFormat:@"v%@ b%@",
+                            [info objectForKey:@"CFBundleShortVersionString"],
+                            [info objectForKey:@"CFBundleVersion"]];
+    [[self versionNumber] setStringValue:versioning];
+    [[self versionNumberItem] setTitle:[NSString stringWithFormat:@"JVST 2014 - %@", versioning]];
     
     // Notifier
     notifier = [[Notifier alloc] init];

@@ -943,6 +943,7 @@
                 <outlet property="toolbarRecordButton" destination="nX3-HP-ZmN" id="kQB-he-sPe"/>
                 <outlet property="toolbarStopButton" destination="ciH-ij-Vi3" id="Mbg-sn-Uj1"/>
                 <outlet property="versionNumber" destination="erg-ol-faB" id="nxq-Nh-Ss0"/>
+                <outlet property="versionNumberItem" destination="Dsf-0o-HEq" id="n1D-Og-fWO"/>
                 <outlet property="window" destination="371" id="532"/>
             </connections>
         </customObject>
@@ -950,6 +951,10 @@
         <userDefaultsController representsSharedInstance="YES" id="yJF-dN-bmB"/>
         <menu id="t0p-o8-Lw1">
             <items>
+                <menuItem title="JVST 2014 - v0.1 b1" enabled="NO" id="Dsf-0o-HEq">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="7in-ha-grY"/>
                 <menuItem title="Not recording keyboard hits" onStateImage="NSStatusAvailable" offStateImage="NSStatusUnavailable" mixedStateImage="NSStatusNone" id="Jfd-4c-K9p">
                     <attributedString key="attributedTitle"/>
                     <modifierMask key="keyEquivalentModifierMask"/>

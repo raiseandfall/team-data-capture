@@ -46,6 +46,7 @@ static id monitorUserInputs;
 @property (readwrite) BOOL isScrollRecording;
 
 @property (readwrite) IBOutlet NSMenu *menu;
+@property (readwrite) IBOutlet NSMenuItem *versionNumberItem;
 @property (readwrite) IBOutlet NSMenuItem *pauseAllRecordingsItem;
 @property (readwrite) IBOutlet NSMenuItem *pauseScrollRecordingItem;
 @property (readwrite) IBOutlet NSMenuItem *pauseMouseRecordingItem;
