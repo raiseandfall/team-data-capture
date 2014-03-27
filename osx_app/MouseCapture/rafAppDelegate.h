@@ -19,9 +19,10 @@ static id monitorUserInputs;
 @property (weak) IBOutlet NSToolbarItem *toolbarClearButton;
 @property (weak) IBOutlet NSToolbarItem *toolbarRecordButton;
 @property (weak) IBOutlet NSToolbarItem *toolbarStopButton;
+@property (weak) IBOutlet NSToolbarItem *toolbarConnectButton;
+@property (weak) IBOutlet NSToolbarItem *toolbarDisconnectButton;
 
-@property (weak) IBOutlet NSButton *btnConnect;
-@property (weak) IBOutlet NSButton *btnDisconnect;
+@property (weak) IBOutlet NSTextField *versionNumber;
 @property (weak) IBOutlet NSTextField *socketStatus;
 @property (weak) IBOutlet NSTextField *cursorDeltaXLabel;
 @property (weak) IBOutlet NSTextField *cursorDeltaYLabel;
@@ -45,6 +46,7 @@ static id monitorUserInputs;
 @property (readwrite) BOOL isScrollRecording;
 
 @property (readwrite) IBOutlet NSMenu *menu;
+@property (readwrite) IBOutlet NSMenuItem *versionNumberItem;
 @property (readwrite) IBOutlet NSMenuItem *pauseAllRecordingsItem;
 @property (readwrite) IBOutlet NSMenuItem *pauseScrollRecordingItem;
 @property (readwrite) IBOutlet NSMenuItem *pauseMouseRecordingItem;
