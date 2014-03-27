@@ -19,9 +19,10 @@ static id monitorUserInputs;
 @property (weak) IBOutlet NSToolbarItem *toolbarClearButton;
 @property (weak) IBOutlet NSToolbarItem *toolbarRecordButton;
 @property (weak) IBOutlet NSToolbarItem *toolbarStopButton;
+@property (weak) IBOutlet NSToolbarItem *toolbarConnectButton;
+@property (weak) IBOutlet NSToolbarItem *toolbarDisconnectButton;
 
-@property (weak) IBOutlet NSButton *btnConnect;
-@property (weak) IBOutlet NSButton *btnDisconnect;
+@property (weak) IBOutlet NSTextField *versionNumber;
 @property (weak) IBOutlet NSTextField *socketStatus;
 @property (weak) IBOutlet NSTextField *cursorDeltaXLabel;
 @property (weak) IBOutlet NSTextField *cursorDeltaYLabel;

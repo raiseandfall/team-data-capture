@@ -19,6 +19,8 @@
 @synthesize toolbarClearButton;
 @synthesize toolbarRecordButton;
 @synthesize toolbarStopButton;
+@synthesize toolbarConnectButton;
+@synthesize toolbarDisconnectButton;
 @synthesize socketStatus;
 @synthesize cursorPosXLabel;
 @synthesize cursorPosYLabel;
@@ -54,7 +56,7 @@ NSRect firstScreenFrame;
 NSRect secondScreenFrame;
 
 NSString *WEBSOCKET_PROTOCOL = @"ws";
-NSString *WEBSOCKET_HOST = @"192.168.173.116";
+NSString *WEBSOCKET_HOST = @"192.168.173.123";
 NSString *WEBSOCKET_PORT = @"9000";
 
 NSString *LABEL_SHOW_LOGS = @"Show logs";
@@ -80,6 +82,13 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
     self.logDateFormatter = [[NSDateFormatter alloc] init];
     [self.logDateFormatter setTimeStyle:NSDateFormatterMediumStyle];
     
+    // Version number
+    NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
+    NSString *version = [info objectForKey:@"CFBundleShortVersionString"];
+    NSNumber *buildNumber = [info objectForKey:@"CFBundleVersion"];
+    [[self versionNumber] setStringValue:[NSString stringWithFormat:@"v%@ b%@", version, buildNumber]];
+    
+    // Notifier
     notifier = [[Notifier alloc] init];
     
     // Start recording id enabled
@@ -88,6 +97,7 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
         [self _connectSocket];
     }
     
+    // Calculate global resolution
     [self calculateGlobalResolution];
     
     // ACTION TYPES
@@ -321,6 +331,9 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
 **/
 - (void)connectSocket:(id)sender {
     [self _connectSocket];
+    
+    [toolbarConnectButton setEnabled:NO];
+    [toolbarDisconnectButton setEnabled:YES];
 }
 
 /**
@@ -332,8 +345,8 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
     [_webSocket close];
     _webSocket = nil;
 
-    [self.btnConnect setEnabled:NO];
-    [self.btnDisconnect setEnabled:YES];
+    [toolbarConnectButton setEnabled:YES];
+    [toolbarDisconnectButton setEnabled:NO];
 }
 
 /**

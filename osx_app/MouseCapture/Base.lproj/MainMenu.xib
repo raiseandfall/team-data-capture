@@ -650,7 +650,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="335" y="390" width="673" height="433"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1058"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1028"/>
             <view key="contentView" id="372">
                 <rect key="frame" x="0.0" y="0.0" width="673" height="433"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -769,7 +769,7 @@
                         </connections>
                     </textField>
                     <imageView misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Eq7-fO-hvZ">
-                        <rect key="frame" x="535" y="346" width="138" height="108"/>
+                        <rect key="frame" x="543" y="346" width="118" height="108"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="138" id="Zd4-8h-zOE"/>
@@ -828,28 +828,15 @@
                             <binding destination="494" name="value" keyPath="cursorDeltaY" id="Rwy-jH-7zV"/>
                         </connections>
                     </textField>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9RU-Ia-rHy">
-                        <rect key="frame" x="522" y="335" width="137" height="32"/>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="erg-ol-faB">
+                        <rect key="frame" x="521" y="346" width="134" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="Connect server" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="Imu-2Z-0ww">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="connectSocket:" target="494" id="OcK-yh-M7A"/>
-                        </connections>
-                    </button>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="66d-cQ-7ZJ">
-                        <rect key="frame" x="508" y="303" width="151" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="Disconnect server" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="2tc-h8-ef9">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="disconnectSocket:" target="494" id="XYq-Hz-aX2"/>
-                        </connections>
-                    </button>
+                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="v0.1 b1" id="iI3-wC-V7M">
+                            <font key="font" size="14" name="LucidaGrande-Bold"/>
+                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
                 </subviews>
                 <constraints>
                     <constraint firstItem="eYo-Dh-Zrh" firstAttribute="top" secondItem="372" secondAttribute="top" constant="20" id="0sy-dK-SUB"/>
@@ -867,7 +854,6 @@
                     <constraint firstItem="mfx-d6-PUi" firstAttribute="leading" secondItem="372" secondAttribute="leading" constant="20" id="MuY-Mb-U7E"/>
                     <constraint firstItem="592-C6-fT3" firstAttribute="top" secondItem="mfx-d6-PUi" secondAttribute="bottom" constant="8" id="PnQ-ui-tty"/>
                     <constraint firstItem="avs-XK-9Ls" firstAttribute="top" secondItem="372" secondAttribute="top" constant="165" id="SOM-Wc-eTq"/>
-                    <constraint firstAttribute="trailing" secondItem="Eq7-fO-hvZ" secondAttribute="trailing" constant="17" id="THS-Ud-eNg"/>
                     <constraint firstItem="Joh-E1-6OW" firstAttribute="top" secondItem="4Bn-vp-Cxu" secondAttribute="bottom" constant="8" id="Ukk-pP-0QY"/>
                     <constraint firstItem="mfx-d6-PUi" firstAttribute="top" secondItem="372" secondAttribute="top" constant="20" id="VCG-3w-278"/>
                     <constraint firstItem="Rpj-Q4-ITc" firstAttribute="top" secondItem="IQG-95-6pD" secondAttribute="bottom" constant="8" id="XGn-LY-zTV"/>
@@ -878,6 +864,7 @@
                     <constraint firstItem="6Aq-SS-mvT" firstAttribute="leading" secondItem="592-C6-fT3" secondAttribute="trailing" constant="8" id="cpk-Vr-AJQ"/>
                     <constraint firstAttribute="trailing" secondItem="avs-XK-9Ls" secondAttribute="trailing" constant="20" symbolic="YES" id="gYg-Hb-5dj"/>
                     <constraint firstItem="4En-Cx-ZRA" firstAttribute="top" secondItem="nKC-lG-Wm4" secondAttribute="bottom" constant="8" id="iuy-vt-7MF"/>
+                    <constraint firstAttribute="trailing" secondItem="Eq7-fO-hvZ" secondAttribute="trailing" constant="12" id="izQ-RP-YmP"/>
                     <constraint firstItem="Rpj-Q4-ITc" firstAttribute="leading" secondItem="Joh-E1-6OW" secondAttribute="trailing" constant="8" id="uoR-Ck-Ggb"/>
                     <constraint firstItem="yL9-xq-Ffa" firstAttribute="leading" secondItem="mfx-d6-PUi" secondAttribute="trailing" constant="8" id="xuA-Tf-WLi"/>
                 </constraints>
@@ -907,10 +894,25 @@
                             <action selector="recordButtonPressed:" target="494" id="uSi-Mq-1Vx"/>
                         </connections>
                     </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="867B97E5-32F6-4292-82CD-695A11BB0014" label="Connect Socket" paletteLabel="Connect Socket" tag="-1" image="connect_websocket" id="j1e-xA-QmE">
+                        <nil key="toolTip"/>
+                        <connections>
+                            <action selector="connectSocket:" target="494" id="r7c-Tm-krL"/>
+                        </connections>
+                    </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="62000EDA-A296-4362-8466-08FC14987340" label="Disconnect Socket" paletteLabel="Disconnect Socket" tag="-1" image="disconnect_ws" id="Auy-1i-gJ1">
+                        <nil key="toolTip"/>
+                        <connections>
+                            <action selector="disconnectSocket:" target="494" id="Qbs-5V-cUh"/>
+                        </connections>
+                    </toolbarItem>
                 </allowedToolbarItems>
                 <defaultToolbarItems>
                     <toolbarItem reference="nX3-HP-ZmN"/>
                     <toolbarItem reference="ciH-ij-Vi3"/>
+                    <toolbarItem reference="GlE-WW-sTu"/>
+                    <toolbarItem reference="j1e-xA-QmE"/>
+                    <toolbarItem reference="Auy-1i-gJ1"/>
                     <toolbarItem reference="GlE-WW-sTu"/>
                     <toolbarItem reference="cSK-Jw-jHQ"/>
                 </defaultToolbarItems>
@@ -918,8 +920,6 @@
         </window>
         <customObject id="494" customClass="rafAppDelegate">
             <connections>
-                <outlet property="btnConnectToServer" destination="9RU-Ia-rHy" id="B1d-Uy-69D"/>
-                <outlet property="btnDisconnect" destination="66d-cQ-7ZJ" id="iMU-uD-4y6"/>
                 <outlet property="cursorDeltaXLabel" destination="IQG-95-6pD" id="Qz4-0W-oId"/>
                 <outlet property="cursorDeltaYLabel" destination="Rpj-Q4-ITc" id="o48-nB-Ui5"/>
                 <outlet property="cursorPosXLabel" destination="nKC-lG-Wm4" id="9kV-3S-VnP"/>
@@ -938,8 +938,11 @@
                 <outlet property="showPreferencesItem" destination="AzF-vF-Qlu" id="EdC-Gv-p3h"/>
                 <outlet property="socketStatus" destination="mcm-DL-X0c" id="pYp-4i-QAX"/>
                 <outlet property="toolbarClearButton" destination="cSK-Jw-jHQ" id="hMu-JJ-Exh"/>
+                <outlet property="toolbarConnectButton" destination="j1e-xA-QmE" id="EA2-hM-8MJ"/>
+                <outlet property="toolbarDisconnectButton" destination="Auy-1i-gJ1" id="Sjf-R5-fEW"/>
                 <outlet property="toolbarRecordButton" destination="nX3-HP-ZmN" id="kQB-he-sPe"/>
                 <outlet property="toolbarStopButton" destination="ciH-ij-Vi3" id="Mbg-sn-Uj1"/>
+                <outlet property="versionNumber" destination="erg-ol-faB" id="nxq-Nh-Ss0"/>
                 <outlet property="window" destination="371" id="532"/>
             </connections>
         </customObject>
@@ -1010,7 +1013,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="196" y="207" width="388" height="319"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1058"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1028"/>
             <view key="contentView" id="TG9-hW-pRf">
                 <rect key="frame" x="0.0" y="0.0" width="388" height="319"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -1022,6 +1025,8 @@
         <image name="NSStatusNone" width="16" height="16"/>
         <image name="NSStatusUnavailable" width="16" height="16"/>
         <image name="Record-Pressed-icon" width="128" height="128"/>
+        <image name="connect_websocket" width="128" height="128"/>
+        <image name="disconnect_ws" width="128" height="128"/>
         <image name="editclear" width="128" height="128"/>
         <image name="jvst_logo_blueOnTransparent" width="418" height="418"/>
         <image name="player_pause" width="128" height="128"/>

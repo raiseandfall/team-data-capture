@@ -30,6 +30,8 @@
 		8F6A2FF518E2535F00CB0BD2 /* Notifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F6A2FF418E2535F00CB0BD2 /* Notifier.m */; };
 		8F70515E18C92DCB0065BEB9 /* SocketRocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F70515618C92AFB0065BEB9 /* SocketRocket.framework */; };
 		8F70516418C931220065BEB9 /* SocketRocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8F70515618C92AFB0065BEB9 /* SocketRocket.framework */; };
+		8F926F3C18E3C37600D91EDD /* connect_websocket.png in Resources */ = {isa = PBXBuildFile; fileRef = 8F926F3A18E3C37600D91EDD /* connect_websocket.png */; };
+		8F926F3D18E3C37600D91EDD /* disconnect_ws.png in Resources */ = {isa = PBXBuildFile; fileRef = 8F926F3B18E3C37600D91EDD /* disconnect_ws.png */; };
 		8FB8507218BAB229007D2A07 /* editclear.png in Resources */ = {isa = PBXBuildFile; fileRef = 8FB8507118BAB229007D2A07 /* editclear.png */; };
 		8FF17D8818DCE93B00E953AE /* MacAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = 8FF17D8718DCE93B00E953AE /* MacAddress.m */; };
 /* End PBXBuildFile section */
@@ -124,6 +126,8 @@
 		8F6A2FF318E2535F00CB0BD2 /* Notifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Notifier.h; sourceTree = "<group>"; };
 		8F6A2FF418E2535F00CB0BD2 /* Notifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Notifier.m; sourceTree = "<group>"; };
 		8F70514C18C92AFA0065BEB9 /* SocketRocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SocketRocket.xcodeproj; path = ../SocketRocket/SocketRocket.xcodeproj; sourceTree = "<group>"; };
+		8F926F3A18E3C37600D91EDD /* connect_websocket.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = connect_websocket.png; sourceTree = "<group>"; };
+		8F926F3B18E3C37600D91EDD /* disconnect_ws.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = disconnect_ws.png; sourceTree = "<group>"; };
 		8FB8507118BAB229007D2A07 /* editclear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = editclear.png; sourceTree = "<group>"; };
 		8FF17D8718DCE93B00E953AE /* MacAddress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MacAddress.m; sourceTree = "<group>"; };
 		8FF17D8918DCE94A00E953AE /* MacAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MacAddress.h; sourceTree = "<group>"; };
@@ -154,6 +158,8 @@
 		8F1C993618B948F40003C83C = {
 			isa = PBXGroup;
 			children = (
+				8F926F3A18E3C37600D91EDD /* connect_websocket.png */,
+				8F926F3B18E3C37600D91EDD /* disconnect_ws.png */,
 				8FB8507118BAB229007D2A07 /* editclear.png */,
 				8F0DC14818DB8E660055F53B /* jvst_logo_128.png */,
 				8F0DC14618DB8E660055F53B /* jvst_logo_16.png */,
@@ -381,8 +387,10 @@
 				8F0DC14C18DB8E660055F53B /* jvst_logo_32.png in Resources */,
 				8F22B69818BAD53A0099DA47 /* Record-Pressed-icon.png in Resources */,
 				8F0DC14F18DB8E660055F53B /* jvst_logo_512.png in Resources */,
+				8F926F3D18E3C37600D91EDD /* disconnect_ws.png in Resources */,
 				8F1C995B18B948F40003C83C /* Images.xcassets in Resources */,
 				8F22B69618BAD48D0099DA47 /* player_play.png in Resources */,
+				8F926F3C18E3C37600D91EDD /* connect_websocket.png in Resources */,
 				8F22B69218BACEF20099DA47 /* jvst_logo_blueOnTransparent.png in Resources */,
 				8F1C995318B948F40003C83C /* Credits.rtf in Resources */,
 				8F0DC14E18DB8E660055F53B /* jvst_logo_256.png in Resources */,
