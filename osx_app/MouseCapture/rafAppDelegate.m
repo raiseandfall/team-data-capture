@@ -72,6 +72,8 @@ NSString *LABEL_NOT_RECORDING_SCROLL = @"Not recording scroll";
 NSString *LABEL_START_ALL_RECORDINGS = @"Start all recordings";
 NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
 
+NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
+
 /**
  * @function        applicationDidFinishLaunching
  * @description     called when app finished launching
@@ -88,7 +90,7 @@ NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
                             [info objectForKey:@"CFBundleShortVersionString"],
                             [info objectForKey:@"CFBundleVersion"]];
     [[self versionNumber] setStringValue:versioning];
-    [[self versionNumberItem] setTitle:[NSString stringWithFormat:@"JVST 2014 - %@", versioning]];
+    [[self versionNumberItem] setTitle:[NSString stringWithFormat:@"%@ - %@", COPYRIGHT_TXT, versioning]];
     
     // Notifier
     notifier = [[Notifier alloc] init];
