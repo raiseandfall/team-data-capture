@@ -17,6 +17,7 @@ var two = new Two({
   autostart: true
 }).appendTo(document.body);
 
+var sky = new Sky(two);
 
 Two.Resoultion = 32;
 

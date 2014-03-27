@@ -17,6 +17,7 @@
     "Socket" : true,
     "Spaceship" : true,
     "console" : true,
-    "Two" : true 
+    "Two" : true,
+    "Sky" : true 
   }
 }
