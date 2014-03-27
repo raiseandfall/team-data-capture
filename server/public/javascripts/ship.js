@@ -1,5 +1,7 @@
 'use strict';
 var Ship = function(two){
+  var self = this;
+  this.wheeling = true;
 
   var ufo1 = {'svg':'<path fill="#FFFFFF" stroke="#000000" stroke-miterlimit="10" d="M248.523,130c0,0-16.417,22.479-27.523,49.5c-12.93,31.459-20.608,68.755-16.973,78.933c6.757,18.919,92.406,10.433,89.189,0c1.064-2.704,0.899-9.63-0.38-18.933c-2.193-15.945-7.663-38.876-15.836-59.5C266.255,152.886,248.523,130,248.523,130z"/><path fill="#FFFFFF" stroke="#000000" stroke-miterlimit="10" d="M226.833,167.549c2.688-5.936,43.033-3.462,43.914-1.495C272.803,170.64,279.5,186,277,180c-2.442-5.86-52.708-2.76-55.087-2.516C221.913,177.484,221.655,178.979,226.833,167.549z"/><ellipse fill="#FFFFFF" stroke="#000000" stroke-miterlimit="10" cx="247.5" cy="212.75" rx="23" ry="22"/><ellipse fill="#458BA3" stroke="#000000" stroke-miterlimit="10" cx="247.5" cy="212.75" rx="20.209" ry="18.459"/><polygon fill="#C90000" stroke="#000000" stroke-miterlimit="10" points="241,253.75 258.5,253.75 249.75,305.75 "/><polygon fill="#C90000" stroke="#000000" stroke-miterlimit="10" points="204.124,239.5 195,293.5 209.585,264.099 "/><polygon fill="#C90000" stroke="#000000" stroke-miterlimit="10" points="306,296.25 306,296.25 292.964,240.472 289.006,263.013"/><polygon fill="#515151" stroke="#000000" stroke-miterlimit="10" points="219.252,267.462 216.833,272.5 233.833,275.5 233.833,269.661 "/><polygon fill="#515151" stroke="#000000" stroke-miterlimit="10" points="265.382,268.361 263.5,273.834 280.5,269.661 277.551,266.5 "/><line fill="none" stroke="#000000" stroke-miterlimit="10" x1="253.5" y1="202.125" x2="235.125" y2="210.75"/><line fill="none" stroke="#000000" stroke-miterlimit="10" x1="254.5" y1="207.125" x2="236.125" y2="215.75"/>',
               'x':176,
@@ -29,5 +31,58 @@ var Ship = function(two){
   ufo.translation.y = new_ufo.y;
   ufo.translation.x = new_ufo.x;
 
-  return ufo;
+  var fire = two.makeCircle(0, 0 , 50);
+  fire.fill = fire.stroke = '#FFFFFF';//'#FF8000';
+  fire.opacity = 0.5;
+  for (var i = 0; i < fire.vertices.length; i++) {
+    var v = fire.vertices[i];
+    v.originalX = v.x;
+  }
+  var fire2 = fire.clone();
+  fire2.fill = fire2.stroke = '#FFFFFF';//'#ff5a00';
+  fire2.opacity = 0.5;
+  fire2.scale = 0.4;
+  for (var i = 0; i < fire2.vertices.length; i++) {
+    var v = fire2.vertices[i];
+    v.originalX = v.x;
+  }
+
+  var reactor = two.makeGroup(fire,fire2);
+
+  this.ship = two.makeGroup(reactor,ufo);
+
+  two.bind('update', function() {
+
+    if(self.wheeling){
+      for (var i = 0; i < fire.vertices.length; i++) {
+        var v = fire.vertices[i];
+        if(v.x < 0){
+          var rand = Math.floor((Math.random()*50)+1);
+          v.x = v.originalX - rand;
+
+          var v2 = fire2.vertices[i];
+          v2.x = v2.originalX - rand;
+        }
+      }
+    }else{
+
+    }
+
+  });
+}
+
+Ship.prototype = {
+    getShip : function(){
+      return this.ship;
+    },
+
+    startWheeling : function(){
+      this.wheeling = false;
+    },
+
+    stopWheeling : function(){
+      this.wheeling = false;
+    }
+
+
 };

@@ -27,7 +27,7 @@ var Spaceship = function(id, ws, two) {
     var ufo = new Ship(two);
 
     var ball = two.makeGroup();
-    ball.add(ufo);
+    ball.add(ufo.getShip());
 
     //move the the rubberball with the mouse position
     ws.events.addEventListener(ws.EVENT.MOUSE_MOVE+'_'+id, function(e) {
@@ -44,7 +44,14 @@ var Spaceship = function(id, ws, two) {
     });
 
     ws.events.addEventListener(ws.EVENT.CLICK+'_'+id, function(e) {
+      console.log('CLICK');
     });
+
+    ws.events.addEventListener(ws.EVENT.MOUSE_WHEEL+'_'+id, function(e) {
+      console.log('listener: mousewheel', e);
+      ufo.startWheeling();
+    });
+
 
     /**
     *
