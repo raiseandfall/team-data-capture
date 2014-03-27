@@ -6,6 +6,7 @@ var Spaceship = function(id, ws, two) {
 
     var delta = new Two.Vector();
     var mouse = new Two.Vector();
+    var rotation = new Two.Vector();
     var drag = 0.33;
     var radius = 50;
     var nIntervId;
@@ -39,6 +40,8 @@ var Spaceship = function(id, ws, two) {
       var datajson =  JSON.parse(e.detail);
       mouse.x = Math.round(datajson.data.pos.x)*two.width / datajson.data.screen.width;
       mouse.y = two.height - Math.round(datajson.data.pos.y)*two.height / datajson.data.screen.height;
+      rotation.x = datajson.data.delta.x;
+      rotation.y = datajson.data.delta.y;
     });
 
     ws.events.addEventListener(ws.EVENT.CLOSE_USER+'_'+id, function(e) {
@@ -88,6 +91,8 @@ var Spaceship = function(id, ws, two) {
 
       ball.translation.addSelf(delta);
 
+      ball.rotation = Math.PI/2*(rotation.y/100);
+
       for(i = 0; i<aTrail.length; i++){
         var itemTrail = aTrail[i];
         itemTrail.x -= speedTrail;
@@ -124,7 +129,7 @@ var Spaceship = function(id, ws, two) {
 
         itemTrail.elt.translation.set(itemTrail.x, itemTrail.y);
         itemTrail.index++;
-        
+
         if(itemTrail.x <= itemTrail.xInit - sizeTrail){
           itemTrail.xInit = mouse.x;
           itemTrail.x = mouse.x;
