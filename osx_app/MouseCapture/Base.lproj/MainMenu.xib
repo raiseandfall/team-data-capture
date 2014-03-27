@@ -1017,13 +1017,42 @@
         <window title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="leQ-Ih-Rku">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="196" y="207" width="388" height="319"/>
+            <rect key="contentRect" x="814" y="516" width="388" height="319"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1028"/>
             <view key="contentView" id="TG9-hW-pRf">
                 <rect key="frame" x="0.0" y="0.0" width="388" height="319"/>
                 <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <tabView translatesAutoresizingMaskIntoConstraints="NO" id="2BY-Y0-4Uj">
+                        <rect key="frame" x="13" y="10" width="362" height="303"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <font key="font" metaFont="system"/>
+                        <tabViewItems>
+                            <tabViewItem label="General" identifier="1" id="JW9-BR-Lxd">
+                                <view key="view" id="r3n-Bk-omP">
+                                    <rect key="frame" x="10" y="33" width="342" height="257"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                </view>
+                            </tabViewItem>
+                            <tabViewItem label="Socket" identifier="2" id="Xoz-Ue-Hfx">
+                                <view key="view" id="vlA-YU-lcV">
+                                    <rect key="frame" x="10" y="33" width="342" height="257"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                </view>
+                            </tabViewItem>
+                        </tabViewItems>
+                    </tabView>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="2BY-Y0-4Uj" secondAttribute="trailing" constant="20" id="4hg-Ed-9mx"/>
+                    <constraint firstAttribute="bottom" secondItem="2BY-Y0-4Uj" secondAttribute="bottom" constant="20" id="I0A-ms-pZ9"/>
+                    <constraint firstItem="2BY-Y0-4Uj" firstAttribute="top" secondItem="TG9-hW-pRf" secondAttribute="top" constant="12" id="QZw-Y2-iX3"/>
+                    <constraint firstItem="2BY-Y0-4Uj" firstAttribute="leading" secondItem="TG9-hW-pRf" secondAttribute="leading" constant="20" id="v1N-L1-Uei"/>
+                </constraints>
             </view>
         </window>
+        <menuItem isSeparatorItem="YES" id="YhG-Ll-E9f"/>
+        <menuItem isSeparatorItem="YES" id="zGO-h6-ygC"/>
     </objects>
     <resources>
         <image name="NSStatusAvailable" width="16" height="16"/>
