@@ -12,7 +12,7 @@ var Socket = (function(WebSocket){
 			MOUSE_MOVE: 'mousemove',
 			CLICK: 'click',
 			KEY_DOWN: 'keydown',
-			MOUSE_WHEEL: 'mousewheel',
+			MOUSE_WHEEL: 'scroll',
 			WORD:	'word',
 			MESSAGE: 'onmessage'
 	};
