@@ -24,6 +24,7 @@ var Spaceship = function(id, ws, two) {
     var sizeTrail = 480;
     var speedTrail = 5;
     var i = 0;
+    var speedLaser = 10;
     var ufo = new Ship(two);
     var ball = two.makeGroup();
     ball.add(ufo.getShip());
@@ -57,7 +58,6 @@ var Spaceship = function(id, ws, two) {
     });
 
     ws.events.addEventListener(ws.EVENT.MOUSE_WHEEL+'_'+id, function(e) {
-      console.log('listener: mousewheel', e);
       ufo.startWheeling();
     });
 
