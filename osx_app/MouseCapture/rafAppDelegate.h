@@ -12,8 +12,8 @@ static id monitorUserInputs;
 
 @interface rafAppDelegate : NSObject <NSApplicationDelegate>
 
-@property (assign) IBOutlet NSWindow *window;
-@property (assign) IBOutlet NSWindow *preferences;
+@property (assign) IBOutlet NSWindow *logWindow;
+@property (assign) IBOutlet NSWindow *preferencesWindow;
 @property (strong) IBOutlet NSTextView *logView;
 
 @property (weak) IBOutlet NSToolbarItem *toolbarClearButton;
@@ -30,6 +30,10 @@ static id monitorUserInputs;
 @property (weak) IBOutlet NSTextField *cursorPosYLabel;
 @property (weak) IBOutlet NSTextField *keyDownCounterLabel;
 @property (weak) IBOutlet NSTextField *leftMouseCounterLabel;
+
+// User Settings
+@property (weak) IBOutlet NSTextField *userSettingHost;
+@property (weak) IBOutlet NSTextField *userSettingPort;
 
 @property (readwrite) NSDateFormatter *logDateFormatter;
 
@@ -58,6 +62,8 @@ static id monitorUserInputs;
 
 - (void)drawIndicators;
 
+- (NSDictionary*)getUserSettings         :(NSString*)settingsType;
+- (void)saveUserSettings;
 - (void)calculateGlobalResolution;
 - (NSDictionary*)getLocalPosition       :(CGPoint)loc;
 - (IBAction)fakeAction                  :(id)sender;

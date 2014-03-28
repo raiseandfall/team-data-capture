@@ -56,7 +56,7 @@ NSRect firstScreenFrame;
 NSRect secondScreenFrame;
 
 NSString *WEBSOCKET_PROTOCOL = @"ws";
-NSString *WEBSOCKET_HOST = @"192.168.173.123";
+NSString *WEBSOCKET_HOST = @"192.168.173.116";
 NSString *WEBSOCKET_PORT = @"9000";
 
 NSString *LABEL_SHOW_LOGS = @"Show logs";
@@ -73,6 +73,7 @@ NSString *LABEL_START_ALL_RECORDINGS = @"Start all recordings";
 NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
 
 NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
+
 
 /**
  * @function        applicationDidFinishLaunching
@@ -116,7 +117,12 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     // Check if we are closing the logger window
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(onClosingLogger:) name:NSWindowWillCloseNotification
-                                               object:[self window]];
+                                               object:self.logWindow];
+    
+    // Check if we are closing the preferences window
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(onClosingPreferences:) name:NSWindowWillCloseNotification
+                                               object:self.preferencesWindow];
 }
 
 
@@ -222,11 +228,42 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
 }
 
 /**
+ * @function        getUserSettings
+ * @description     get user settings
+ **/
+- (NSDictionary*)getUserSettings :(NSString*)settingsType {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSDictionary *userSettings = [defaults objectForKey:settingsType];
+    
+    return userSettings;
+}
+
+/**
+ * @function        saveUserSettings
+ * @description     save user settings
+ **/
+- (void)saveUserSettings {
+    NSLog(@"host : %@", self.userSettingHost.stringValue);
+}
+
+/**
+ * @function        onClosingPreferences
+ * @description     called when preferences window is closed
+ **/
+- (void)onClosingPreferences:(NSNotification *)notification {
+    [self saveUserSettings];
+}
+
+/**
  * @function        displayPreferencesWindow
  * @description     display preferences window
 **/
 - (IBAction)displayPreferencesWindow:(id)sender{
-    [[self preferences] makeKeyAndOrderFront:nil];
+    // Fill settings if not yet
+    
+    
+    
+    [[self preferencesWindow] makeKeyAndOrderFront:nil];
 }
 
 
@@ -314,12 +351,12 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
  * @description     show logger file
 **/
 - (IBAction)showLogger:(id)sender {
-    if ([[self window] isVisible]) {
-        [[self window] close];
+    if ([[self logWindow] isVisible]) {
+        [[self logWindow] close];
         [[self showLoggerItem] setTitle:LABEL_SHOW_LOGS];
     } else {
-        [[self window] setLevel: NSStatusWindowLevel];
-        [[self window] makeKeyAndOrderFront:nil];
+        [[self logWindow] setLevel: NSStatusWindowLevel];
+        [[self logWindow] makeKeyAndOrderFront:nil];
         [[self showLoggerItem] setTitle:LABEL_HIDE_LOGS];
     }
 }
