@@ -62,7 +62,7 @@ static id monitorUserInputs;
 
 - (void)drawIndicators;
 
-- (NSDictionary*)getUserSettings         :(NSString*)settingsType;
+- (NSString*)getUserSettings            :(NSString*)settingName;
 - (void)saveUserSettings;
 - (void)calculateGlobalResolution;
 - (NSDictionary*)getLocalPosition       :(CGPoint)loc;

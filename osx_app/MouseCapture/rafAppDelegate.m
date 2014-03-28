@@ -105,6 +105,10 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     // Calculate global resolution
     [self calculateGlobalResolution];
     
+    // Get User settings
+    [self.userSettingHost setStringValue:[self getUserSettings:@"host"]];
+    [self.userSettingPort setStringValue:[self getUserSettings:@"port"]];
+    
     // ACTION TYPES
     ACTION_TYPES = [NSDictionary dictionaryWithObjectsAndKeys:
                        @"mousemove", @"MOUSE_MOVE",
@@ -231,11 +235,14 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
  * @function        getUserSettings
  * @description     get user settings
  **/
-- (NSDictionary*)getUserSettings :(NSString*)settingsType {
+- (NSString*)getUserSettings :(NSString*)settingName {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSDictionary *userSettings = [defaults objectForKey:settingsType];
+    NSString *userSetting = [defaults objectForKey:settingName];
     
-    return userSettings;
+    if (userSetting == nil || [userSetting length] == 0) {
+        return @"";
+    }
+    return userSetting;
 }
 
 /**
@@ -243,7 +250,8 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
  * @description     save user settings
  **/
 - (void)saveUserSettings {
-    NSLog(@"host : %@", self.userSettingHost.stringValue);
+    [[NSUserDefaults standardUserDefaults] setObject:self.userSettingHost.stringValue forKey:@"host"];
+    [[NSUserDefaults standardUserDefaults] setObject:self.userSettingPort.stringValue forKey:@"port"];
 }
 
 /**
