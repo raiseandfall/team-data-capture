@@ -56,7 +56,7 @@ NSRect firstScreenFrame;
 NSRect secondScreenFrame;
 
 NSString *WEBSOCKET_PROTOCOL = @"ws";
-NSString *WEBSOCKET_HOST = @"192.168.173.116";
+NSString *WEBSOCKET_HOST = @"192.168.173.123";
 NSString *WEBSOCKET_PORT = @"9000";
 
 NSString *LABEL_SHOW_LOGS = @"Show logs";
@@ -198,12 +198,10 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     float localY = 0;
     
     if ((adjustedX >= firstScreenMinX && adjustedX <= firstScreenMaxX) && (adjustedY >= firstScreenMinY && adjustedY <= firstScreenMaxY)) {
-        //NSLog(@"CURSOR ON FIRST SCREEN :: globalPos : %f, %f - localPos : %f, %f", adjustedX, adjustedY, (adjustedX - firstScreenMinX), (adjustedY - firstScreenMinY));
         currentScreen = firstScreenFrame;
         localX = adjustedX - firstScreenMinX;
         localY = adjustedY - firstScreenMinY;
     } else {
-        //NSLog(@"CURSOR ON SECOND SCREEN :: globalPos : %f, %f - localPos : %f, %f", adjustedX, adjustedY, (adjustedX - secondScreenMinX), (adjustedY - secondScreenMinY));
         currentScreen = secondScreenFrame;
         localX = adjustedX - secondScreenMinX;
         localY = adjustedY - secondScreenMinY;
@@ -263,17 +261,30 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
 }
 
 /**
- * @function        displayPreferencesWindow
- * @description     display preferences window
+ * @function        showPreferences
+ * @description     show preferences window
 **/
-- (IBAction)displayPreferencesWindow:(id)sender{
-    // Fill settings if not yet
-    
-    
-    
+- (IBAction)showPreferences:(id)sender{
+    [[self preferencesWindow] setLevel: NSStatusWindowLevel];
+    [NSApp activateIgnoringOtherApps:YES];
     [[self preferencesWindow] makeKeyAndOrderFront:nil];
 }
 
+/**
+ * @function        showLogger
+ * @description     show logger window
+ **/
+- (IBAction)showLogger:(id)sender {
+    if ([[self logWindow] isVisible]) {
+        [[self logWindow] close];
+        [[self showLoggerItem] setTitle:LABEL_SHOW_LOGS];
+    } else {
+        [[self logWindow] setLevel: NSStatusWindowLevel];
+        [NSApp activateIgnoringOtherApps:YES];
+        [[self logWindow] makeKeyAndOrderFront:nil];
+        [[self showLoggerItem] setTitle:LABEL_HIDE_LOGS];
+    }
+}
 
 /*******************
  * MENU BAR ITEM
@@ -352,21 +363,6 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
 - (IBAction)toggleMouseRecording:(id)sender {
     self.isMouseRecording = !self.isMouseRecording;
     [self drawIndicators];
-}
-
-/**
- * @function        showLogger
- * @description     show logger file
-**/
-- (IBAction)showLogger:(id)sender {
-    if ([[self logWindow] isVisible]) {
-        [[self logWindow] close];
-        [[self showLoggerItem] setTitle:LABEL_SHOW_LOGS];
-    } else {
-        [[self logWindow] setLevel: NSStatusWindowLevel];
-        [[self logWindow] makeKeyAndOrderFront:nil];
-        [[self showLoggerItem] setTitle:LABEL_HIDE_LOGS];
-    }
 }
 
 

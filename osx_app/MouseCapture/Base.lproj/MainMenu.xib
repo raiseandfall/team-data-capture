@@ -1003,7 +1003,7 @@
                     <attributedString key="attributedTitle"/>
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
-                        <action selector="displayPreferencesWindow:" target="494" id="suq-ft-nIb"/>
+                        <action selector="showPreferences:" target="494" id="VQP-kI-bTQ"/>
                     </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="PQt-P8-6dp"/>
