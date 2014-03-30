@@ -34,6 +34,7 @@ static id monitorUserInputs;
 // User Settings
 @property (weak) IBOutlet NSTextField *userSettingHost;
 @property (weak) IBOutlet NSTextField *userSettingPort;
+@property (weak) IBOutlet NSButton *userSettingDisplayNotifications;
 
 @property (readwrite) NSDateFormatter *logDateFormatter;
 
@@ -59,6 +60,7 @@ static id monitorUserInputs;
 @property (readwrite) IBOutlet NSMenuItem *showLoggerItem;
 @property (readwrite) IBOutlet NSMenuItem *showPreferencesItem;
 @property (readwrite) IBOutlet NSStatusItem *statusItem;
+
 
 - (void)drawIndicators;
 

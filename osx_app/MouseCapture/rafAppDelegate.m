@@ -108,6 +108,7 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     // Get User settings
     [self.userSettingHost setStringValue:[self getUserSettings:@"host"]];
     [self.userSettingPort setStringValue:[self getUserSettings:@"port"]];
+    [self.userSettingDisplayNotifications setState:[[self getUserSettings:@"displaySystemNotifications"] intValue]];
     
     // ACTION TYPES
     ACTION_TYPES = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -248,8 +249,11 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
  * @description     save user settings
  **/
 - (void)saveUserSettings {
+    
     [[NSUserDefaults standardUserDefaults] setObject:self.userSettingHost.stringValue forKey:@"host"];
     [[NSUserDefaults standardUserDefaults] setObject:self.userSettingPort.stringValue forKey:@"port"];
+    [[NSUserDefaults standardUserDefaults] setObject:self.userSettingDisplayNotifications.stringValue
+                                              forKey:@"displaySystemNotifications"];
 }
 
 /**
