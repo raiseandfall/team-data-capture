@@ -2,4 +2,18 @@ extends layout
 
 block content
 	audio(src='/sound/laser1.mp3')
+	header.visible
+		h1= title
+		div.btn
+			span#stats stats
 	div.background
+	div#overlay.hide
+		h1 statistics
+		span based on 150ppi
+		span#close X
+		table
+			tr
+				td name
+				td distance
+				td click
+				td scroll
