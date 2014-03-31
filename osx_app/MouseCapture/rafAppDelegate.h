@@ -14,6 +14,7 @@ static id monitorUserInputs;
 
 @property (assign) IBOutlet NSWindow *logWindow;
 @property (assign) IBOutlet NSWindow *preferencesWindow;
+@property (assign) IBOutlet NSWindow *messengerWindow;
 @property (strong) IBOutlet NSTextView *logView;
 
 @property (weak) IBOutlet NSToolbarItem *toolbarClearButton;
@@ -35,6 +36,10 @@ static id monitorUserInputs;
 @property (weak) IBOutlet NSTextField *userSettingPort;
 @property (weak) IBOutlet NSButton *userSettingDisplayNotifications;
 
+// Messenger
+@property (weak) IBOutlet NSTextField *messengerTextarea;
+@property (weak) IBOutlet NSButton *postMessageBtn;
+
 @property (readwrite) NSDateFormatter *logDateFormatter;
 
 @property (readwrite) NSNumber *cursorDeltaX;
@@ -52,6 +57,7 @@ static id monitorUserInputs;
 @property (readwrite) IBOutlet NSMenuItem *pauseAllRecordingsItem;
 @property (readwrite) IBOutlet NSMenuItem *pauseScrollRecordingItem;
 @property (readwrite) IBOutlet NSMenuItem *pauseMouseRecordingItem;
+@property (readwrite) IBOutlet NSMenuItem *showMessengerItem;
 @property (readwrite) IBOutlet NSMenuItem *serverStatusItem;
 @property (readwrite) IBOutlet NSMenuItem *showLoggerItem;
 @property (readwrite) IBOutlet NSMenuItem *showPreferencesItem;
@@ -75,5 +81,7 @@ static id monitorUserInputs;
 - (IBAction)recordButtonPressed         :(id)sender;
 - (IBAction)stopButtonPressed           :(id)sender;
 - (void)logMessageToLogView             :(NSString*)message;
+
+- (IBAction)clickPostMessage            :(id)sender;
 
 @end
