@@ -1,8 +1,6 @@
 'use strict';
 
 var Socket = require('../providers/socket').Socket,
-  Session = require('../providers/session').Session,
-  Action = require('../providers/action').Action,
   APP = require('../constants.js').APP;
 /**
  *  Define the Socket Object.
@@ -49,77 +47,62 @@ Client.prototype.welcome = function (data, type_client, sockets) {
 };
 
 Client.prototype.saveSocket = function(){
-  var self = this;
+  var response = '{"type":"'+APP.TYPE.WELCOME+'"}',
+    self = this;
   Socket.find({'mac':self.mac}).exec(function(err, sockets){
     if(err) {
       throw new Error(err, 'Creating a Socket: An error has occurred');
     }else{
       if(sockets.length > 0){
         console.log(self.username + ' is back');
-        self.saveSessions();
+        self.send(response);
       }else{
         var socket = new Socket({
           username: self.username,
-          mac: self.mac
+          mac: self.mac,
+          distance: 0,
+          click: 0,
+          scroll: 0
         });
         socket.save(function(err){
           if(err) {
             throw new Error(err, 'Creating a Socket: An error has occurred');
           }else{
             console.log(self.username + ' has been saved');
-            self.saveSessions();
+            self.send(response);
           }
         });
       }
     }
   });
 };
-Client.prototype.saveSessions = function(){
-  var response = '{"type":"'+APP.TYPE.WELCOME+'"}',
-    self = this;
-
-  var session = new Session({
-    mac: self.mac
-  });
-  session.save(function(err, session){
-    if(err) {
-      throw new Error(err, 'Creating a Session: An error has occurred');
-    }else{
-      console.log(self.username + ' just started a new session '+session);
-      self.session_id = session._id;
-      self.send(response);
-    }
-  });
-};
 
 Client.prototype.saveAction = function(data){
-/*  var self = this;
 
-  var action = new Action({
-    mac: self.mac,
-    type: data.type,
-    data: data.data
-  });
-  action.save(function(err){
+  var self = this;
+  Socket.findOne({'mac':self.mac}).exec(function(err, socket){
     if(err) {
-      throw new Error(err, 'Creating a Action: An error has occurred');
+      throw new Error(err, 'Creating a Socket: An error has occurred');
     }else{
-      //console.log(self.username + ' just did a new action '+data.type);
+      var distance;
+      switch(data.type){
+        case APP.ACTION.MOUSE_MOVE:
+          distance = Math.sqrt(Math.pow(data.data.delta.x,2)+Math.pow(data.data.delta.y,2));
+          socket.addDistance(distance);
+          break;
+        case APP.ACTION.CLICK:
+          socket.addClick();
+          break;
+        case APP.ACTION.MOUSE_WHEEL:
+          socket.addScroll(Math.abs(data.data.delta.y));
+          break;
+      }
     }
   });
-
-  Session.findOne({'_id':self.session_id}).exec(function(err, session){
-    if(err){
-      throw new Error(err, 'Creating a Action: An error has occurred when retrieving the Session');
-    }else{
-      session.addAction(data);
-    }
-  });*/
 };
 
 
 Client.prototype.send = function(data){
-  //console.log(data);
   this.ws.send(data);
 };
 
