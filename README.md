@@ -6,7 +6,6 @@ So far the app is tracking :
 - scroll
 - left click
 - mouse move
-- key hits
 
 ## Installation
 
@@ -53,7 +52,7 @@ $ node server.js
 The main configuration values are the web socket parameters.
 
 ### OSX App
-A Preferences pane is currently in development to allow change of parameters without re-compiling the app.
+A Preferences window is available to change Host & Port settings. Open it from the menu bar item.
 
 ### Server
 Set your ip address and port in server/config.js
