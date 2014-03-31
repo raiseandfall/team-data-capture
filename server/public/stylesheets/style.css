@@ -1,10 +1,83 @@
+@import 'fonts/stylesheet.css';
+
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   background: #27223f; /* Old browsers */
 }
+canvas{
+	pointer-events:none;
+}
+header{
+	opacity:0;
+}
+h1{
+	font-family:'pwperspectivemedium';
+	color:white;
+	font-size:30px;
+	text-align: center;
+	margin-bottom:.5em;
+}
+.hide{
+	display:none;
+}
+.visible{
+	opacity:1!important;
+}
+.btn{
+	text-align: center;
+}
+.btn span{
+	font-family:'pwperspectivemedium';
+	color:white;
+	cursor: pointer;
+	font-size:15px;
+	border-radius:10px;
+	border:1px solid white;
+	padding:10px 20px;
+	background:transparent;
+	transition:.5s all;
+}
 
+.btn span:hover{
+	color: #27223f;
+	background:white;
+	border:none;
+}
 
 a {
   color: #FF4136;
+}
+
+#overlay{
+	background:rgba(0,0,0,.75);
+	position:fixed;
+	width:100%;
+	height:100%;
+	z-index:5;
+	top:0;
+	left:0;
+	color:white;
+	font-family:'pwperspectivemedium';
+	text-align: center;
+	transition:.5s opacity;
+	opacity:0;
+}
+
+#overlay table{
+	width:500px;
+	margin:50px auto;
+}
+
+#close{
+	position:absolute;
+	right:20px;
+	top:20px;
+	font-size:20px;
+	text-align: center;
+	cursor: pointer;
+}
+
+#overlay table tr td{
+	padding:10px;
 }
