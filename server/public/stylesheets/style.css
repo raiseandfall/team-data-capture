@@ -8,3 +8,7 @@ body {
 a {
   color: #FF4136;
 }
+
+.audiojs {
+  height: 0px !important;
+}

@@ -20,7 +20,12 @@ var two = new Two({
 var sky = new Sky(two);
 Two.Resolution = 32;
 
-
+var audio;
+audiojs.events.ready(function() {
+  var as = audiojs.createAll();
+      audio = as[0];
+      console.log('audio ready!',audio);
+});
 /**********************************
 *              Events             *
 **********************************/
@@ -66,7 +71,10 @@ ws.events.addEventListener(ws.EVENT.MOUSE_MOVE, function(e) {
 * Call everytime an action click is sent from the server
 */
 ws.events.addEventListener(ws.EVENT.CLICK, function(e) {
-	//console.log('listener: click', e);}
+	console.log('listener: click', e,audio,this.audio);
+  if(audio){
+    audio.play();
+  }
 });
 
 /**
@@ -133,7 +141,7 @@ ws.events.addEventListener(ws.EVENT.NEW_USER, function(e) {
 	* Call everytime an action click from the socket [id] is sent from the server
 	*/
 	ws.events.addEventListener(ws.EVENT.CLICK+'_'+id, function(e) {
-		//console.log('listener: ', 'click_'+id, e);
+		console.log('listener: ', 'click_'+id, e);
 	});
 
 	/** mousewheel_[id]
