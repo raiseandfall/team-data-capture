@@ -42,7 +42,6 @@ NSString *SEPARATORS_KEY_CODES = @"$";
 NSString *currentWord = @"";
 int clientID = 0;
 NSDictionary *ACTION_TYPES;
-BOOL ALLOW_WORDS_TRACKING = NO;
 BOOL ALLOW_NOTIFICATIONS = YES;
 
 Notifier *notifier;
@@ -426,6 +425,7 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     self.isMouseRecording = NO;
     self.isScrollRecording = NO;
     [NSEvent removeMonitor:monitorUserInputs];
+    monitorUserInputs = nil;
     
     [self initCounters];
     
@@ -653,7 +653,7 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     _webSocket = nil;
     
     // Push notification
-    if (ALLOW_NOTIFICATIONS) {
+    if ([[self getUserSettings:@"displaySystemNotifications"] intValue] == 1) {
         [notifier push:@"Connection to WebSocket failed" :@"The connection to the WebSocket failed. Please retry." :YES :nil];
     }
     
@@ -687,11 +687,10 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
-    //NSLog(@"Websocket :: closed : %@", reason);
     clientID = 0;
     
     // Push notification
-    if (ALLOW_NOTIFICATIONS) {
+    if ([[self getUserSettings:@"displaySystemNotifications"] intValue] == 1) {
         [notifier push:@"WebSocket just closed" :@"The WebSocket just closed, the app lost connection. Please retry." :YES :nil];
     }
     
