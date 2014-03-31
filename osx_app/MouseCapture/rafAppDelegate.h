@@ -28,7 +28,6 @@ static id monitorUserInputs;
 @property (weak) IBOutlet NSTextField *cursorDeltaYLabel;
 @property (weak) IBOutlet NSTextField *cursorPosXLabel;
 @property (weak) IBOutlet NSTextField *cursorPosYLabel;
-@property (weak) IBOutlet NSTextField *keyDownCounterLabel;
 @property (weak) IBOutlet NSTextField *leftMouseCounterLabel;
 
 // User Settings
@@ -42,11 +41,9 @@ static id monitorUserInputs;
 @property (readwrite) NSNumber *cursorDeltaY;
 @property (readwrite) NSNumber *cursorPositionX;
 @property (readwrite) NSNumber *cursorPositionY;
-@property (readwrite) NSNumber *keyDownCounter;
 @property (readwrite) NSNumber *leftMouseCounter;
 
 @property (readwrite) BOOL isGlobalRecording;
-@property (readwrite) BOOL isKeyboardRecording;
 @property (readwrite) BOOL isMouseRecording;
 @property (readwrite) BOOL isScrollRecording;
 
@@ -55,7 +52,6 @@ static id monitorUserInputs;
 @property (readwrite) IBOutlet NSMenuItem *pauseAllRecordingsItem;
 @property (readwrite) IBOutlet NSMenuItem *pauseScrollRecordingItem;
 @property (readwrite) IBOutlet NSMenuItem *pauseMouseRecordingItem;
-@property (readwrite) IBOutlet NSMenuItem *pauseKeyboardRecordingItem;
 @property (readwrite) IBOutlet NSMenuItem *serverStatusItem;
 @property (readwrite) IBOutlet NSMenuItem *showLoggerItem;
 @property (readwrite) IBOutlet NSMenuItem *showPreferencesItem;
@@ -70,7 +66,6 @@ static id monitorUserInputs;
 - (NSDictionary*)getLocalPosition       :(CGPoint)loc;
 - (IBAction)fakeAction                  :(id)sender;
 - (IBAction)toggleAllRecordings         :(id)sender;
-- (IBAction)toggleKeyboardRecording     :(id)sender;
 - (IBAction)toggleMouseRecording        :(id)sender;
 - (IBAction)toggleScrollRecording       :(id)sender;
 
@@ -79,8 +74,6 @@ static id monitorUserInputs;
 - (IBAction)clearButtonPressed          :(id)sender;
 - (IBAction)recordButtonPressed         :(id)sender;
 - (IBAction)stopButtonPressed           :(id)sender;
-- (BOOL)isCharacterTracked              :(NSString*)_char;
-- (BOOL)isSeparator                     :(NSString*)_char   :(NSString*)keyCode;
 - (void)logMessageToLogView             :(NSString*)message;
 
 @end

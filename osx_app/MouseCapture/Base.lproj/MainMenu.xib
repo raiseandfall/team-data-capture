@@ -650,22 +650,13 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="335" y="390" width="673" height="433"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1028"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1058"/>
             <view key="contentView" id="372">
                 <rect key="frame" x="0.0" y="0.0" width="673" height="433"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="mfx-d6-PUi">
-                        <rect key="frame" x="18" y="396" width="143" height="17"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Keyboard Keys down :" id="YEK-IU-Su2">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="592-C6-fT3">
-                        <rect key="frame" x="39" y="371" width="122" height="17"/>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="592-C6-fT3">
+                        <rect key="frame" x="39" y="396" width="122" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Mouse Left Clicks :" id="ah8-g1-6tY">
                             <font key="font" metaFont="system"/>
@@ -673,20 +664,8 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yL9-xq-Ffa">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6Aq-SS-mvT">
                         <rect key="frame" x="165" y="396" width="60" height="17"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="0" id="rnX-eh-oB6">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                        <connections>
-                            <binding destination="494" name="value" keyPath="keyDownCounter" id="Oao-FO-SvB"/>
-                        </connections>
-                    </textField>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6Aq-SS-mvT">
-                        <rect key="frame" x="165" y="371" width="60" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="0" id="dsB-KU-6xq">
                             <font key="font" metaFont="system"/>
@@ -843,19 +822,14 @@
                     <constraint firstItem="4En-Cx-ZRA" firstAttribute="leading" secondItem="pLQ-Hh-8y8" secondAttribute="trailing" constant="8" id="4ae-lJ-5Gg"/>
                     <constraint firstItem="4Bn-vp-Cxu" firstAttribute="leading" secondItem="372" secondAttribute="leading" constant="262" id="5lO-AQ-SOG"/>
                     <constraint firstItem="Joh-E1-6OW" firstAttribute="leading" secondItem="372" secondAttribute="leading" constant="262" id="8D0-MC-gts"/>
-                    <constraint firstItem="6Aq-SS-mvT" firstAttribute="top" secondItem="yL9-xq-Ffa" secondAttribute="bottom" constant="8" id="8fB-Cw-t7C"/>
                     <constraint firstItem="pLQ-Hh-8y8" firstAttribute="top" secondItem="eYo-Dh-Zrh" secondAttribute="bottom" constant="8" id="8tJ-mf-M7d"/>
                     <constraint firstItem="nKC-lG-Wm4" firstAttribute="leading" secondItem="eYo-Dh-Zrh" secondAttribute="trailing" constant="8" id="9e0-RN-GJp"/>
                     <constraint firstItem="Eq7-fO-hvZ" firstAttribute="top" secondItem="372" secondAttribute="top" constant="-21" id="BV6-Cy-XCC"/>
                     <constraint firstItem="avs-XK-9Ls" firstAttribute="leading" secondItem="372" secondAttribute="leading" constant="20" symbolic="YES" id="GFZ-up-oWI"/>
-                    <constraint firstItem="yL9-xq-Ffa" firstAttribute="top" secondItem="372" secondAttribute="top" constant="20" id="HmF-pt-gPo"/>
                     <constraint firstItem="IQG-95-6pD" firstAttribute="top" secondItem="4En-Cx-ZRA" secondAttribute="bottom" constant="8" id="Inr-6D-xU9"/>
                     <constraint firstItem="IQG-95-6pD" firstAttribute="leading" secondItem="4Bn-vp-Cxu" secondAttribute="trailing" constant="8" id="KYV-pT-bYj"/>
-                    <constraint firstItem="mfx-d6-PUi" firstAttribute="leading" secondItem="372" secondAttribute="leading" constant="20" id="MuY-Mb-U7E"/>
-                    <constraint firstItem="592-C6-fT3" firstAttribute="top" secondItem="mfx-d6-PUi" secondAttribute="bottom" constant="8" id="PnQ-ui-tty"/>
                     <constraint firstItem="avs-XK-9Ls" firstAttribute="top" secondItem="372" secondAttribute="top" constant="165" id="SOM-Wc-eTq"/>
                     <constraint firstItem="Joh-E1-6OW" firstAttribute="top" secondItem="4Bn-vp-Cxu" secondAttribute="bottom" constant="8" id="Ukk-pP-0QY"/>
-                    <constraint firstItem="mfx-d6-PUi" firstAttribute="top" secondItem="372" secondAttribute="top" constant="20" id="VCG-3w-278"/>
                     <constraint firstItem="Rpj-Q4-ITc" firstAttribute="top" secondItem="IQG-95-6pD" secondAttribute="bottom" constant="8" id="XGn-LY-zTV"/>
                     <constraint firstItem="592-C6-fT3" firstAttribute="leading" secondItem="372" secondAttribute="leading" constant="41" id="YxE-Us-dBf"/>
                     <constraint firstItem="nKC-lG-Wm4" firstAttribute="top" secondItem="372" secondAttribute="top" constant="20" id="a0o-t4-SnD"/>
@@ -866,7 +840,6 @@
                     <constraint firstItem="4En-Cx-ZRA" firstAttribute="top" secondItem="nKC-lG-Wm4" secondAttribute="bottom" constant="8" id="iuy-vt-7MF"/>
                     <constraint firstAttribute="trailing" secondItem="Eq7-fO-hvZ" secondAttribute="trailing" constant="12" id="izQ-RP-YmP"/>
                     <constraint firstItem="Rpj-Q4-ITc" firstAttribute="leading" secondItem="Joh-E1-6OW" secondAttribute="trailing" constant="8" id="uoR-Ck-Ggb"/>
-                    <constraint firstItem="yL9-xq-Ffa" firstAttribute="leading" secondItem="mfx-d6-PUi" secondAttribute="trailing" constant="8" id="xuA-Tf-WLi"/>
                 </constraints>
             </view>
             <toolbar key="toolbar" implicitIdentifier="0CDC68AB-7F6C-43A2-8B11-5A150D00D8DB" autosavesConfiguration="NO" displayMode="iconAndLabel" sizeMode="regular" id="LUy-EL-P9r">
@@ -924,13 +897,11 @@
                 <outlet property="cursorDeltaYLabel" destination="Rpj-Q4-ITc" id="o48-nB-Ui5"/>
                 <outlet property="cursorPosXLabel" destination="nKC-lG-Wm4" id="9kV-3S-VnP"/>
                 <outlet property="cursorPosYLabel" destination="4En-Cx-ZRA" id="EWr-QG-jzS"/>
-                <outlet property="keyDownCounterLabel" destination="yL9-xq-Ffa" id="5jF-Ku-dHI"/>
                 <outlet property="leftMouseCounterLabel" destination="6Aq-SS-mvT" id="eIh-zY-sdN"/>
                 <outlet property="logView" destination="5wA-tM-Bs6" id="jqr-lB-Dyb"/>
                 <outlet property="logWindow" destination="371" id="spo-Gb-GQm"/>
                 <outlet property="menu" destination="t0p-o8-Lw1" id="9FS-Jy-6D7"/>
                 <outlet property="pauseAllRecordingsItem" destination="RLx-lh-0Nr" id="gIw-TS-Mv2"/>
-                <outlet property="pauseKeyboardRecordingItem" destination="Jfd-4c-K9p" id="68L-CG-l7C"/>
                 <outlet property="pauseMouseRecordingItem" destination="9wX-MN-9Q7" id="TZE-Tm-g0G"/>
                 <outlet property="pauseScrollRecordingItem" destination="5jY-Bn-qe0" id="QXh-I1-J5I"/>
                 <outlet property="preferencesWindow" destination="leQ-Ih-Rku" id="svp-3p-Kxy"/>
@@ -958,13 +929,6 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="7in-ha-grY"/>
-                <menuItem title="Not recording keyboard hits" onStateImage="NSStatusAvailable" offStateImage="NSStatusUnavailable" mixedStateImage="NSStatusNone" id="Jfd-4c-K9p">
-                    <attributedString key="attributedTitle"/>
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="toggleKeyboardRecording:" target="494" id="jKR-Et-6Iv"/>
-                    </connections>
-                </menuItem>
                 <menuItem title="Not recording mouse" onStateImage="NSStatusAvailable" offStateImage="NSStatusUnavailable" mixedStateImage="NSStatusNone" id="9wX-MN-9Q7">
                     <attributedString key="attributedTitle"/>
                     <modifierMask key="keyEquivalentModifierMask"/>
@@ -1021,7 +985,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="814" y="516" width="388" height="319"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1028"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1058"/>
             <view key="contentView" id="TG9-hW-pRf">
                 <rect key="frame" x="0.0" y="0.0" width="388" height="319"/>
                 <autoresizingMask key="autoresizingMask"/>

@@ -26,16 +26,13 @@
 @synthesize cursorPosYLabel;
 @synthesize cursorDeltaXLabel;
 @synthesize cursorDeltaYLabel;
-@synthesize keyDownCounterLabel;
 @synthesize leftMouseCounterLabel;
 @synthesize isGlobalRecording;
-@synthesize isKeyboardRecording;
 @synthesize isScrollRecording;
 @synthesize isMouseRecording;
 
 @synthesize cursorPositionX;
 @synthesize cursorPositionY;
-@synthesize keyDownCounter;
 @synthesize leftMouseCounter;
 
 // VARIABLES
@@ -45,7 +42,6 @@ NSString *SEPARATORS_KEY_CODES = @"$";
 NSString *currentWord = @"";
 int clientID = 0;
 NSDictionary *ACTION_TYPES;
-BOOL ALLOW_WORDS_TRACKING = NO;
 BOOL ALLOW_NOTIFICATIONS = YES;
 
 Notifier *notifier;
@@ -55,18 +51,12 @@ float thresholdY = 0;
 NSRect firstScreenFrame;
 NSRect secondScreenFrame;
 
-NSString *WEBSOCKET_PROTOCOL = @"ws";
-NSString *WEBSOCKET_HOST = @"192.168.173.103";
-NSString *WEBSOCKET_PORT = @"9000";
-
 NSString *LABEL_SHOW_LOGS = @"Show logs";
 NSString *LABEL_HIDE_LOGS = @"Hide logs";
 NSString *LABEL_SERVER_UP = @"Connected to Server";
 NSString *LABEL_SERVER_DOWN = @"Server Unavailable";
 NSString *LABEL_RECORDING_MOUSE = @"Recording mouse";
 NSString *LABEL_NOT_RECORDING_MOUSE = @"Not recording mouse";
-NSString *LABEL_RECORDING_KEYBOARD = @"Recording keyboard hits";
-NSString *LABEL_NOT_RECORDING_KEYBOARD = @"Not recording keyboard hits";
 NSString *LABEL_RECORDING_SCROLL = @"Recording scroll";
 NSString *LABEL_NOT_RECORDING_SCROLL = @"Not recording scroll";
 NSString *LABEL_START_ALL_RECORDINGS = @"Start all recordings";
@@ -114,7 +104,6 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     ACTION_TYPES = [NSDictionary dictionaryWithObjectsAndKeys:
                        @"mousemove", @"MOUSE_MOVE",
                        @"click", @"CLICK",
-                       @"keydown", @"KEY_DOWN",
                        @"word", @"WORD",
                        @"scroll", @"SCROLL",
                         nil];
@@ -233,7 +222,7 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
 /**
  * @function        getUserSettings
  * @description     get user settings
- **/
+**/
 - (NSString*)getUserSettings :(NSString*)settingName {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *userSetting = [defaults objectForKey:settingName];
@@ -247,7 +236,7 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
 /**
  * @function        saveUserSettings
  * @description     save user settings
- **/
+**/
 - (void)saveUserSettings {
     
     [[NSUserDefaults standardUserDefaults] setObject:self.userSettingHost.stringValue forKey:@"host"];
@@ -259,7 +248,7 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
 /**
  * @function        onClosingPreferences
  * @description     called when preferences window is closed
- **/
+**/
 - (void)onClosingPreferences:(NSNotification *)notification {
     [self saveUserSettings];
 }
@@ -277,7 +266,7 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
 /**
  * @function        showLogger
  * @description     show logger window
- **/
+**/
 - (IBAction)showLogger:(id)sender {
     if ([[self logWindow] isVisible]) {
         [[self logWindow] close];
@@ -328,10 +317,7 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
  * @description     draw menu bar indicators
 **/
 - (void)drawIndicators {
-    self.isGlobalRecording = self.isMouseRecording || self.isKeyboardRecording || self.isScrollRecording;
-
-    [[self pauseKeyboardRecordingItem] setTitle:self.isKeyboardRecording ? LABEL_RECORDING_KEYBOARD : LABEL_NOT_RECORDING_KEYBOARD];
-    [[self pauseKeyboardRecordingItem] setState:self.isKeyboardRecording];
+    self.isGlobalRecording = self.isMouseRecording || self.isScrollRecording;
     
     [[self pauseScrollRecordingItem] setTitle:self.isScrollRecording ? LABEL_RECORDING_SCROLL : LABEL_NOT_RECORDING_SCROLL];
     [[self pauseScrollRecordingItem] setState:self.isScrollRecording];
@@ -345,18 +331,9 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
 /**
  * @function        toggleScrollRecording
  * @description     toggle scroll recording
- **/
+**/
 - (IBAction)toggleScrollRecording:(id)sender {
     self.isScrollRecording = !self.isScrollRecording;
-    [self drawIndicators];
-}
-
-/**
- * @function        toggleKeyboardRecording
- * @description     toggle keyboard recording
-**/
-- (IBAction)toggleKeyboardRecording:(id)sender {
-    self.isKeyboardRecording = !self.isKeyboardRecording;
     [self drawIndicators];
 }
 
@@ -407,7 +384,6 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     self.cursorDeltaY = [NSNumber numberWithFloat:0];
     self.cursorPositionX = [NSNumber numberWithFloat:0];
     self.cursorPositionY = [NSNumber numberWithFloat:0];
-    self.keyDownCounter = [NSNumber numberWithInt:0];
     self.leftMouseCounter = [NSNumber numberWithInt:0];
 }
 
@@ -419,17 +395,25 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     _webSocket.delegate = nil;
     [_webSocket close];
     
-    _webSocket = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%@:%@", WEBSOCKET_PROTOCOL, WEBSOCKET_HOST, WEBSOCKET_PORT]]]];
-    _webSocket.delegate = self;
+    // If no host & port in the configuration
+    if ([[self getUserSettings:@"host"] isEqualToString:@""] || [[self getUserSettings:@"port"] isEqualToString:@""]) {
+        [notifier push:@"Missing server parameters" :@"Please specifiy the server host & port in the preferences" :YES :nil];
+    } else {
+        _webSocket = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[NSString
+                                                                                                                stringWithFormat:@"ws://%@:%@",
+                                                                                                                [self getUserSettings:@"host"],
+                                                                                                                [self getUserSettings:@"port"]]]]];
+        _webSocket.delegate = self;
     
-    [socketStatus setStringValue:@"Opening connection!"];
-    [_webSocket open];
+        [socketStatus setStringValue:@"Opening connection!"];
+        [_webSocket open];
+    }
 }
 
 /**
  * @function        stopRecording
  * @description     stop global recording
- **/
+**/
 - (void)stopRecording {
     if (!self.isGlobalRecording) {
         return;
@@ -438,10 +422,10 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     NSLog(@"stopRecording");
     
     self.isGlobalRecording = NO;
-    self.isKeyboardRecording = NO;
     self.isMouseRecording = NO;
     self.isScrollRecording = NO;
     [NSEvent removeMonitor:monitorUserInputs];
+    monitorUserInputs = nil;
     
     [self initCounters];
     
@@ -457,14 +441,13 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
 **/
 - (void)startRecording {
     self.isGlobalRecording = YES;
-    self.isKeyboardRecording = YES;
     self.isMouseRecording = YES;
     self.isScrollRecording = YES;
     
     NSLog(@"startRecording");
     
     // Fire everytime cursor move
-    NSUInteger eventMasks = NSMouseMovedMask | NSLeftMouseDownMask | NSKeyDownMask | NSScrollWheelMask;
+    NSUInteger eventMasks = NSMouseMovedMask | NSLeftMouseDownMask | NSScrollWheelMask;
     
     monitorUserInputs = [NSEvent addGlobalMonitorForEventsMatchingMask:eventMasks handler:^(NSEvent *incomingEvent) {
         switch ([incomingEvent type]) {
@@ -511,53 +494,6 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
                 break;
             }
                 
-            // Key down
-            case 10:
-            {
-                if ([self isKeyboardRecording]) {
-                    // Character just hit
-                    NSString *_char = [[incomingEvent characters] lowercaseString];
-                    int keyCode = (int)[incomingEvent keyCode];
-                    NSString *_keyCode = [NSString stringWithFormat:@"%d" , [incomingEvent keyCode]];
-                
-                    [self logMessageToLogView:[NSString stringWithFormat:@"Key pressed : %@", _char]];
-                    self.keyDownCounter = [NSNumber numberWithInt:(1 + [self.keyDownCounter intValue])];
-                    
-                    BOOL trackChar = [self isCharacterTracked:_char];
-                    
-                    // Only report key if it's a character we want to track
-                    NSMutableDictionary *keyData = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                                    _char, @"keyPressed",
-                                                    nil];
-                    [self reportToSocket:@"KEY_DOWN" :keyData];
-                    
-                    // If allow works tracking
-                    if (ALLOW_WORDS_TRACKING) {
-                        // If it's a delete key
-                        if (keyCode == 51) {
-                            // Remove last character
-                            if ([currentWord length] > 0) {
-                                currentWord = [currentWord substringToIndex:[currentWord length] - 1];
-                            }
-                        
-                        // If it's a separator & currentWord is not empty
-                        } else if ([self isSeparator:_char:_keyCode:keyCode] && [currentWord length] > 0) {
-                            // Send the word just typed and we re-init currentWord
-                            NSMutableDictionary *keyData = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                                            currentWord, @"word",
-                                                            nil];
-                            [self reportToSocket:@"WORD" :keyData];
-                            currentWord = @"";
-                        
-                        // Stack letter to current word
-                        } else if (trackChar) {
-                            currentWord = [currentWord stringByAppendingString:_char];
-                        }
-                    }
-                }
-                break;
-            }
-                
             // Scroll wheel ( X & Y )
             case 22:
             {
@@ -594,62 +530,11 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     [self logMessageToLogView:[NSString stringWithFormat:@"Start Recording"]];
 }
 
-
-/**
- * @function        isCharacterTracked
- * @description     check if a character has to be tracked
-**/
-- (BOOL)isCharacterTracked:(NSString*)_char {
-    // Check if it's a character to track
-    NSCharacterSet *charSet = [NSCharacterSet characterSetWithCharactersInString:TRACKED_CHARS];
-    NSRange range = [_char rangeOfCharacterFromSet:charSet];
-    
-    if (range.location != NSNotFound) {
-        return YES;
-    } else {
-        return NO;
-    }
-}
-
-
-/**
- * @function        isSeparator
- * @description     check if a character is a separator
- **/
-- (BOOL)isSeparator:(NSString*)_char :(NSString*)_sKeyCode :(int)_iKeyCode {
-    // Check if it's a character / number / space / comma / period
-    NSCharacterSet *charSet;
-    NSRange range;
-    
-    charSet = [NSCharacterSet characterSetWithCharactersInString:SEPARATORS];
-    range = [_char rangeOfCharacterFromSet:charSet];
-    
-    // If return key
-    if (_iKeyCode == 36) {
-        return YES;
-    }
-    
-    if (range.location != NSNotFound) {
-        return YES;
-    } else {
-        charSet = [NSCharacterSet characterSetWithCharactersInString:SEPARATORS_KEY_CODES];
-        range = [_sKeyCode rangeOfCharacterFromSet:charSet];
-        
-        if (range.location != NSNotFound) {
-            return YES;
-        } else {
-            return NO;
-        }
-    }
-}
-
-
 /**
  * @function        clearButtonPressed
  * @description     called when clear button is pressed
 **/
 - (IBAction)clearButtonPressed:(id)sender {
-    self.keyDownCounter = [NSNumber numberWithInt:0];
     self.leftMouseCounter = [NSNumber numberWithInt:0];
     [self.logView setString:@""];
 }
@@ -768,7 +653,7 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     _webSocket = nil;
     
     // Push notification
-    if (ALLOW_NOTIFICATIONS) {
+    if ([[self getUserSettings:@"displaySystemNotifications"] intValue] == 1) {
         [notifier push:@"Connection to WebSocket failed" :@"The connection to the WebSocket failed. Please retry." :YES :nil];
     }
     
@@ -802,11 +687,10 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
-    //NSLog(@"Websocket :: closed : %@", reason);
     clientID = 0;
     
     // Push notification
-    if (ALLOW_NOTIFICATIONS) {
+    if ([[self getUserSettings:@"displaySystemNotifications"] intValue] == 1) {
         [notifier push:@"WebSocket just closed" :@"The WebSocket just closed, the app lost connection. Please retry." :YES :nil];
     }
     
