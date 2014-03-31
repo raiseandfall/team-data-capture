@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="4514" systemVersion="13C64" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="4514"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="5053"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -930,6 +930,7 @@
                 <outlet property="logWindow" destination="371" id="spo-Gb-GQm"/>
                 <outlet property="menu" destination="t0p-o8-Lw1" id="9FS-Jy-6D7"/>
                 <outlet property="pauseAllRecordingsItem" destination="RLx-lh-0Nr" id="gIw-TS-Mv2"/>
+                <outlet property="pauseKeyboardRecordingItem" destination="g2A-tp-RMf" id="TUG-hf-RJ2"/>
                 <outlet property="pauseMouseRecordingItem" destination="9wX-MN-9Q7" id="TZE-Tm-g0G"/>
                 <outlet property="pauseScrollRecordingItem" destination="5jY-Bn-qe0" id="QXh-I1-J5I"/>
                 <outlet property="preferencesWindow" destination="leQ-Ih-Rku" id="svp-3p-Kxy"/>
@@ -957,6 +958,12 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="7in-ha-grY"/>
+                <menuItem title="Not recording keyboard hits" onStateImage="NSStatusAvailable" offStateImage="NSStatusUnavailable" mixedStateImage="NSStatusNone" id="g2A-tp-RMf">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="toggleKeyboardRecording:" target="494" id="6yd-ix-azF"/>
+                    </connections>
+                </menuItem>
                 <menuItem title="Not recording mouse" onStateImage="NSStatusAvailable" offStateImage="NSStatusUnavailable" mixedStateImage="NSStatusNone" id="9wX-MN-9Q7">
                     <attributedString key="attributedTitle"/>
                     <modifierMask key="keyEquivalentModifierMask"/>
