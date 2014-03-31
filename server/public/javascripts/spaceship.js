@@ -4,7 +4,7 @@ var Spaceship = function(id, ws, two) {
 
     var aTrail = [];
     var aLaser = [];
-
+    var missiles = [];
     var delta = new Two.Vector();
     var mouse = new Two.Vector();
     var rotation = new Two.Vector();
@@ -49,8 +49,7 @@ var Spaceship = function(id, ws, two) {
 
     ws.events.addEventListener(ws.EVENT.CLICK+'_'+id, function(e) {
       var laser = {};
-      laser.elt = two.makeRectangle(mouse.x+200, mouse.y, 20, 2);
-      laser.elt.noStroke().fill = '#FFDC99';
+      laser.elt = ufo.getLaser(mouse.x, mouse.y);
       laser.xInit = mouse.x;
       laser.x = mouse.x+200;
       laser.y = mouse.y;
@@ -91,6 +90,14 @@ var Spaceship = function(id, ws, two) {
       aTrail.push(itemTrailSin);
     }
 
+    /**
+    *
+    */
+
+    function checkCollision(){
+
+    }
+
     nIntervId = setInterval(addTrailItem, frequence);
 
     two.bind('update', function() {
@@ -107,7 +114,7 @@ var Spaceship = function(id, ws, two) {
 
         if(laser.x > two.width){
           laser.elt.remove();
-          aLaser.splice(i,0);
+          aLaser.splice(i,1);
         }
       }
 
@@ -155,7 +162,7 @@ var Spaceship = function(id, ws, two) {
           itemTrail.index = 0;
           clearInterval(nIntervId);
         }else{
-          var percent = 1-(itemTrail.xInit-itemTrail.x)/sizeTrail;
+          percent = 1-(itemTrail.xInit-itemTrail.x)/sizeTrail;
           itemTrail.elt.scale = percent*itemTrail.z/2;
           itemTrail.elt.opacity = percent*(itemTrail.z);
           itemTrail.elt.translation.set(itemTrail.x, itemTrail.y);
@@ -163,5 +170,7 @@ var Spaceship = function(id, ws, two) {
           itemTrail.index++;
         }
       }
+
     });
+
 };

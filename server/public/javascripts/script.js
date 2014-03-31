@@ -18,8 +18,8 @@ var two = new Two({
 }).appendTo(document.body);
 
 var sky = new Sky(two);
+Two.Resolution = 32;
 
-Two.Resoultion = 32;
 
 /**********************************
 *              Events             *
@@ -44,9 +44,6 @@ ws.events.addEventListener(ws.EVENT.WELCOME, function(e) {
 		ss,
 		i;
 	console.log('listener: welcome', l);
-	for(i = 0; i < l; i++){
-		ss = new Spaceship(datajson.data[i].id, ws, two);
-	}
 });
 
 
@@ -66,7 +63,7 @@ ws.events.addEventListener(ws.EVENT.MOUSE_MOVE, function(e) {
 * Call everytime an action click is sent from the server
 */
 ws.events.addEventListener(ws.EVENT.CLICK, function(e) {
-	//console.log('listener: click', e);
+	//console.log('listener: click', e);}
 });
 
 /**
@@ -110,6 +107,7 @@ ws.events.addEventListener(ws.EVENT.NEW_USER, function(e) {
 	//var username = datajson.data.username;
 
 	var ss = new Spaceship(id, ws, two);
+
 	/** closeuser_[id]
 	* also ws.EVENT.MOUSE_MOVE+'_'+id
 	* Call everytime an action mouse move from the socket [id] is sent from the server
