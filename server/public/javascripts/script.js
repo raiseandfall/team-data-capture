@@ -20,12 +20,7 @@ var two = new Two({
 var sky = new Sky(two);
 Two.Resolution = 32;
 
-var audio;
-audiojs.events.ready(function() {
-  var as = audiojs.createAll();
-      audio = as[0];
-      console.log('audio ready!',audio);
-});
+
 /**********************************
 *              Events             *
 **********************************/

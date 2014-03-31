@@ -30,6 +30,14 @@ var Spaceship = function(id, ws, two) {
     ball.add(ufo.getShip());
 
     var bubbleText;
+    var textTimer;
+    var textScale = 1;
+    var textTranslate = 0;
+    var bubble;
+    var textWidth = 0;
+    var v;
+    var contentBubble;
+    var audio = document.getElementById('audio');
 
     //move the the rubberball with the mouse position
     ws.events.addEventListener(ws.EVENT.MOUSE_MOVE+'_'+id, function(e) {
@@ -57,6 +65,10 @@ var Spaceship = function(id, ws, two) {
       laser.y = mouse.y;
       aLaser.push(laser);
       createText('HEY!');
+      if(audio){
+        audio.currentTime=0;
+         audio.play();
+      }
     });
 
     ws.events.addEventListener(ws.EVENT.MOUSE_WHEEL+'_'+id, function(e) {
@@ -96,13 +108,7 @@ var Spaceship = function(id, ws, two) {
     /**
     *
     */
-    var textTimer;
-    var textScale = 1;
-    var textTranslate = 0;
-    var bubble;
-    var textWidth = 0;
-    var v;
-    var contentBubble;
+
     function createText(){
         if(textTimer)
           clearInterval(textTimer);
@@ -116,12 +122,13 @@ var Spaceship = function(id, ws, two) {
           bubbleText.width = two.width;
           bubbleText.height = two.height;
           bubbleText.style.position = 'fixed';
+          bubbleText.style.top = '0px';
           document.body.appendChild(bubbleText);
           contentBubble = document.getElementById('canvas').getContext('2d');
         }
 
         contentBubble.clearRect(0,0,two.width,two.height);
-        contentBubble.font = "30px Arial";
+        contentBubble.font = "30px pwperspectivemedium";
         contentBubble.fillText('hey!',0,0);
         textWidth = contentBubble.measureText('hey!').width;
 
@@ -144,8 +151,8 @@ var Spaceship = function(id, ws, two) {
       contentBubble.clearRect(0,0,two.width,two.height);
       contentBubble.save();
       contentBubble.translate(mouse.x - textWidth/2 + textTranslate,mouse.y+textTranslate);
-      contentBubble.font = "30px Arial";
-      contentBubble.fillStyle = 'rgba(255,0,0,'+textScale+')';
+      contentBubble.font = "30px pwperspectivemedium";
+      contentBubble.fillStyle = 'rgba(0,0,0,'+textScale+')';
       contentBubble.fillText('hey!',0,0);
       contentBubble.restore();
 
