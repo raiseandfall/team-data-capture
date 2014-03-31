@@ -55,10 +55,6 @@ float thresholdY = 0;
 NSRect firstScreenFrame;
 NSRect secondScreenFrame;
 
-NSString *WEBSOCKET_PROTOCOL = @"ws";
-NSString *WEBSOCKET_HOST = @"192.168.173.110";
-NSString *WEBSOCKET_PORT = @"9000";
-
 NSString *LABEL_SHOW_LOGS = @"Show logs";
 NSString *LABEL_HIDE_LOGS = @"Hide logs";
 NSString *LABEL_SERVER_UP = @"Connected to Server";
@@ -423,7 +419,10 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     if ([[self getUserSettings:@"host"] isEqualToString:@""] || [[self getUserSettings:@"port"] isEqualToString:@""]) {
         [notifier push:@"Missing server parameters" :@"Please specifiy the server host & port in the preferences" :YES :nil];
     } else {
-        _webSocket = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"ws://%@:%@", WEBSOCKET_HOST, WEBSOCKET_PORT]]]];
+        _webSocket = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[NSString
+                                                                                                                stringWithFormat:@"ws://%@:%@",
+                                                                                                                [self getUserSettings:@"host"],
+                                                                                                                [self getUserSettings:@"port"]]]]];
         _webSocket.delegate = self;
     
         [socketStatus setStringValue:@"Opening connection!"];
