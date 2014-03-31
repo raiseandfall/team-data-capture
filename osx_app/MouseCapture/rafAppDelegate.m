@@ -105,6 +105,11 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     // Calculate global resolution
     [self calculateGlobalResolution];
     
+    // Get User settings
+    [self.userSettingHost setStringValue:[self getUserSettings:@"host"]];
+    [self.userSettingPort setStringValue:[self getUserSettings:@"port"]];
+    [self.userSettingDisplayNotifications setState:[[self getUserSettings:@"displaySystemNotifications"] intValue]];
+    
     // ACTION TYPES
     ACTION_TYPES = [NSDictionary dictionaryWithObjectsAndKeys:
                        @"mousemove", @"MOUSE_MOVE",
@@ -194,12 +199,10 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     float localY = 0;
     
     if ((adjustedX >= firstScreenMinX && adjustedX <= firstScreenMaxX) && (adjustedY >= firstScreenMinY && adjustedY <= firstScreenMaxY)) {
-        //NSLog(@"CURSOR ON FIRST SCREEN :: globalPos : %f, %f - localPos : %f, %f", adjustedX, adjustedY, (adjustedX - firstScreenMinX), (adjustedY - firstScreenMinY));
         currentScreen = firstScreenFrame;
         localX = adjustedX - firstScreenMinX;
         localY = adjustedY - firstScreenMinY;
     } else {
-        //NSLog(@"CURSOR ON SECOND SCREEN :: globalPos : %f, %f - localPos : %f, %f", adjustedX, adjustedY, (adjustedX - secondScreenMinX), (adjustedY - secondScreenMinY));
         currentScreen = secondScreenFrame;
         localX = adjustedX - secondScreenMinX;
         localY = adjustedY - secondScreenMinY;
@@ -231,11 +234,14 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
  * @function        getUserSettings
  * @description     get user settings
  **/
-- (NSDictionary*)getUserSettings :(NSString*)settingsType {
+- (NSString*)getUserSettings :(NSString*)settingName {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSDictionary *userSettings = [defaults objectForKey:settingsType];
+    NSString *userSetting = [defaults objectForKey:settingName];
     
-    return userSettings;
+    if (userSetting == nil || [userSetting length] == 0) {
+        return @"";
+    }
+    return userSetting;
 }
 
 /**
@@ -243,7 +249,11 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
  * @description     save user settings
  **/
 - (void)saveUserSettings {
-    NSLog(@"host : %@", self.userSettingHost.stringValue);
+    
+    [[NSUserDefaults standardUserDefaults] setObject:self.userSettingHost.stringValue forKey:@"host"];
+    [[NSUserDefaults standardUserDefaults] setObject:self.userSettingPort.stringValue forKey:@"port"];
+    [[NSUserDefaults standardUserDefaults] setObject:self.userSettingDisplayNotifications.stringValue
+                                              forKey:@"displaySystemNotifications"];
 }
 
 /**
@@ -255,17 +265,30 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
 }
 
 /**
- * @function        displayPreferencesWindow
- * @description     display preferences window
+ * @function        showPreferences
+ * @description     show preferences window
 **/
-- (IBAction)displayPreferencesWindow:(id)sender{
-    // Fill settings if not yet
-    
-    
-    
+- (IBAction)showPreferences:(id)sender{
+    [[self preferencesWindow] setLevel: NSStatusWindowLevel];
+    [NSApp activateIgnoringOtherApps:YES];
     [[self preferencesWindow] makeKeyAndOrderFront:nil];
 }
 
+/**
+ * @function        showLogger
+ * @description     show logger window
+ **/
+- (IBAction)showLogger:(id)sender {
+    if ([[self logWindow] isVisible]) {
+        [[self logWindow] close];
+        [[self showLoggerItem] setTitle:LABEL_SHOW_LOGS];
+    } else {
+        [[self logWindow] setLevel: NSStatusWindowLevel];
+        [NSApp activateIgnoringOtherApps:YES];
+        [[self logWindow] makeKeyAndOrderFront:nil];
+        [[self showLoggerItem] setTitle:LABEL_HIDE_LOGS];
+    }
+}
 
 /*******************
  * MENU BAR ITEM
@@ -344,21 +367,6 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
 - (IBAction)toggleMouseRecording:(id)sender {
     self.isMouseRecording = !self.isMouseRecording;
     [self drawIndicators];
-}
-
-/**
- * @function        showLogger
- * @description     show logger file
-**/
-- (IBAction)showLogger:(id)sender {
-    if ([[self logWindow] isVisible]) {
-        [[self logWindow] close];
-        [[self showLoggerItem] setTitle:LABEL_SHOW_LOGS];
-    } else {
-        [[self logWindow] setLevel: NSStatusWindowLevel];
-        [[self logWindow] makeKeyAndOrderFront:nil];
-        [[self showLoggerItem] setTitle:LABEL_HIDE_LOGS];
-    }
 }
 
 

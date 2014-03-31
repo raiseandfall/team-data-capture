@@ -650,7 +650,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="335" y="390" width="673" height="433"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1280" height="778"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1028"/>
             <view key="contentView" id="372">
                 <rect key="frame" x="0.0" y="0.0" width="673" height="433"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -943,6 +943,7 @@
                 <outlet property="toolbarDisconnectButton" destination="Auy-1i-gJ1" id="Sjf-R5-fEW"/>
                 <outlet property="toolbarRecordButton" destination="nX3-HP-ZmN" id="kQB-he-sPe"/>
                 <outlet property="toolbarStopButton" destination="ciH-ij-Vi3" id="Mbg-sn-Uj1"/>
+                <outlet property="userSettingDisplayNotifications" destination="saD-u4-OLX" id="JeW-Re-nYu"/>
                 <outlet property="userSettingHost" destination="iMb-Vo-OS7" id="F0Z-23-myx"/>
                 <outlet property="userSettingPort" destination="hzk-nq-o6L" id="wRJ-5B-ISf"/>
                 <outlet property="versionNumber" destination="erg-ol-faB" id="nxq-Nh-Ss0"/>
@@ -1003,7 +1004,7 @@
                     <attributedString key="attributedTitle"/>
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
-                        <action selector="displayPreferencesWindow:" target="494" id="suq-ft-nIb"/>
+                        <action selector="showPreferences:" target="494" id="VQP-kI-bTQ"/>
                     </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="PQt-P8-6dp"/>
@@ -1020,7 +1021,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="814" y="516" width="388" height="319"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1280" height="778"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1028"/>
             <view key="contentView" id="TG9-hW-pRf">
                 <rect key="frame" x="0.0" y="0.0" width="388" height="319"/>
                 <autoresizingMask key="autoresizingMask"/>

@@ -34,6 +34,7 @@ static id monitorUserInputs;
 // User Settings
 @property (weak) IBOutlet NSTextField *userSettingHost;
 @property (weak) IBOutlet NSTextField *userSettingPort;
+@property (weak) IBOutlet NSButton *userSettingDisplayNotifications;
 
 @property (readwrite) NSDateFormatter *logDateFormatter;
 
@@ -60,9 +61,10 @@ static id monitorUserInputs;
 @property (readwrite) IBOutlet NSMenuItem *showPreferencesItem;
 @property (readwrite) IBOutlet NSStatusItem *statusItem;
 
+
 - (void)drawIndicators;
 
-- (NSDictionary*)getUserSettings         :(NSString*)settingsType;
+- (NSString*)getUserSettings            :(NSString*)settingName;
 - (void)saveUserSettings;
 - (void)calculateGlobalResolution;
 - (NSDictionary*)getLocalPosition       :(CGPoint)loc;
