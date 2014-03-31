@@ -55,21 +55,6 @@ var Ship = function(two){
   }
   var reactor = two.makeGroup(fire,fire2);
 
-  var wall = two.makeCircle(100, 0 , 100);
-  wall.stroke = '#FFFFFF';
-  wall.fill = 'rgba(255,255,255,0.3)';
-  wall.scale = 0;
-  for (i = 0; i < wall.vertices.length; i++) {
-    v = wall.vertices[i];
-    v.originalX = v.x;
-  }
-  /*var circle = two.makeCircle(0, 0 , 50);
-  circle.stroke = '#00f0ff';//'#ff5a00';
-  circle.fill = 'none';
-  circle.opacity = 0.5;
-  circle.linewidth = 5;
-  var reactor_cosmic = two.makeGroup(circle);*/
-
   /*var lazer = two.makeGroup();
   var originLazer = 188;
   var densityLazer = 20;
@@ -83,7 +68,7 @@ var Ship = function(two){
   lazer = two.makeGroup(lines);
   ship.add(lazer);*/
 
-  var ship = two.makeGroup(reactor,ufo,wall);
+  var ship = two.makeGroup(reactor,ufo);
 
   two.bind('update', function() {
 
@@ -101,15 +86,6 @@ var Ship = function(two){
           var v2 = fire2.vertices[i];
           v2.x = v2.originalX - rand;
         }
-      }
-    }
-
-    if(wall.scale>0){
-      wall.scale -= 0.02;
-      for (i = 0; i < wall.vertices.length; i++) {
-        v = wall.vertices[i];
-          var rand = Math.floor((Math.random()*10)+1);
-          v.x = v.originalX - rand;
       }
     }
 
@@ -161,7 +137,4 @@ var Ship = function(two){
     return laser;
   };
 
-  this.protectWall = function(){
-    wall.scale = 1;
-  };
 };

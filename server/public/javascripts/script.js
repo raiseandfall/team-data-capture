@@ -68,15 +68,7 @@ ws.events.addEventListener(ws.EVENT.MOUSE_MOVE, function(e) {
 * Call everytime an action click is sent from the server
 */
 ws.events.addEventListener(ws.EVENT.CLICK, function(e) {
-	//console.log('listener: click', e);
-  // update missiles
-  missiles = [];
-  for(i = 0; i < spaceships.length; i++){
-    missiles = missiles.concat(spaceships[i].getLaser());
-  }
-  for(i = 0; i < spaceships.length; i++){
-    spaceships[i].updateMissilesPos(missiles);
-  }
+	//console.log('listener: click', e);}
 });
 
 /**

@@ -171,26 +171,6 @@ var Spaceship = function(id, ws, two) {
         }
       }
 
-      for (i = 0; i < missiles.length; ++i){
-
-        //console.log('--->',Math.abs(mouse.x - missiles[i].x));
-        if(Math.abs(mouse.x - missiles[i].x) < 100&&Math.abs(mouse.y - missiles[i].y) < 100){
-          console.log('COLLISION');
-          ufo.protectWall();
-        }
-        if(missiles[i].x > two.width){
-          missiles.splice(i,1);
-        }
-      }
-
     });
-
-    this.updateMissilesPos = function(missilestotal){
-      missiles = missilestotal;
-    };
-
-    this.getLaser = function(){
-      return aLaser;
-    };
 
 };
