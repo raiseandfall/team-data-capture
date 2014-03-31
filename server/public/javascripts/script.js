@@ -44,6 +44,9 @@ ws.events.addEventListener(ws.EVENT.WELCOME, function(e) {
 		ss,
 		i;
 	console.log('listener: welcome', l);
+  for(i = 0; i < l; i++){
+		ss = new Spaceship(datajson.data[i].id, ws, two);
+	}
 });
 
 
