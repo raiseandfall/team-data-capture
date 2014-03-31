@@ -56,7 +56,7 @@ NSRect firstScreenFrame;
 NSRect secondScreenFrame;
 
 NSString *WEBSOCKET_PROTOCOL = @"ws";
-NSString *WEBSOCKET_HOST = @"192.168.173.116";
+NSString *WEBSOCKET_HOST = @"192.168.173.110";
 NSString *WEBSOCKET_PORT = @"9000";
 
 NSString *LABEL_SHOW_LOGS = @"Show logs";
