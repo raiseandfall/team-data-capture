@@ -26,16 +26,13 @@
 @synthesize cursorPosYLabel;
 @synthesize cursorDeltaXLabel;
 @synthesize cursorDeltaYLabel;
-@synthesize keyDownCounterLabel;
 @synthesize leftMouseCounterLabel;
 @synthesize isGlobalRecording;
-@synthesize isKeyboardRecording;
 @synthesize isScrollRecording;
 @synthesize isMouseRecording;
 
 @synthesize cursorPositionX;
 @synthesize cursorPositionY;
-@synthesize keyDownCounter;
 @synthesize leftMouseCounter;
 
 // VARIABLES
@@ -61,8 +58,6 @@ NSString *LABEL_SERVER_UP = @"Connected to Server";
 NSString *LABEL_SERVER_DOWN = @"Server Unavailable";
 NSString *LABEL_RECORDING_MOUSE = @"Recording mouse";
 NSString *LABEL_NOT_RECORDING_MOUSE = @"Not recording mouse";
-NSString *LABEL_RECORDING_KEYBOARD = @"Recording keyboard hits";
-NSString *LABEL_NOT_RECORDING_KEYBOARD = @"Not recording keyboard hits";
 NSString *LABEL_RECORDING_SCROLL = @"Recording scroll";
 NSString *LABEL_NOT_RECORDING_SCROLL = @"Not recording scroll";
 NSString *LABEL_START_ALL_RECORDINGS = @"Start all recordings";
@@ -110,7 +105,6 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     ACTION_TYPES = [NSDictionary dictionaryWithObjectsAndKeys:
                        @"mousemove", @"MOUSE_MOVE",
                        @"click", @"CLICK",
-                       @"keydown", @"KEY_DOWN",
                        @"word", @"WORD",
                        @"scroll", @"SCROLL",
                         nil];
@@ -324,10 +318,7 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
  * @description     draw menu bar indicators
 **/
 - (void)drawIndicators {
-    self.isGlobalRecording = self.isMouseRecording || self.isKeyboardRecording || self.isScrollRecording;
-
-    [[self pauseKeyboardRecordingItem] setTitle:self.isKeyboardRecording ? LABEL_RECORDING_KEYBOARD : LABEL_NOT_RECORDING_KEYBOARD];
-    [[self pauseKeyboardRecordingItem] setState:self.isKeyboardRecording];
+    self.isGlobalRecording = self.isMouseRecording || self.isScrollRecording;
     
     [[self pauseScrollRecordingItem] setTitle:self.isScrollRecording ? LABEL_RECORDING_SCROLL : LABEL_NOT_RECORDING_SCROLL];
     [[self pauseScrollRecordingItem] setState:self.isScrollRecording];
@@ -344,15 +335,6 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
 **/
 - (IBAction)toggleScrollRecording:(id)sender {
     self.isScrollRecording = !self.isScrollRecording;
-    [self drawIndicators];
-}
-
-/**
- * @function        toggleKeyboardRecording
- * @description     toggle keyboard recording
-**/
-- (IBAction)toggleKeyboardRecording:(id)sender {
-    self.isKeyboardRecording = !self.isKeyboardRecording;
     [self drawIndicators];
 }
 
@@ -403,7 +385,6 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     self.cursorDeltaY = [NSNumber numberWithFloat:0];
     self.cursorPositionX = [NSNumber numberWithFloat:0];
     self.cursorPositionY = [NSNumber numberWithFloat:0];
-    self.keyDownCounter = [NSNumber numberWithInt:0];
     self.leftMouseCounter = [NSNumber numberWithInt:0];
 }
 
@@ -442,7 +423,6 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     NSLog(@"stopRecording");
     
     self.isGlobalRecording = NO;
-    self.isKeyboardRecording = NO;
     self.isMouseRecording = NO;
     self.isScrollRecording = NO;
     [NSEvent removeMonitor:monitorUserInputs];
@@ -461,14 +441,13 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
 **/
 - (void)startRecording {
     self.isGlobalRecording = YES;
-    self.isKeyboardRecording = YES;
     self.isMouseRecording = YES;
     self.isScrollRecording = YES;
     
     NSLog(@"startRecording");
     
     // Fire everytime cursor move
-    NSUInteger eventMasks = NSMouseMovedMask | NSLeftMouseDownMask | NSKeyDownMask | NSScrollWheelMask;
+    NSUInteger eventMasks = NSMouseMovedMask | NSLeftMouseDownMask | NSScrollWheelMask;
     
     monitorUserInputs = [NSEvent addGlobalMonitorForEventsMatchingMask:eventMasks handler:^(NSEvent *incomingEvent) {
         switch ([incomingEvent type]) {
@@ -515,53 +494,6 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
                 break;
             }
                 
-            // Key down
-            case 10:
-            {
-                if ([self isKeyboardRecording]) {
-                    // Character just hit
-                    NSString *_char = [[incomingEvent characters] lowercaseString];
-                    int keyCode = (int)[incomingEvent keyCode];
-                    NSString *_keyCode = [NSString stringWithFormat:@"%d" , [incomingEvent keyCode]];
-                
-                    [self logMessageToLogView:[NSString stringWithFormat:@"Key pressed : %@", _char]];
-                    self.keyDownCounter = [NSNumber numberWithInt:(1 + [self.keyDownCounter intValue])];
-                    
-                    BOOL trackChar = [self isCharacterTracked:_char];
-                    
-                    // Only report key if it's a character we want to track
-                    NSMutableDictionary *keyData = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                                    _char, @"keyPressed",
-                                                    nil];
-                    [self reportToSocket:@"KEY_DOWN" :keyData];
-                    
-                    // If allow works tracking
-                    if (ALLOW_WORDS_TRACKING) {
-                        // If it's a delete key
-                        if (keyCode == 51) {
-                            // Remove last character
-                            if ([currentWord length] > 0) {
-                                currentWord = [currentWord substringToIndex:[currentWord length] - 1];
-                            }
-                        
-                        // If it's a separator & currentWord is not empty
-                        } else if ([self isSeparator:_char:_keyCode:keyCode] && [currentWord length] > 0) {
-                            // Send the word just typed and we re-init currentWord
-                            NSMutableDictionary *keyData = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                                            currentWord, @"word",
-                                                            nil];
-                            [self reportToSocket:@"WORD" :keyData];
-                            currentWord = @"";
-                        
-                        // Stack letter to current word
-                        } else if (trackChar) {
-                            currentWord = [currentWord stringByAppendingString:_char];
-                        }
-                    }
-                }
-                break;
-            }
-                
             // Scroll wheel ( X & Y )
             case 22:
             {
@@ -598,62 +530,11 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     [self logMessageToLogView:[NSString stringWithFormat:@"Start Recording"]];
 }
 
-
-/**
- * @function        isCharacterTracked
- * @description     check if a character has to be tracked
-**/
-- (BOOL)isCharacterTracked:(NSString*)_char {
-    // Check if it's a character to track
-    NSCharacterSet *charSet = [NSCharacterSet characterSetWithCharactersInString:TRACKED_CHARS];
-    NSRange range = [_char rangeOfCharacterFromSet:charSet];
-    
-    if (range.location != NSNotFound) {
-        return YES;
-    } else {
-        return NO;
-    }
-}
-
-
-/**
- * @function        isSeparator
- * @description     check if a character is a separator
-**/
-- (BOOL)isSeparator:(NSString*)_char :(NSString*)_sKeyCode :(int)_iKeyCode {
-    // Check if it's a character / number / space / comma / period
-    NSCharacterSet *charSet;
-    NSRange range;
-    
-    charSet = [NSCharacterSet characterSetWithCharactersInString:SEPARATORS];
-    range = [_char rangeOfCharacterFromSet:charSet];
-    
-    // If return key
-    if (_iKeyCode == 36) {
-        return YES;
-    }
-    
-    if (range.location != NSNotFound) {
-        return YES;
-    } else {
-        charSet = [NSCharacterSet characterSetWithCharactersInString:SEPARATORS_KEY_CODES];
-        range = [_sKeyCode rangeOfCharacterFromSet:charSet];
-        
-        if (range.location != NSNotFound) {
-            return YES;
-        } else {
-            return NO;
-        }
-    }
-}
-
-
 /**
  * @function        clearButtonPressed
  * @description     called when clear button is pressed
 **/
 - (IBAction)clearButtonPressed:(id)sender {
-    self.keyDownCounter = [NSNumber numberWithInt:0];
     self.leftMouseCounter = [NSNumber numberWithInt:0];
     [self.logView setString:@""];
 }
