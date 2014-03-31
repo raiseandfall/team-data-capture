@@ -29,6 +29,16 @@ var Spaceship = function(id, ws, two) {
     var ball = two.makeGroup();
     ball.add(ufo.getShip());
 
+    var bubbleText;
+    var textTimer;
+    var textScale = 1;
+    var textTranslate = 0;
+    var bubble;
+    var textWidth = 0;
+    var v;
+    var contentBubble;
+    var audio = document.getElementById('audio');
+
     //move the the rubberball with the mouse position
     ws.events.addEventListener(ws.EVENT.MOUSE_MOVE+'_'+id, function(e) {
       var datajson =  JSON.parse(e.detail);
@@ -54,6 +64,11 @@ var Spaceship = function(id, ws, two) {
       laser.x = mouse.x+200;
       laser.y = mouse.y;
       aLaser.push(laser);
+      createText('HEY!');
+      if(audio){
+        audio.currentTime=0;
+         audio.play();
+      }
     });
 
     ws.events.addEventListener(ws.EVENT.MOUSE_WHEEL+'_'+id, function(e) {
@@ -94,8 +109,70 @@ var Spaceship = function(id, ws, two) {
     *
     */
 
-    function checkCollision(){
+    function createText(){
+        if(textTimer)
+          clearInterval(textTimer);
 
+        textScale = 1;
+        textTranslate = 0;
+
+        if(!bubbleText){
+          bubbleText = document.createElement('canvas');
+          bubbleText.id = 'canvas';
+          bubbleText.width = two.width;
+          bubbleText.height = two.height;
+          bubbleText.style.position = 'fixed';
+          bubbleText.style.top = '0px';
+          document.body.appendChild(bubbleText);
+          contentBubble = document.getElementById('canvas').getContext('2d');
+        }
+
+        contentBubble.clearRect(0,0,two.width,two.height);
+        contentBubble.font = "30px pwperspectivemedium";
+        contentBubble.fillText('hey!',0,0);
+        textWidth = contentBubble.measureText('hey!').width;
+
+        if(!bubble){
+          bubble = two.makeCircle(mouse.x + textTranslate, mouse.y + textTranslate, textWidth);
+          bubble.fill = bubble.stroke = '#FFFFFF';
+          for (i = 0; i < bubble.vertices.length; i++) {
+            v = bubble.vertices[i];
+            v.originalY = v.y;
+          }
+        }
+        bubble.translation.x = mouse.x + textTranslate;
+        bubble.translation.y = mouse.y+textTranslate;
+        bubble.opacity = textScale;
+
+        textTimer = setInterval(drawText,60);
+    }
+
+    function drawText(){
+      contentBubble.clearRect(0,0,two.width,two.height);
+      contentBubble.save();
+      contentBubble.translate(mouse.x - textWidth/2 + textTranslate,mouse.y+textTranslate);
+      contentBubble.font = "30px pwperspectivemedium";
+      contentBubble.fillStyle = 'rgba(0,0,0,'+textScale+')';
+      contentBubble.fillText('hey!',0,0);
+      contentBubble.restore();
+
+      textTranslate -= 10;
+      if(textTranslate<-50)
+        textScale -= 0.1;
+
+      bubble.translation.x = mouse.x + textTranslate;
+      bubble.translation.y = mouse.y+textTranslate;
+      bubble.opacity = textScale;
+      for (i = 0; i < bubble.vertices.length; i++) {
+        v = bubble.vertices[i];
+        var rand = Math.floor((Math.random()*5)+1);
+        v.y = v.originalY + rand;
+      }
+      if(textScale<=0){
+        clearInterval(textTimer);
+        bubble.opacity = textScale = 0;
+        contentBubble.clearRect(0,0,two.width,two.height);
+      }
     }
 
     nIntervId = setInterval(addTrailItem, frequence);
@@ -103,10 +180,9 @@ var Spaceship = function(id, ws, two) {
     two.bind('update', function() {
 
       delta.copy(mouse).subSelf(ball.translation);
-
       ball.translation.addSelf(delta);
-
       ball.rotation = Math.PI/2*(rotation.y/100);
+
       for(i = 0; i<aLaser.length; i++){
         var laser = aLaser[i];
         laser.x += speedLaser;

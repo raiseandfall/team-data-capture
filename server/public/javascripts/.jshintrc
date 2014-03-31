@@ -18,6 +18,7 @@
     "Spaceship" : true,
     "console" : true,
     "Two" : true,
-    "Sky" : true 
+    "Sky" : true, 
+    "Stats" : true 
   }
 }
