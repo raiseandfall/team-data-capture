@@ -650,7 +650,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="335" y="390" width="673" height="433"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1028"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1058"/>
             <view key="contentView" id="372">
                 <rect key="frame" x="0.0" y="0.0" width="673" height="433"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -930,7 +930,6 @@
                 <outlet property="logWindow" destination="371" id="spo-Gb-GQm"/>
                 <outlet property="menu" destination="t0p-o8-Lw1" id="9FS-Jy-6D7"/>
                 <outlet property="pauseAllRecordingsItem" destination="RLx-lh-0Nr" id="gIw-TS-Mv2"/>
-                <outlet property="pauseKeyboardRecordingItem" destination="Jfd-4c-K9p" id="68L-CG-l7C"/>
                 <outlet property="pauseMouseRecordingItem" destination="9wX-MN-9Q7" id="TZE-Tm-g0G"/>
                 <outlet property="pauseScrollRecordingItem" destination="5jY-Bn-qe0" id="QXh-I1-J5I"/>
                 <outlet property="preferencesWindow" destination="leQ-Ih-Rku" id="svp-3p-Kxy"/>
@@ -958,13 +957,6 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="7in-ha-grY"/>
-                <menuItem title="Not recording keyboard hits" onStateImage="NSStatusAvailable" offStateImage="NSStatusUnavailable" mixedStateImage="NSStatusNone" id="Jfd-4c-K9p">
-                    <attributedString key="attributedTitle"/>
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="toggleKeyboardRecording:" target="494" id="jKR-Et-6Iv"/>
-                    </connections>
-                </menuItem>
                 <menuItem title="Not recording mouse" onStateImage="NSStatusAvailable" offStateImage="NSStatusUnavailable" mixedStateImage="NSStatusNone" id="9wX-MN-9Q7">
                     <attributedString key="attributedTitle"/>
                     <modifierMask key="keyEquivalentModifierMask"/>
@@ -1021,7 +1013,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="814" y="516" width="388" height="319"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1028"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1058"/>
             <view key="contentView" id="TG9-hW-pRf">
                 <rect key="frame" x="0.0" y="0.0" width="388" height="319"/>
                 <autoresizingMask key="autoresizingMask"/>

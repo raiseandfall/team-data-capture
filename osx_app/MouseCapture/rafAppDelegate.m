@@ -233,7 +233,7 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
 /**
  * @function        getUserSettings
  * @description     get user settings
- **/
+**/
 - (NSString*)getUserSettings :(NSString*)settingName {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *userSetting = [defaults objectForKey:settingName];
@@ -247,7 +247,7 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
 /**
  * @function        saveUserSettings
  * @description     save user settings
- **/
+**/
 - (void)saveUserSettings {
     
     [[NSUserDefaults standardUserDefaults] setObject:self.userSettingHost.stringValue forKey:@"host"];
@@ -259,7 +259,7 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
 /**
  * @function        onClosingPreferences
  * @description     called when preferences window is closed
- **/
+**/
 - (void)onClosingPreferences:(NSNotification *)notification {
     [self saveUserSettings];
 }
@@ -277,7 +277,7 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
 /**
  * @function        showLogger
  * @description     show logger window
- **/
+**/
 - (IBAction)showLogger:(id)sender {
     if ([[self logWindow] isVisible]) {
         [[self logWindow] close];
@@ -345,7 +345,7 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
 /**
  * @function        toggleScrollRecording
  * @description     toggle scroll recording
- **/
+**/
 - (IBAction)toggleScrollRecording:(id)sender {
     self.isScrollRecording = !self.isScrollRecording;
     [self drawIndicators];
@@ -419,17 +419,22 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     _webSocket.delegate = nil;
     [_webSocket close];
     
-    _webSocket = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%@:%@", WEBSOCKET_PROTOCOL, WEBSOCKET_HOST, WEBSOCKET_PORT]]]];
-    _webSocket.delegate = self;
+    // If no host & port in the configuration
+    if ([[self getUserSettings:@"host"] isEqualToString:@""] || [[self getUserSettings:@"port"] isEqualToString:@""]) {
+        [notifier push:@"Missing server parameters" :@"Please specifiy the server host & port in the preferences" :YES :nil];
+    } else {
+        _webSocket = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"ws://%@:%@", WEBSOCKET_HOST, WEBSOCKET_PORT]]]];
+        _webSocket.delegate = self;
     
-    [socketStatus setStringValue:@"Opening connection!"];
-    [_webSocket open];
+        [socketStatus setStringValue:@"Opening connection!"];
+        [_webSocket open];
+    }
 }
 
 /**
  * @function        stopRecording
  * @description     stop global recording
- **/
+**/
 - (void)stopRecording {
     if (!self.isGlobalRecording) {
         return;
@@ -615,7 +620,7 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
 /**
  * @function        isSeparator
  * @description     check if a character is a separator
- **/
+**/
 - (BOOL)isSeparator:(NSString*)_char :(NSString*)_sKeyCode :(int)_iKeyCode {
     // Check if it's a character / number / space / comma / period
     NSCharacterSet *charSet;
