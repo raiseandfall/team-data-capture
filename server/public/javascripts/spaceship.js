@@ -25,17 +25,15 @@ var Spaceship = function(id, ws, two) {
     var speedTrail = 5;
     var i = 0;
     var speedLaser = 10;
-    var ufo = new Ship(two);
+    var ufo = new Ship(id, two);
     var ball = two.makeGroup();
     ball.add(ufo.getShip());
 
     var bubbleText;
+    var message = '';
     var textTimer;
     var textScale = 1;
     var textTranslate = 0;
-    var bubble;
-    var textWidth = 0;
-    var v;
     var contentBubble;
     var audio = document.getElementById('laser');
     var reactor_audio = document.getElementById('reactor_audio');
@@ -80,8 +78,8 @@ var Spaceship = function(id, ws, two) {
     });
 
     ws.events.addEventListener(ws.EVENT.MESSENGER+'_'+id, function(e) {
-      console.log('EVENT.MESSENGER'+id,e);
-      createText('HEY!');
+      var detail = JSON.parse(e.detail);
+      createText(detail.data.msg);
     });
 
     /**
@@ -117,70 +115,44 @@ var Spaceship = function(id, ws, two) {
     *
     */
 
-    function createText(){
-        if(textTimer){
-          clearInterval(textTimer);
-        }
+    function createText(msg){
+      message = msg;
+      if(textTimer){
+        clearInterval(textTimer);
+      }
 
-        textScale = 1;
-        textTranslate = 0;
+      textScale = 1;
+      textTranslate = 0;
 
-        if(!bubbleText){
-          bubbleText = document.createElement('canvas');
-          bubbleText.id = 'canvas';
-          bubbleText.width = two.width;
-          bubbleText.height = two.height;
-          bubbleText.style.position = 'fixed';
-          bubbleText.style.top = '0px';
-          document.body.appendChild(bubbleText);
-          contentBubble = document.getElementById('canvas').getContext('2d');
-        }
-
-        contentBubble.clearRect(0,0,two.width,two.height);
-        contentBubble.font = '30px pwperspectivemedium';
-        contentBubble.fillText('hey!',0,0);
-        textWidth = contentBubble.measureText('hey!').width;
-
-        if(!bubble){
-          bubble = two.makeCircle(mouse.x + textTranslate, mouse.y + textTranslate, textWidth);
-          bubble.fill = bubble.stroke = '#FFFFFF';
-          for (i = 0; i < bubble.vertices.length; i++) {
-            v = bubble.vertices[i];
-            v.originalY = v.y;
-          }
-        }
-        bubble.translation.x = mouse.x + textTranslate;
-        bubble.translation.y = mouse.y+textTranslate;
-        bubble.opacity = textScale;
-
-        textTimer = setInterval(drawText,60);
+      if(!bubbleText){
+        bubbleText = document.createElement('canvas');
+        bubbleText.id = 'canvas_text'+id;
+        bubbleText.width = two.width;
+        bubbleText.height = two.height;
+        bubbleText.style.position = 'fixed';
+        bubbleText.style.top = '0px';
+        document.body.appendChild(bubbleText);
+        contentBubble = document.getElementById('canvas_text'+id).getContext('2d');
+      }
+      textTimer = setInterval(drawText,60);
     }
 
     function drawText(){
       contentBubble.clearRect(0,0,two.width,two.height);
       contentBubble.save();
-      contentBubble.translate(mouse.x - textWidth/2 + textTranslate,mouse.y+textTranslate);
-      contentBubble.font = '30px pwperspectivemedium';
-      contentBubble.fillStyle = 'rgba(0,0,0,'+textScale+')';
-      contentBubble.fillText('hey!',0,0);
+      contentBubble.translate(mouse.x + textTranslate - 50,mouse.y + textTranslate - 50);
+      contentBubble.font = '20px pwperspectivemedium';
+      contentBubble.fillStyle = 'rgba(255,255,255,'+textScale+')';
+      contentBubble.fillText(message,0,0);
       contentBubble.restore();
 
       textTranslate -= 10;
-      if(textTranslate<-50){
-        textScale -= 0.1;
+      if(textTranslate<-100){
+        textScale -= 0.2;
       }
 
-      bubble.translation.x = mouse.x + textTranslate;
-      bubble.translation.y = mouse.y+textTranslate;
-      bubble.opacity = textScale;
-      for (i = 0; i < bubble.vertices.length; i++) {
-        v = bubble.vertices[i];
-        var rand = Math.floor((Math.random()*5)+1);
-        v.y = v.originalY + rand;
-      }
       if(textScale<=0){
         clearInterval(textTimer);
-        bubble.opacity = textScale = 0;
         contentBubble.clearRect(0,0,two.width,two.height);
       }
     }

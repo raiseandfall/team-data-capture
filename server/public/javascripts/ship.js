@@ -1,5 +1,5 @@
 'use strict';
-var Ship = function(two){
+var Ship = function(id, two){
   var i,
       v,
       ufo1 = {'src':'/img/ship1.png',
@@ -23,13 +23,13 @@ var Ship = function(two){
       ufos = [ufo1, ufo2, ufo3];
 
   var ufo_canvas = document.createElement('canvas');
-    ufo_canvas.id = 'ufo_canvas';
+    ufo_canvas.id = 'ufo_canvas'+id;
     ufo_canvas.width = two.width;
     ufo_canvas.height = two.height;
     ufo_canvas.style.position = 'fixed';
     ufo_canvas.style.top = '0px';
     document.body.appendChild(ufo_canvas);
-  var ufo = document.getElementById('ufo_canvas').getContext('2d');
+  var ufo = document.getElementById('ufo_canvas'+id).getContext('2d');
 
   var type_ufo = Math.floor((Math.random()*ufos.length));
   var new_ufo = ufos[type_ufo];

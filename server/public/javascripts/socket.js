@@ -24,8 +24,6 @@ var Socket = (function(WebSocket){
     // flags.binary will be set if a binary data is received
     // flags.masked will be set if the data was masked
 
-		console.log('--->onmessage',JSON.parse(data.data));
-
 		var datajson = JSON.parse(data.data),
 			ev = new CustomEvent(EVENT.MESSAGE, {'detail':data.data}),
 			response;
@@ -55,7 +53,7 @@ var Socket = (function(WebSocket){
 			case EVENT.CLICK:
 			case EVENT.KEY_DOWN:
 			case EVENT.MOUSE_WHEEL:
-			case EVENT.WORD:
+			case EVENT.MESSENGER:
 					// send a general event for all mousemove
 					ev = new CustomEvent(datajson.type, {'detail':data.data});
 					this.dispatchEvent(ev);
