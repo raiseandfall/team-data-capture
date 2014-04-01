@@ -901,12 +901,16 @@
                 <outlet property="logView" destination="5wA-tM-Bs6" id="jqr-lB-Dyb"/>
                 <outlet property="logWindow" destination="371" id="spo-Gb-GQm"/>
                 <outlet property="menu" destination="t0p-o8-Lw1" id="9FS-Jy-6D7"/>
+                <outlet property="messengerTextarea" destination="Eld-jl-vFc" id="86y-7p-Emy"/>
+                <outlet property="messengerWindow" destination="MJ3-9b-4mF" id="q5X-Lk-ywi"/>
                 <outlet property="pauseAllRecordingsItem" destination="RLx-lh-0Nr" id="gIw-TS-Mv2"/>
                 <outlet property="pauseMouseRecordingItem" destination="9wX-MN-9Q7" id="TZE-Tm-g0G"/>
                 <outlet property="pauseScrollRecordingItem" destination="5jY-Bn-qe0" id="QXh-I1-J5I"/>
+                <outlet property="postMessageBtn" destination="V56-Jo-ARy" id="TbX-qr-0JJ"/>
                 <outlet property="preferencesWindow" destination="leQ-Ih-Rku" id="svp-3p-Kxy"/>
                 <outlet property="serverStatusItem" destination="xYW-mj-vsw" id="ELp-ax-ZAX"/>
                 <outlet property="showLoggerItem" destination="1Pl-3V-A8Y" id="vRL-66-K9H"/>
+                <outlet property="showMessengerItem" destination="1Mm-cS-gGM" id="kAh-98-83O"/>
                 <outlet property="showPreferencesItem" destination="AzF-vF-Qlu" id="EdC-Gv-p3h"/>
                 <outlet property="socketStatus" destination="mcm-DL-X0c" id="pYp-4i-QAX"/>
                 <outlet property="toolbarClearButton" destination="cSK-Jw-jHQ" id="hMu-JJ-Exh"/>
@@ -929,6 +933,18 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="7in-ha-grY"/>
+                <menuItem title="Server Up" onStateImage="NSStatusAvailable" offStateImage="NSStatusUnavailable" mixedStateImage="NSStatusNone" enabled="NO" id="xYW-mj-vsw">
+                    <attributedString key="attributedTitle"/>
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
+                <menuItem title="Show logs" id="1Pl-3V-A8Y">
+                    <attributedString key="attributedTitle"/>
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="showLogger:" target="494" id="cuU-y6-mXJ"/>
+                    </connections>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="ftT-Zw-Ww5"/>
                 <menuItem title="Not recording mouse" onStateImage="NSStatusAvailable" offStateImage="NSStatusUnavailable" mixedStateImage="NSStatusNone" id="9wX-MN-9Q7">
                     <attributedString key="attributedTitle"/>
                     <modifierMask key="keyEquivalentModifierMask"/>
@@ -951,19 +967,13 @@
                     </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="wPM-Xg-ndS"/>
-                <menuItem title="Server Up" onStateImage="NSStatusAvailable" offStateImage="NSStatusUnavailable" mixedStateImage="NSStatusNone" id="xYW-mj-vsw">
-                    <attributedString key="attributedTitle"/>
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                </menuItem>
-                <menuItem isSeparatorItem="YES" id="ftT-Zw-Ww5"/>
-                <menuItem title="Show logs" id="1Pl-3V-A8Y">
-                    <attributedString key="attributedTitle"/>
+                <menuItem title="Messenger" id="1Mm-cS-gGM">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
-                        <action selector="showLogger:" target="494" id="cuU-y6-mXJ"/>
+                        <action selector="showMessenger:" target="494" id="LF6-ZG-ebH"/>
                     </connections>
                 </menuItem>
-                <menuItem isSeparatorItem="YES" id="B3a-Ob-G0x"/>
+                <menuItem isSeparatorItem="YES" id="3xy-yl-6uM"/>
                 <menuItem title="Preferences..." id="AzF-vF-Qlu">
                     <attributedString key="attributedTitle"/>
                     <modifierMask key="keyEquivalentModifierMask"/>
@@ -1090,6 +1100,52 @@
         </window>
         <menuItem isSeparatorItem="YES" id="YhG-Ll-E9f"/>
         <menuItem isSeparatorItem="YES" id="zGO-h6-ygC"/>
+        <window title="Messenger" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="MJ3-9b-4mF">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="762" y="863" width="388" height="164"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1058"/>
+            <view key="contentView" id="me7-mj-qZx">
+                <rect key="frame" x="0.0" y="0.0" width="388" height="164"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="V56-Jo-ARy">
+                        <rect key="frame" x="308" y="6" width="66" height="32"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="54" id="BdJ-lO-0xV"/>
+                            <constraint firstAttribute="height" constant="21" id="KFr-uD-XAW"/>
+                        </constraints>
+                        <buttonCell key="cell" type="push" title="Post" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Obr-df-VjT">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="clickPostMessage:" target="494" id="3Vy-tv-2xH"/>
+                        </connections>
+                    </button>
+                    <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="Eld-jl-vFc">
+                        <rect key="frame" x="20" y="42" width="348" height="102"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="102" id="3q5-UM-UdE"/>
+                            <constraint firstAttribute="width" constant="348" id="Czh-E4-vmx"/>
+                        </constraints>
+                        <textFieldCell key="cell" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" focusRingType="none" drawsBackground="YES" id="jHQ-Kx-XQ3">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="bottom" secondItem="V56-Jo-ARy" secondAttribute="bottom" constant="13" id="KXW-Yb-etA"/>
+                    <constraint firstItem="Eld-jl-vFc" firstAttribute="leading" secondItem="me7-mj-qZx" secondAttribute="leading" constant="20" id="MCH-wu-v83"/>
+                    <constraint firstAttribute="trailing" secondItem="Eld-jl-vFc" secondAttribute="trailing" constant="20" id="Mx4-e7-g74"/>
+                    <constraint firstItem="Eld-jl-vFc" firstAttribute="top" secondItem="me7-mj-qZx" secondAttribute="top" constant="20" id="v9t-ff-nXG"/>
+                </constraints>
+            </view>
+        </window>
     </objects>
     <resources>
         <image name="NSStatusAvailable" width="16" height="16"/>

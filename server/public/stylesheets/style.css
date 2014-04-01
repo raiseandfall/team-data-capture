@@ -27,6 +27,10 @@ h1{
 .btn{
 	text-align: center;
 }
+.btn#volume {
+  position: absolute;
+  left: 10px;
+}
 .btn span{
 	font-family:'pwperspectivemedium';
 	color:white;
@@ -47,6 +51,10 @@ h1{
 
 a {
   color: #FF4136;
+}
+
+.audiojs {
+  height: 0px !important;
 }
 
 #overlay{
