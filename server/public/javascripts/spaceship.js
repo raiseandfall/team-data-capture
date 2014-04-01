@@ -65,7 +65,6 @@ var Spaceship = function(id, ws, two) {
       laser.x = mouse.x+200;
       laser.y = mouse.y;
       aLaser.push(laser);
-      createText('HEY!');
       if(audio){
         audio.currentTime=0;
         audio.play();
@@ -80,6 +79,10 @@ var Spaceship = function(id, ws, two) {
       }
     });
 
+    ws.events.addEventListener(ws.EVENT.MESSENGER+'_'+id, function(e) {
+      console.log('EVENT.MESSENGER'+id,e);
+      createText('HEY!');
+    });
 
     /**
     *

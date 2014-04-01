@@ -13,7 +13,7 @@ var Socket = (function(WebSocket){
 			CLICK: 'click',
 			KEY_DOWN: 'keydown',
 			MOUSE_WHEEL: 'scroll',
-			WORD:	'word',
+			MESSENGER:	'messenger',
 			MESSAGE: 'onmessage'
 	};
   var onopen = function () {
@@ -24,10 +24,13 @@ var Socket = (function(WebSocket){
     // flags.binary will be set if a binary data is received
     // flags.masked will be set if the data was masked
 
+		console.log('--->onmessage',JSON.parse(data.data));
+
 		var datajson = JSON.parse(data.data),
 			ev = new CustomEvent(EVENT.MESSAGE, {'detail':data.data}),
 			response;
 		this.dispatchEvent(ev);
+
 
 		switch(datajson.type){
 			case EVENT.HELLO:
