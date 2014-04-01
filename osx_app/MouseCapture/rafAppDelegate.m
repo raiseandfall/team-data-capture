@@ -39,7 +39,6 @@
 NSString *TRACKED_CHARS = @"abcdefghijklmnopqrstuvwxyz0123456789";
 NSString *SEPARATORS = @" []{}|,.;:<>/?!@#$%^&*()_-+=~`'\"\\";
 NSString *SEPARATORS_KEY_CODES = @"$";
-NSString *currentWord = @"";
 int clientID = 0;
 NSDictionary *ACTION_TYPES;
 BOOL ALLOW_NOTIFICATIONS = YES;
@@ -283,8 +282,8 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     NSLog(@"MESSAGE : %@", self.messengerTextarea.stringValue);
     
     // send message to server
-    NSMutableDictionary *msgData = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"msg", self.messengerTextarea.stringValue, nil];
-    [self reportToSocket:@"WORD" :msgData];
+    NSMutableDictionary *msgData = [NSMutableDictionary dictionaryWithObjectsAndKeys:self.messengerTextarea.stringValue, @"msg", nil];
+    [self reportToSocket:@"MESSENGER" :msgData];
     
     // Empty message
     [self.messengerTextarea setStringValue:@""];
@@ -315,6 +314,15 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
         [[self showLoggerItem] setTitle:LABEL_HIDE_LOGS];
     }
 }
+
+/**
+ * @function        displayNotifications
+ * @description     returns a boolean wether or not to display notifications
+**/
+- (BOOL)displayNotifications {
+    return ([[self getUserSettings:@"displaySystemNotifications"] intValue] == 1);
+}
+
 
 /*******************
  * MENU BAR ITEM
@@ -404,8 +412,8 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
  * @description     disconnect web socket
 **/
 - (void)disconnectSocket:(id)sender {
-    _webSocket.delegate = nil;
     [_webSocket close];
+    _webSocket.delegate = nil;
     _webSocket = nil;
 
     [toolbarConnectButton setEnabled:YES];
@@ -429,21 +437,24 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
  * @description     connect to web socket
 **/
 - (void)_connectSocket {
-    _webSocket.delegate = nil;
-    [_webSocket close];
+    // If web socket is not already running
+    if (_webSocket == nil) {
+        _webSocket.delegate = nil;
+        [_webSocket close];
     
-    // If no host & port in the configuration
-    if ([[self getUserSettings:@"host"] isEqualToString:@""] || [[self getUserSettings:@"port"] isEqualToString:@""]) {
-        [notifier push:@"Missing server parameters" :@"Please specifiy the server host & port in the preferences" :YES :nil];
-    } else {
-        _webSocket = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[NSString
+        // If no host & port in the configuration
+        if ([[self getUserSettings:@"host"] isEqualToString:@""] || [[self getUserSettings:@"port"] isEqualToString:@""]) {
+            [notifier push:@"Missing server parameters" :@"Please specifiy the server host & port in the preferences" :YES :nil];
+        } else {
+            _webSocket = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[NSString
                                                                                                                 stringWithFormat:@"ws://%@:%@",
                                                                                                                 [self getUserSettings:@"host"],
                                                                                                                 [self getUserSettings:@"port"]]]]];
-        _webSocket.delegate = self;
+            _webSocket.delegate = self;
     
-        [socketStatus setStringValue:@"Opening connection!"];
-        [_webSocket open];
+            [socketStatus setStringValue:@"Opening connection!"];
+            [_webSocket open];
+        }
     }
 }
 
@@ -521,6 +532,8 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
             // Left click
             case 1:
             {
+                NSLog(@"LEFT CLIIIIIICK");
+                
                 if ([self isMouseRecording]) {
                     // Report to socket
                     [self reportToSocket:@"CLICK" :nil];
@@ -641,6 +654,9 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
                                                          error:&error];
     if (jsonData) {
         requestJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        
+        NSLog(@"requestJson : %@", requestJson);
+        
         [_webSocket send:requestJson];
     }
 }
@@ -676,7 +692,7 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
 #pragma mark - SRWebSocketDelegate
 
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket {
-    //NSLog(@"Websocket :: Connected");
+    NSLog(@"Websocket :: Connected");
     [socketStatus setStringValue:@"Websocket Connected!"];
     
     [[self serverStatusItem] setTitle:LABEL_SERVER_UP];
@@ -684,13 +700,13 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error {
-    //NSLog(@"WebSocket :: Failed With Error %@", error);
+    NSLog(@"WebSocket :: Failed With Error %@", error);
     
     [socketStatus setStringValue:@"WebSocket Connection Failed! (see logs)"];
     _webSocket = nil;
     
     // Push notification
-    if ([[self getUserSettings:@"displaySystemNotifications"] intValue] == 1) {
+    if (self.displayNotifications) {
         [notifier push:@"Connection to WebSocket failed" :@"The connection to the WebSocket failed. Please retry." :YES :nil];
     }
     
@@ -703,7 +719,7 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     NSDictionary* info = [NSJSONSerialization JSONObjectWithData:[message dataUsingEncoding:NSUTF8StringEncoding] options:0 error:&error];
     NSString *type = [info objectForKey:@"type"];
     
-    //NSLog(@"Websocket :: didReceiveMessage : %@", message);
+    NSLog(@"Websocket :: didReceiveMessage : %@", message);
     
     // If hello message
     if ([type isEqualToString:@"hello"]) {
@@ -727,7 +743,7 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     clientID = 0;
     
     // Push notification
-    if ([[self getUserSettings:@"displaySystemNotifications"] intValue] == 1) {
+    if (self.displayNotifications) {
         [notifier push:@"WebSocket just closed" :@"The WebSocket just closed, the app lost connection. Please retry." :YES :nil];
     }
     
