@@ -18,7 +18,7 @@ var two = new Two({
 
 var sky = new Sky(two);
 Two.Resolution = 32;
-/*
+
 var audio = document.getElementById('audio'),
     isplaying = true;
 audio.volume = 0.4;
@@ -34,7 +34,7 @@ volume.addEventListener('click', function(e) {
     volume.firstChild.innerHTML = 'sound: off';
   }
   isplaying = !isplaying;
-});*/
+});
 
 /**********************************
 *              Events             *

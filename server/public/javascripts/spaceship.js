@@ -38,6 +38,7 @@ var Spaceship = function(id, ws, two) {
     var v;
     var contentBubble;
     var audio = document.getElementById('laser');
+    var reactor_audio = document.getElementById('reactor_audio');
 
     //move the the rubberball with the mouse position
     ws.events.addEventListener(ws.EVENT.MOUSE_MOVE+'_'+id, function(e) {
@@ -67,12 +68,16 @@ var Spaceship = function(id, ws, two) {
       createText('HEY!');
       if(audio){
         audio.currentTime=0;
-         audio.play();
+        audio.play();
       }
     });
 
     ws.events.addEventListener(ws.EVENT.MOUSE_WHEEL+'_'+id, function(e) {
       ufo.startWheeling();
+      if(reactor_audio){
+        reactor_audio.currentTime=0;
+        reactor_audio.play();
+      }
     });
 
 
