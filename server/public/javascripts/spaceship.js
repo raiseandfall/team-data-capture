@@ -184,6 +184,7 @@ var Spaceship = function(id, ws, two) {
       delta.copy(mouse).subSelf(ball.translation);
       ball.translation.addSelf(delta);
       ball.rotation = Math.PI/2*(rotation.y/100);
+      ufo.setPosition(mouse,Math.PI/2*(rotation.y/100));
 
       for(i = 0; i<aLaser.length; i++){
         var laser = aLaser[i];
