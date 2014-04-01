@@ -104,7 +104,7 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     ACTION_TYPES = [NSDictionary dictionaryWithObjectsAndKeys:
                        @"mousemove", @"MOUSE_MOVE",
                        @"click", @"CLICK",
-                       @"word", @"WORD",
+                       @"messenger", @"MESSENGER",
                        @"scroll", @"SCROLL",
                         nil];
     
@@ -117,6 +117,11 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(onClosingPreferences:) name:NSWindowWillCloseNotification
                                                object:self.preferencesWindow];
+    
+    // Check if we are closing the preferences window
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(onClosingMessenger:) name:NSWindowWillCloseNotification
+                                               object:self.messengerWindow];
 }
 
 
@@ -238,7 +243,6 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
  * @description     save user settings
 **/
 - (void)saveUserSettings {
-    
     [[NSUserDefaults standardUserDefaults] setObject:self.userSettingHost.stringValue forKey:@"host"];
     [[NSUserDefaults standardUserDefaults] setObject:self.userSettingPort.stringValue forKey:@"port"];
     [[NSUserDefaults standardUserDefaults] setObject:self.userSettingDisplayNotifications.stringValue
@@ -251,6 +255,39 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
 **/
 - (void)onClosingPreferences:(NSNotification *)notification {
     [self saveUserSettings];
+}
+
+/**
+ * @function        showMessenger
+ * @description     show messenger window
+ **/
+- (IBAction)showMessenger:(id)sender {
+    [[self messengerWindow] setLevel: NSStatusWindowLevel];
+    [NSApp activateIgnoringOtherApps:YES];
+    [[self messengerWindow] makeKeyAndOrderFront:nil];
+}
+
+/**
+ * @function        onClosingMessenger
+ * @description     called when messenger window is closed
+**/
+- (void)onClosingMessenger:(NSNotification *)notification {
+    [self.messengerTextarea setStringValue:@""];
+}
+
+/**
+ * @function        clickPostMessage
+ * @description     click post message
+**/
+- (IBAction)clickPostMessage:(id)sender {
+    NSLog(@"MESSAGE : %@", self.messengerTextarea.stringValue);
+    
+    // send message to server
+    NSMutableDictionary *msgData = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"msg", self.messengerTextarea.stringValue, nil];
+    [self reportToSocket:@"WORD" :msgData];
+    
+    // Empty message
+    [self.messengerTextarea setStringValue:@""];
 }
 
 /**

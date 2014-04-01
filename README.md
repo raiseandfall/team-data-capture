@@ -7,6 +7,8 @@ So far the app is tracking :
 - left click
 - mouse move
 
+The app also has a messenger system, to send chat-type messages.
+
 ## Installation
 
 ### OSX App
