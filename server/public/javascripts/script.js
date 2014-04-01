@@ -8,7 +8,6 @@ port='9000';
 var ws = new Socket();
 ws.connect(host, port);
 
-
 var type = 'canvas';
 
 var two = new Two({
@@ -19,7 +18,23 @@ var two = new Two({
 
 var sky = new Sky(two);
 Two.Resolution = 32;
-
+/*
+var audio = document.getElementById('audio'),
+    isplaying = true;
+audio.volume = 0.4;
+audio.loop = true;
+audio.play();
+var volume = document.getElementById('volume');
+volume.addEventListener('click', function(e) {
+  if(isplaying){
+    audio.pause();
+    volume.firstChild.innerHTML = 'sound: on';
+  }else{
+    audio.play();
+    volume.firstChild.innerHTML = 'sound: off';
+  }
+  isplaying = !isplaying;
+});*/
 
 /**********************************
 *              Events             *

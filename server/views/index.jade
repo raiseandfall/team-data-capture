@@ -1,8 +1,11 @@
 extends layout
 
 block content
-	audio#audio(src='/sound/laser2.mp3')
+	audio#audio(src='/sound/background.mp3')
+	audio#laser(src='/sound/laser2.mp3')
 	header.visible
+		div.btn#volume
+			span sound: off
 		h1= title
 		div.btn
 			span#stats stats

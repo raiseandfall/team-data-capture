@@ -37,7 +37,7 @@ var Spaceship = function(id, ws, two) {
     var textWidth = 0;
     var v;
     var contentBubble;
-    var audio = document.getElementById('audio');
+    var audio = document.getElementById('laser');
 
     //move the the rubberball with the mouse position
     ws.events.addEventListener(ws.EVENT.MOUSE_MOVE+'_'+id, function(e) {
