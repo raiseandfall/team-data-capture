@@ -19,6 +19,8 @@
     "console" : true,
     "Two" : true,
     "Sky" : true, 
-    "Stats" : true 
+    "Stats" : true,
+    "Ship" : true,
+    "ActiveXObject" : true
   }
 }

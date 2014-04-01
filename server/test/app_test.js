@@ -2,7 +2,7 @@
 
 var TeamCaptureApp = require('../app').TeamCaptureApp,
     Socket = require('../controllers/sockets').Socket,
-    app = new TeamCaptureApp(4000),
+    app = new TeamCaptureApp('192.168.173.103', '4000'),
     socket = new Socket(),
     events = require('events'),
     idLog = 0,
@@ -45,7 +45,7 @@ exports['connect socket'] = function (test) {
 	socket.connection();
 };
 
-
+/*
 exports['message socket'] = function (test) {
 
 	console.log = function (str) {
@@ -54,4 +54,4 @@ exports['message socket'] = function (test) {
 	};
 	socket.message('{"type":"'+APP.ACTION.MOUSE_MOVE+'"}');
 
-};
+};*/

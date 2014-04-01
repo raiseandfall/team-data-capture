@@ -46,6 +46,10 @@ var Stats = function(){
   this.overlay = document.getElementById('overlay'); 
   this.close = document.getElementById('close'); 
 
+  this.intervalId = 0;
+  this.currentClass = 0;
+  this.aClass = ['distance', 'click', 'scroll'];
+
   this.btn.addEventListener('click', function(){
     self.overlay.className = '';
     self.header.className = '';
@@ -61,6 +65,7 @@ var Stats = function(){
   this.close.addEventListener('click', function(){
     self.overlay.className = '';
     self.header.className = '';
+    clearInterval(this.intervalId);
     setTimeout(function(){
       self.overlay.className = 'hide';
     }, 500);
@@ -71,17 +76,33 @@ var Stats = function(){
 };
 
 Stats.prototype.display = function(data){
-  var datajson = JSON.parse(data),
+  var self = this,
+    datajson = JSON.parse(data),
     l = datajson.data.length,
     table = this.overlay.getElementsByTagName('table'),
-    content = '<tr><td>username</td><td>distance</td><td>click</td><td>scroll</td></tr>',
+    content = '<tr><td>username</td><td class="distance active">distance</td><td class="click">click</td><td class="scroll">scroll</td></tr>',
     i, item;
   if(datajson.type === 'socket'){
     for(i = 0; i<l; i++){
-      content += '<tr><td>'+datajson.data[i].username+'</td><td>'+Math.round(datajson.data[i].distance*0.083333/150)+' ft</td><td>'+datajson.data[i].click+'</td><td>'+Math.round(datajson.data[i].scroll*0.083333/150)+' ft</td></tr>';
+      content += '<tr><td>'+datajson.data[i].username+'</td><td class="distance active">'+Math.round(datajson.data[i].distance*0.083333/150)+' ft</td><td class="click">'+datajson.data[i].click+'</td><td class="scroll">'+Math.round(datajson.data[i].scroll*0.083333/150)+' ft</td></tr>';
     }
     table[0].innerHTML = content;
+    this.intervalId = setInterval(function(){
+      var elements = table[0].getElementsByClassName(self.aClass[self.currentClass]);
+      for(i = 0; i<elements.length; i++){
+        elements[i].className = self.aClass[self.currentClass];
+      }
+      self.currentClass ++;
+      if(self.currentClass>=self.aClass.length){
+        self.currentClass = 0;
+      }
+      elements = table[0].getElementsByClassName(self.aClass[self.currentClass]);
+      for(i = 0; i<elements.length; i++){
+        elements[i].className = self.aClass[self.currentClass]+' active';
+      }
+    },5000);
   }
+
 };
 
 stats = new Stats();

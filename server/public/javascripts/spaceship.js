@@ -104,8 +104,9 @@ var Spaceship = function(id, ws, two) {
     var v;
     var contentBubble;
     function createText(){
-        if(textTimer)
+        if(textTimer){
           clearInterval(textTimer);
+        }
 
         textScale = 1;
         textTranslate = 0;
@@ -121,7 +122,7 @@ var Spaceship = function(id, ws, two) {
         }
 
         contentBubble.clearRect(0,0,two.width,two.height);
-        contentBubble.font = "30px Arial";
+        contentBubble.font = '30px Arial';
         contentBubble.fillText('hey!',0,0);
         textWidth = contentBubble.measureText('hey!').width;
 
@@ -144,14 +145,15 @@ var Spaceship = function(id, ws, two) {
       contentBubble.clearRect(0,0,two.width,two.height);
       contentBubble.save();
       contentBubble.translate(mouse.x - textWidth/2 + textTranslate,mouse.y+textTranslate);
-      contentBubble.font = "30px Arial";
+      contentBubble.font = '30px Arial';
       contentBubble.fillStyle = 'rgba(255,0,0,'+textScale+')';
       contentBubble.fillText('hey!',0,0);
       contentBubble.restore();
 
       textTranslate -= 10;
-      if(textTranslate<-50)
+      if(textTranslate<-50){
         textScale -= 0.1;
+      }
 
       bubble.translation.x = mouse.x + textTranslate;
       bubble.translation.y = mouse.y+textTranslate;

@@ -5,7 +5,7 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   background: #27223f; /* Old browsers */
 }
-canvas{
+canvas, svg{
 	pointer-events:none;
 }
 header{
@@ -51,7 +51,7 @@ a {
 
 #overlay{
 	background:rgba(0,0,0,.75);
-	position:fixed;
+	position:absolute;
 	width:100%;
 	height:100%;
 	z-index:5;
@@ -62,10 +62,11 @@ a {
 	text-align: center;
 	transition:.5s opacity;
 	opacity:0;
+	overflow: auto;
 }
 
 #overlay table{
-	width:500px;
+	width:480px;
 	margin:50px auto;
 }
 
@@ -80,4 +81,21 @@ a {
 
 #overlay table tr td{
 	padding:10px;
+}
+
+
+@media only screen and (max-width: 480px){
+	#overlay table{
+		width:100%;
+	}
+	#overlay table .distance,
+	#overlay table .click,
+	#overlay table .scroll
+	{
+		display:none
+	}
+	.active
+	{
+		display:block !important;
+	}
 }
