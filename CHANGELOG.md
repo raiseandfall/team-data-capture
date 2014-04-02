@@ -9,7 +9,7 @@ __v0.1.1__
   - Will add a timing reconnect feature
   - Will add a manual reconnect feature ( in menu bar )
 
-__v0.1.0__
+__v0.1.0 ( current )__
   - Tracks mouse position, mouse left click, mouse scroll
   - Adds a notification system
   - Adds a preferences panel : settings are websocket host / port & display of notifications
