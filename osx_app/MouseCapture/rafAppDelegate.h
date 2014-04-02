@@ -34,6 +34,7 @@ static id monitorUserInputs;
 // User Settings
 @property (weak) IBOutlet NSTextField *userSettingHost;
 @property (weak) IBOutlet NSTextField *userSettingPort;
+@property (weak) IBOutlet NSButton *userSettingAutoStartTracking;
 @property (weak) IBOutlet NSButton *userSettingDisplayNotifications;
 
 // Messenger
@@ -51,6 +52,7 @@ static id monitorUserInputs;
 @property (readwrite) BOOL isGlobalRecording;
 @property (readwrite) BOOL isMouseRecording;
 @property (readwrite) BOOL isScrollRecording;
+@property (readwrite) BOOL isAuthenticated;
 
 @property (readwrite) IBOutlet NSMenu *menu;
 @property (readwrite) IBOutlet NSMenuItem *versionNumberItem;
@@ -69,6 +71,7 @@ static id monitorUserInputs;
 - (NSString*)getUserSettings            :(NSString*)settingName;
 - (void)saveUserSettings;
 - (void)calculateGlobalResolution;
+- (void)toggleFeature                   :(NSString*)featureName :(BOOL)toEnable;
 - (NSDictionary*)getLocalPosition       :(CGPoint)loc;
 - (IBAction)fakeAction                  :(id)sender;
 - (IBAction)toggleAllRecordings         :(id)sender;

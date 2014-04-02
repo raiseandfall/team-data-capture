@@ -30,6 +30,7 @@
 @synthesize isGlobalRecording;
 @synthesize isScrollRecording;
 @synthesize isMouseRecording;
+@synthesize isAuthenticated;
 
 @synthesize cursorPositionX;
 @synthesize cursorPositionY;
@@ -53,7 +54,7 @@ NSRect secondScreenFrame;
 NSString *LABEL_SHOW_LOGS = @"Show logs";
 NSString *LABEL_HIDE_LOGS = @"Hide logs";
 NSString *LABEL_SERVER_UP = @"Connected to Server";
-NSString *LABEL_SERVER_DOWN = @"Server Unavailable";
+NSString *LABEL_SERVER_DOWN = @"Not Connected to Server";
 NSString *LABEL_RECORDING_MOUSE = @"Recording mouse";
 NSString *LABEL_NOT_RECORDING_MOUSE = @"Not recording mouse";
 NSString *LABEL_RECORDING_SCROLL = @"Recording scroll";
@@ -70,7 +71,8 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
 **/
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    self.isGlobalRecording = YES;
+    self.isAuthenticated = NO;
+    
     self.logDateFormatter = [[NSDateFormatter alloc] init];
     [self.logDateFormatter setTimeStyle:NSDateFormatterMediumStyle];
     
@@ -85,12 +87,6 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     // Notifier
     notifier = [[Notifier alloc] init];
     
-    // Start recording id enabled
-    if (self.isGlobalRecording) {
-        [self initCounters];
-        [self _connectSocket];
-    }
-    
     // Calculate global resolution
     [self calculateGlobalResolution];
     
@@ -98,6 +94,7 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     [self.userSettingHost setStringValue:[self getUserSettings:@"host"]];
     [self.userSettingPort setStringValue:[self getUserSettings:@"port"]];
     [self.userSettingDisplayNotifications setState:[[self getUserSettings:@"displaySystemNotifications"] intValue]];
+    [self.userSettingAutoStartTracking setState:[[self getUserSettings:@"autoStartTracking"] intValue]];
     
     // ACTION TYPES
     ACTION_TYPES = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -121,6 +118,10 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(onClosingMessenger:) name:NSWindowWillCloseNotification
                                                object:self.messengerWindow];
+    
+    // Connect to socket
+    [self initCounters];
+    [self _connectSocket];
 }
 
 
@@ -246,6 +247,8 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     [[NSUserDefaults standardUserDefaults] setObject:self.userSettingPort.stringValue forKey:@"port"];
     [[NSUserDefaults standardUserDefaults] setObject:self.userSettingDisplayNotifications.stringValue
                                               forKey:@"displaySystemNotifications"];
+    [[NSUserDefaults standardUserDefaults] setObject:self.userSettingAutoStartTracking.stringValue
+                                              forKey:@"autoStartTracking"];
 }
 
 /**
@@ -261,9 +264,11 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
  * @description     show messenger window
  **/
 - (IBAction)showMessenger:(id)sender {
-    [[self messengerWindow] setLevel: NSStatusWindowLevel];
-    [NSApp activateIgnoringOtherApps:YES];
-    [[self messengerWindow] makeKeyAndOrderFront:nil];
+    if ([self isAuthenticated]) {
+        [[self messengerWindow] setLevel: NSStatusWindowLevel];
+        [NSApp activateIgnoringOtherApps:YES];
+        [[self messengerWindow] makeKeyAndOrderFront:nil];
+    }
 }
 
 /**
@@ -321,6 +326,24 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
 **/
 - (BOOL)displayNotifications {
     return ([[self getUserSettings:@"displaySystemNotifications"] intValue] == 1);
+}
+
+/**
+ * @function        displayNotifications
+ * @description     returns a boolean wether or not to display notifications
+**/
+- (BOOL)autoStartTracking {
+    return ([[self getUserSettings:@"autoStartTracking"] intValue] == 1 || [self getUserSettings:@"autoStartTracking"] == nil);
+}
+
+/**
+ * @function        toggleFeature
+ * @description     toggle feature
+ **/
+- (void)toggleFeature:(NSString*)featureName :(BOOL)toEnable {
+    if ([featureName isEqualToString:@"MESSENGER"]) {
+        [self.showMessengerItem setEnabled:toEnable];
+    }
 }
 
 
@@ -532,8 +555,6 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
             // Left click
             case 1:
             {
-                NSLog(@"LEFT CLIIIIIICK");
-                
                 if ([self isMouseRecording]) {
                     // Report to socket
                     [self reportToSocket:@"CLICK" :nil];
@@ -654,9 +675,6 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
                                                          error:&error];
     if (jsonData) {
         requestJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        
-        NSLog(@"requestJson : %@", requestJson);
-        
         [_webSocket send:requestJson];
     }
 }
@@ -694,9 +712,6 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket {
     NSLog(@"Websocket :: Connected");
     [socketStatus setStringValue:@"Websocket Connected!"];
-    
-    [[self serverStatusItem] setTitle:LABEL_SERVER_UP];
-    [[self serverStatusItem] setState:NSOnState];
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error {
@@ -730,8 +745,23 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
         
     // If welcome message
     } else if ([type isEqualToString:@"welcome"]) {
-        // Start recording actions
-        [self startRecording];
+        
+        NSLog(@"WELCOME !!!");
+        
+        // Display server status
+        [[self serverStatusItem] setTitle:LABEL_SERVER_UP];
+        [[self serverStatusItem] setState:NSOnState];
+        
+        // User now authentified
+        self.isAuthenticated = YES;
+        
+        // Start recording actions if auto-start enabled
+        if ([self autoStartTracking]) {
+            [self startRecording];
+        }
+        
+        // Enable messenger feature
+        [self toggleFeature:@"MESSENGER" :true];
     }
     
     if (error) {
