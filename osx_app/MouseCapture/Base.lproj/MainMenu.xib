@@ -1139,6 +1139,9 @@
                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
+                        <connections>
+                            <action selector="clickPostMessage:" target="494" id="vyJ-d8-lD2"/>
+                        </connections>
                     </textField>
                 </subviews>
                 <constraints>

@@ -76,13 +76,18 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     self.logDateFormatter = [[NSDateFormatter alloc] init];
     [self.logDateFormatter setTimeStyle:NSDateFormatterMediumStyle];
     
+    // Year
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"yyyy"];
+    NSString *yearString = [formatter stringFromDate:[NSDate date]];
+    
     // Version number
     NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
     NSString *versioning = [NSString stringWithFormat:@"v%@ b%@",
                             [info objectForKey:@"CFBundleShortVersionString"],
                             [info objectForKey:@"CFBundleVersion"]];
     [[self versionNumber] setStringValue:versioning];
-    [[self versionNumberItem] setTitle:[NSString stringWithFormat:@"%@ - %@", COPYRIGHT_TXT, versioning]];
+    [[self versionNumberItem] setTitle:[NSString stringWithFormat:@"%@ - %@ - %@", COPYRIGHT_TXT, yearString, versioning]];
     
     // Notifier
     notifier = [[Notifier alloc] init];
@@ -123,7 +128,6 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     [self initCounters];
     [self _connectSocket];
 }
-
 
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication {
     return NO;
@@ -284,7 +288,10 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
  * @description     click post message
 **/
 - (IBAction)clickPostMessage:(id)sender {
-    NSLog(@"MESSAGE : %@", self.messengerTextarea.stringValue);
+    // If message not null
+    if ([self.messengerTextarea.stringValue length] == 0) {
+        return;
+    }
     
     // send message to server
     NSMutableDictionary *msgData = [NSMutableDictionary dictionaryWithObjectsAndKeys:self.messengerTextarea.stringValue, @"msg", nil];
