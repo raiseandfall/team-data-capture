@@ -51,8 +51,8 @@ module.exports = function(grunt) {
         options: {
           separator: '',
         },
-        src: ['public/css/style.autoprefixed.css' ],
-        dest: 'public/css/style.css'
+        src: ['public/stylesheets/style.autoprefixed.css' ],
+        dest: 'public/stylesheets/style.css'
       }
     },
 
@@ -64,9 +64,9 @@ module.exports = function(grunt) {
     cssmin: {
       dist: {
         expand: true,
-        cwd: 'public/css/',
+        cwd: 'public/stylesheets/',
         src: ['*.css', '!*.min.css', '!*.sass.css', '!*.autoprefixed.css'],
-        dest: 'public/css/',
+        dest: 'public/stylesheets/',
         ext: '.min.css'
       }
     },
@@ -81,7 +81,7 @@ module.exports = function(grunt) {
           {
             src : ['style.scss'],
             cwd : 'public/scss',
-            dest : 'public/css/',
+            dest : 'public/stylesheets/',
             ext : '.sass.css',
             expand : true
           }

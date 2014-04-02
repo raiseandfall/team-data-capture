@@ -1,0 +1,75 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background: #27223f; /* Old browsers */
+}
+canvas, svg{
+	pointer-events:none;
+}
+header{
+	opacity:0;
+}
+h1{
+	font-family:'pwperspectivemedium';
+	color:white;
+	font-size:30px;
+	text-align: center;
+	margin-bottom:.5em;
+}
+.hide{
+	display:none;
+}
+.visible{
+	opacity:1!important;
+}
+.btn{
+	text-align: center;
+}
+.btn#volume {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  border-radius:32px;
+  background:url('/img/volume.png') no-repeat 0px 0px transparent;
+  width:32px;
+  height:32px;
+  border-radius:10px;
+  border:1px solid white;
+  transition:.5s all;
+}
+.btn#volume:hover {
+  background-position: -32px 0px;
+  background-color:white;
+}
+.btn#volume.off{
+  background-position: -64px 0px;
+}
+.btn#volume.off:hover{
+  background-position: -96px 0px;
+  background-color:white;
+}
+.btn span{
+	font-family:'pwperspectivemedium';
+	color:white;
+	cursor: pointer;
+	font-size:15px;
+	border-radius:10px;
+	border:1px solid white;
+	padding:10px 20px;
+	background:transparent;
+	transition:.5s all;
+}
+
+.btn span:hover{
+	color: #27223f;
+	background:white;
+	border:none;
+}
+
+a {
+  color: #FF4136;
+}
+
+.audiojs {
+  height: 0px !important;
+}

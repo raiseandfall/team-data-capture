@@ -1,0 +1,50 @@
+#overlay{
+	background:rgba(0,0,0,.75);
+	position:absolute;
+	width:100%;
+	height:100%;
+	z-index:5;
+	top:0;
+	left:0;
+	color:white;
+	font-family:'pwperspectivemedium';
+	text-align: center;
+	transition:.5s opacity;
+	opacity:0;
+	overflow: auto;
+}
+
+#overlay table{
+	width:480px;
+	margin:50px auto;
+}
+
+#close{
+	position:absolute;
+	right:20px;
+	top:20px;
+	font-size:20px;
+	text-align: center;
+	cursor: pointer;
+}
+
+#overlay table tr td{
+	padding:10px;
+}
+
+
+@media only screen and (max-width: 480px){
+	#overlay table{
+		width:100%;
+	}
+	#overlay table .distance,
+	#overlay table .click,
+	#overlay table .scroll
+	{
+		display:none
+	}
+	.active
+	{
+		display:block !important;
+	}
+}
