@@ -19,6 +19,6 @@ exports.APP = {
 		CLICK: 'click',
 		KEY_DOWN: 'keydown',
 		MOUSE_WHEEL: 'scroll',
-		WORD:	'word'
+		MESSENGER:	'messenger'
 	}
 };

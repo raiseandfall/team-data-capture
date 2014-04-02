@@ -13,7 +13,7 @@ var Socket = (function(WebSocket){
 			CLICK: 'click',
 			KEY_DOWN: 'keydown',
 			MOUSE_WHEEL: 'scroll',
-			WORD:	'word',
+			MESSENGER:	'messenger',
 			MESSAGE: 'onmessage'
 	};
   var onopen = function () {
@@ -28,6 +28,7 @@ var Socket = (function(WebSocket){
 			ev = new CustomEvent(EVENT.MESSAGE, {'detail':data.data}),
 			response;
 		this.dispatchEvent(ev);
+
 
 		switch(datajson.type){
 			case EVENT.HELLO:
@@ -52,7 +53,7 @@ var Socket = (function(WebSocket){
 			case EVENT.CLICK:
 			case EVENT.KEY_DOWN:
 			case EVENT.MOUSE_WHEEL:
-			case EVENT.WORD:
+			case EVENT.MESSENGER:
 					// send a general event for all mousemove
 					ev = new CustomEvent(datajson.type, {'detail':data.data});
 					this.dispatchEvent(ev);

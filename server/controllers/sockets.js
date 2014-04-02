@@ -34,7 +34,7 @@ var Socket = function() {
       case APP.ACTION.CLICK:
       case APP.ACTION.KEY_DOWN:
       case APP.ACTION.MOUSE_WHEEL:
-      case APP.ACTION.WORD:
+      case APP.ACTION.MESSENGER:
         client.saveAction(datajson);
         for (i = 0; i<self.websockets.length; i++){
           self.websockets[i].send(data);
