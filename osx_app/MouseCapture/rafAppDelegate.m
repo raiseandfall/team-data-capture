@@ -129,7 +129,6 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     [self _connectSocket];
 }
 
-
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication {
     return NO;
 }
@@ -289,8 +288,6 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
  * @description     click post message
 **/
 - (IBAction)clickPostMessage:(id)sender {
-    NSLog(@"MESSAGE : %@", self.messengerTextarea.stringValue);
-    
     // send message to server
     NSMutableDictionary *msgData = [NSMutableDictionary dictionaryWithObjectsAndKeys:self.messengerTextarea.stringValue, @"msg", nil];
     [self reportToSocket:@"MESSENGER" :msgData];
