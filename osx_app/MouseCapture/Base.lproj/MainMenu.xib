@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="4514" systemVersion="13C64" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="5053"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="4514"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -650,7 +650,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="335" y="390" width="673" height="433"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1058"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1280" height="778"/>
             <view key="contentView" id="372">
                 <rect key="frame" x="0.0" y="0.0" width="673" height="433"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -910,7 +910,7 @@
                 <outlet property="preferencesWindow" destination="leQ-Ih-Rku" id="svp-3p-Kxy"/>
                 <outlet property="serverStatusItem" destination="xYW-mj-vsw" id="ELp-ax-ZAX"/>
                 <outlet property="showLoggerItem" destination="1Pl-3V-A8Y" id="vRL-66-K9H"/>
-                <outlet property="showMessengerItem" destination="1Mm-cS-gGM" id="kAh-98-83O"/>
+                <outlet property="showMessengerItem" destination="1Mm-cS-gGM" id="hgZ-VU-XU7"/>
                 <outlet property="showPreferencesItem" destination="AzF-vF-Qlu" id="EdC-Gv-p3h"/>
                 <outlet property="socketStatus" destination="mcm-DL-X0c" id="pYp-4i-QAX"/>
                 <outlet property="toolbarClearButton" destination="cSK-Jw-jHQ" id="hMu-JJ-Exh"/>
@@ -918,6 +918,7 @@
                 <outlet property="toolbarDisconnectButton" destination="Auy-1i-gJ1" id="Sjf-R5-fEW"/>
                 <outlet property="toolbarRecordButton" destination="nX3-HP-ZmN" id="kQB-he-sPe"/>
                 <outlet property="toolbarStopButton" destination="ciH-ij-Vi3" id="Mbg-sn-Uj1"/>
+                <outlet property="userSettingAutoStartTracking" destination="zuH-Ff-5oM" id="dFS-NX-EoO"/>
                 <outlet property="userSettingDisplayNotifications" destination="saD-u4-OLX" id="JeW-Re-nYu"/>
                 <outlet property="userSettingHost" destination="iMb-Vo-OS7" id="F0Z-23-myx"/>
                 <outlet property="userSettingPort" destination="hzk-nq-o6L" id="wRJ-5B-ISf"/>
@@ -933,16 +934,9 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="7in-ha-grY"/>
-                <menuItem title="Server Up" onStateImage="NSStatusAvailable" offStateImage="NSStatusUnavailable" mixedStateImage="NSStatusNone" enabled="NO" id="xYW-mj-vsw">
+                <menuItem title="Not Connected to Server" onStateImage="NSStatusAvailable" offStateImage="NSStatusUnavailable" mixedStateImage="NSStatusNone" enabled="NO" id="xYW-mj-vsw">
                     <attributedString key="attributedTitle"/>
                     <modifierMask key="keyEquivalentModifierMask"/>
-                </menuItem>
-                <menuItem title="Show logs" id="1Pl-3V-A8Y">
-                    <attributedString key="attributedTitle"/>
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="showLogger:" target="494" id="cuU-y6-mXJ"/>
-                    </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="ftT-Zw-Ww5"/>
                 <menuItem title="Not recording mouse" onStateImage="NSStatusAvailable" offStateImage="NSStatusUnavailable" mixedStateImage="NSStatusNone" id="9wX-MN-9Q7">
@@ -967,10 +961,11 @@
                     </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="wPM-Xg-ndS"/>
-                <menuItem title="Messenger" id="1Mm-cS-gGM">
+                <menuItem title="Messenger" enabled="NO" id="1Mm-cS-gGM">
+                    <attributedString key="attributedTitle"/>
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
-                        <action selector="showMessenger:" target="494" id="LF6-ZG-ebH"/>
+                        <action selector="showMessenger:" target="494" id="TwH-mB-uCQ"/>
                     </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="3xy-yl-6uM"/>
@@ -982,6 +977,13 @@
                     </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="PQt-P8-6dp"/>
+                <menuItem title="Show logs" id="1Pl-3V-A8Y">
+                    <attributedString key="attributedTitle"/>
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="showLogger:" target="494" id="cuU-y6-mXJ"/>
+                    </connections>
+                </menuItem>
                 <menuItem title="Exit" id="rfu-NC-RQu">
                     <attributedString key="attributedTitle"/>
                     <modifierMask key="keyEquivalentModifierMask"/>
@@ -992,49 +994,55 @@
             </items>
         </menu>
         <window title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="leQ-Ih-Rku">
-            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+            <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="814" y="516" width="388" height="319"/>
+<<<<<<< HEAD
+            <rect key="contentRect" x="814" y="516" width="388" height="168"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1058"/>
+=======
+            <rect key="contentRect" x="814" y="516" width="388" height="319"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1280" height="778"/>
+>>>>>>> 63c7e8f338a04c07b2bd34922d61ab37f2568071
             <view key="contentView" id="TG9-hW-pRf">
-                <rect key="frame" x="0.0" y="0.0" width="388" height="319"/>
+                <rect key="frame" x="0.0" y="0.0" width="388" height="168"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <tabView translatesAutoresizingMaskIntoConstraints="NO" id="2BY-Y0-4Uj">
-                        <rect key="frame" x="13" y="10" width="362" height="303"/>
+                        <rect key="frame" x="13" y="10" width="362" height="152"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <font key="font" metaFont="system"/>
                         <tabViewItems>
                             <tabViewItem label="General" identifier="1" id="JW9-BR-Lxd">
                                 <view key="view" id="r3n-Bk-omP">
-                                    <rect key="frame" x="10" y="33" width="342" height="257"/>
+                                    <rect key="frame" x="10" y="33" width="342" height="106"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <button translatesAutoresizingMaskIntoConstraints="NO" id="saD-u4-OLX">
-                                            <rect key="frame" x="84" y="227" width="197" height="18"/>
+                                        <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="saD-u4-OLX">
+                                            <rect key="frame" x="73" y="44" width="197" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="193" id="qg3-jq-YGU"/>
-                                            </constraints>
                                             <buttonCell key="cell" type="check" title="Display system notifications" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="I7F-3V-C0c">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
                                         </button>
+                                        <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zuH-Ff-5oM">
+                                            <rect key="frame" x="73" y="75" width="173" height="18"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="check" title="Start tracking on launch" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="H6V-Mv-RHa">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                        </button>
                                     </subviews>
-                                    <constraints>
-                                        <constraint firstItem="saD-u4-OLX" firstAttribute="leading" secondItem="r3n-Bk-omP" secondAttribute="leading" constant="86" id="BRX-iN-H6N"/>
-                                        <constraint firstItem="saD-u4-OLX" firstAttribute="top" secondItem="r3n-Bk-omP" secondAttribute="top" constant="14" id="s30-M9-NQf"/>
-                                    </constraints>
                                 </view>
                             </tabViewItem>
                             <tabViewItem label="Socket" identifier="2" id="Xoz-Ue-Hfx">
                                 <view key="view" id="vlA-YU-lcV">
-                                    <rect key="frame" x="10" y="33" width="342" height="257"/>
+                                    <rect key="frame" x="10" y="33" width="342" height="146"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="5YO-Ud-FRG">
-                                            <rect key="frame" x="23" y="223" width="73" height="17"/>
+                                            <rect key="frame" x="23" y="112" width="73" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="69" id="pBZ-KI-uAc"/>
@@ -1046,7 +1054,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="4x4-A4-Owd">
-                                            <rect key="frame" x="23" y="185" width="73" height="17"/>
+                                            <rect key="frame" x="23" y="74" width="73" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="69" id="Er4-M7-ZZU"/>
@@ -1058,7 +1066,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iMb-Vo-OS7">
-                                            <rect key="frame" x="102" y="220" width="139" height="22"/>
+                                            <rect key="frame" x="102" y="109" width="139" height="22"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="192.168.173.101" drawsBackground="YES" id="Zif-Y6-1gk">
                                                 <font key="font" metaFont="system"/>
@@ -1067,7 +1075,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hzk-nq-o6L">
-                                            <rect key="frame" x="102" y="182" width="139" height="22"/>
+                                            <rect key="frame" x="102" y="71" width="139" height="22"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="9000" drawsBackground="YES" id="mAV-8f-YHG">
                                                 <font key="font" metaFont="system"/>
@@ -1104,7 +1112,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="762" y="863" width="388" height="164"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1058"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1280" height="778"/>
             <view key="contentView" id="me7-mj-qZx">
                 <rect key="frame" x="0.0" y="0.0" width="388" height="164"/>
                 <autoresizingMask key="autoresizingMask"/>

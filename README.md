@@ -81,18 +81,18 @@ ws.events.addEventListener(`onmessage`, function(e) {
 ```
 
 Here is the list of the events:
-* `onmessage`: trigger everytime a message is sent from the server
-* `welcome`: trigger when the client connect the socket. it recieve the list of app_client connected.
-* `newuser`: trigger when a new app_client connect.
-* `closeuser`: trigger when a app_client disconnect.
-* `mousemove`: trigger when a app_client move the mouse.
-* `click`: trigger when a app_client click.
-* `keypress`: trigger when a app_client press a key.
-* `scroll`: trigger when a app_client scroll.
+* `onmessage`: triggered every time a message is sent from the server
+* `welcome`: triggered when the client connect the socket. it recieve the list of app_client connected.
+* `newuser`: triggered when an new app_client connect.
+* `closeuser`: triggered when an app_client disconnect.
+* `mousemove`: triggered when an app_client move the mouse.
+* `click`: triggered when an app_client click.
+* `messenger`: triggered when an app_client sends a message
+* `scroll`: triggered when an app_client scroll.
 
 User specific event:
-* `closeuser_[id]`: trigger when the app_client with the id=[id] disconnect.
-* `mousemove_[id]`: trigger when the app_client with the id=[id] move the mouse.
-* `click_[id]`: trigger when the app_client with the id=[id] click.
-* `keypress_[id]`: trigger when the app_client with the id=[id] press a key.
-* `scroll_[id]`: trigger when the app_client with the id=[id] scroll.
+* `closeuser_[id]`: triggered when the app_client with the id=[id] disconnect.
+* `mousemove_[id]`: triggered when the app_client with the id=[id] move the mouse.
+* `click_[id]`: triggered when the app_client with the id=[id] click.
+* `messenger_[id]`: triggered when the app_client with the id=[id] sends a message.
+* `scroll_[id]`: triggered when the app_client with the id=[id] scroll.
