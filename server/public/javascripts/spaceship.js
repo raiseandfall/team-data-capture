@@ -55,14 +55,12 @@ var Spaceship = function(id, ws, two) {
                'smokecolor2':'#FFFFFF'
              };
     var ufos = [ufo1, ufo2, ufo3];
-    var ufo;
-    var type_ufo;
-    var new_ufo;
-    var imageUfo;
-    var fire, fire2, reactor;
+    var ufo, fire, fire2, reactor;
+    var type_ufo = Math.floor((Math.random()*ufos.length));
+    var new_ufo = ufos[type_ufo];
+    var imageUfo = new Image();
+    imageUfo.src = new_ufo.src;
 
-
-    //move the the rubberball with the mouse position
     ws.events.addEventListener(ws.EVENT.MOUSE_MOVE+'_'+id, function(e) {
       var datajson =  JSON.parse(e.detail);
       mouse.x = Math.round(datajson.data.pos.x)*two.width / datajson.data.screen.width;
@@ -126,11 +124,6 @@ var Spaceship = function(id, ws, two) {
       ufo_canvas.style.top = '0px';
       document.body.appendChild(ufo_canvas);
       ufo = document.getElementById('ufo_canvas'+id).getContext('2d');
-
-      type_ufo = Math.floor((Math.random()*ufos.length));
-      new_ufo = ufos[type_ufo];
-      imageUfo = new Image();
-      imageUfo.src = new_ufo.src;
       ufo.drawImage(imageUfo, new_ufo.x, new_ufo.y);
     }
 

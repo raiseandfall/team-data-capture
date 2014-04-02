@@ -1,8 +1,9 @@
 'use strict';
 
-var TeamCaptureApp = require('../app').TeamCaptureApp,
+var config = require('../config.js'),
+    TeamCaptureApp = require('../app').TeamCaptureApp,
     Socket = require('../controllers/sockets').Socket,
-    app = new TeamCaptureApp('192.168.173.103', '4000'),
+    app = new TeamCaptureApp(config.ipaddress, 4000),
     socket = new Socket(),
     events = require('events'),
     idLog = 0,
@@ -10,7 +11,7 @@ var TeamCaptureApp = require('../app').TeamCaptureApp,
 
 exports['read ipaddress'] = function (test) {
 		app.initialize();
-    test.equal(app.ipaddress, '192.168.173.103');
+    test.equal(app.ipaddress, config.ipaddress);
     test.done();
 };
 
@@ -45,13 +46,13 @@ exports['connect socket'] = function (test) {
 	socket.connection();
 };
 
-/*
-exports['message socket'] = function (test) {
 
-	console.log = function (str) {
+//exports['message socket'] = function (test) {
+
+	/*console.log = function (str) {
 		test.equal(str, 'Client : {"type":"mousemove"}');
 		test.done();
-	};
-	socket.message('{"type":"'+APP.ACTION.MOUSE_MOVE+'"}');
+	};*/
+	//socket.message('{"type":"'+APP.ACTION.MOUSE_MOVE+'","id": "1"}');
 
-};*/
+//};
