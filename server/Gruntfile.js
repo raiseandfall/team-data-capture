@@ -129,6 +129,10 @@ module.exports = function(grunt) {
           interrupt: true
         }
       },
+      scss: {
+        files: 'public/scss/*',
+        tasks: ['scss']
+      },
       nodeunit: {
         files: 'test/**/*.js',
         tasks: ['nodeunit']
