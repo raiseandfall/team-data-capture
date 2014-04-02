@@ -288,6 +288,11 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
  * @description     click post message
 **/
 - (IBAction)clickPostMessage:(id)sender {
+    // If message not null
+    if ([self.messengerTextarea.stringValue length] == 0) {
+        return;
+    }
+    
     // send message to server
     NSMutableDictionary *msgData = [NSMutableDictionary dictionaryWithObjectsAndKeys:self.messengerTextarea.stringValue, @"msg", nil];
     [self reportToSocket:@"MESSENGER" :msgData];
