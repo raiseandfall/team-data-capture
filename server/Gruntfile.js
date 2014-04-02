@@ -44,8 +44,8 @@ module.exports = function(grunt) {
         banner: '/*!\n<%= pkg.name %>\nv<%= pkg.version %>\n<%= grunt.template.today("mm-dd-yyyy") %>\nMade by <%= pkg.author.name %> - <%= pkg.author.url %>\n*/'
       },
       js: {
-        src: ['assets/vendors/modernizr/modernizr.js', 'assets/js/*.js'],
-        dest: 'assets/js/script.js'
+        src: ['public/bower_components/two/build/two.js', 'public/js/*.js'],
+        dest: 'public/javascripts/script.js'
       },
       css: {
         options: {
@@ -104,19 +104,72 @@ module.exports = function(grunt) {
       },
       jspublic: {
         options: {
-          jshintrc: 'public/javascripts/.jshintrc',
+          jshintrc: 'public/js/.jshintrc',
         },
         files: {
-          src: ['public/javascripts/*.js']
+          src: [
+            'public/js/*.js',
+            '!public/js/modernizr.js'
+          ]
         },
       }
     },
+
+    /*
+    * url: https://github.com/Modernizr/grunt-modernizr
+    * description: sifts through your project files, gathers up your references to Modernizr tests and outputs a lean, mean Modernizr machine.
+    */
+    modernizr: {
+      dist: {
+        'devFile' : 'public/js/modernizr-dev.js',
+        'outputFile' : 'public/js/modernizr.js',
+        'extra' : {
+          'shiv' : true,
+          'printshiv' : false,
+          'load' : true,
+          'mq' : true,
+          'cssclasses' : true
+        },
+        'extensibility' : {
+          'addtest' : false,
+          'prefixed' : true,
+          'teststyles' : false,
+          'testprops' : false,
+          'testallprops' : false,
+          'hasevents' : false,
+          'prefixes' : false,
+          'domprefixes' : false
+        },
+        'uglify' : true,
+        'tests' : ['csstransitions'],
+        'parseFiles' : false,
+        'matchCommunityTests' : false,
+        'customTests' : []
+      }
+    },
+
+    /*
+    * url: https://github.com/gruntjs/grunt-contrib-uglify
+    * description: Minify files with UglifyJS.
+    */
+    uglify: {
+      options: {
+        report: true
+      },
+      js: {
+        files: {
+          'public/javascripts/script.min.js': ['public/javascripts/script.js']
+        }
+      }
+    },
+
     // grunt-develop
     develop: {
       server: {
         file: 'server.js'
       }
     },
+
     // grunt-contrib-watch
     watch: {
       jslint: {
@@ -132,6 +185,13 @@ module.exports = function(grunt) {
       scss: {
         files: 'public/scss/*',
         tasks: ['scss']
+      },
+      js: {
+        files: [
+          'public/js/*',
+          '!public/js/modernizr.js'
+        ],
+        tasks: ['js']
       },
       nodeunit: {
         files: 'test/**/*.js',
@@ -159,16 +219,21 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
 
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-modernizr');
+
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-nodeunit');
   grunt.loadNpmTasks('grunt-develop');
 
+  grunt.registerTask('js', ['jshint', 'modernizr', 'concat:js', 'uglify:js']);
+
   // dev = run jslint and all tests
   grunt.registerTask('scss', ['sass', 'autoprefixer', 'concat:css', 'cssmin']);
 
   // default = run jslint and all tests
-  grunt.registerTask('default', ['scss', 'jshint','develop','nodeunit']);
+  grunt.registerTask('default', ['scss', 'js', 'develop', 'nodeunit']);
 
   // dev = run jslint and all tests
   grunt.registerTask('dev', ['develop', 'watch']);
