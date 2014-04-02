@@ -996,13 +996,8 @@
         <window title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="leQ-Ih-Rku">
             <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-<<<<<<< HEAD
-            <rect key="contentRect" x="814" y="516" width="388" height="168"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1058"/>
-=======
             <rect key="contentRect" x="814" y="516" width="388" height="319"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1280" height="778"/>
->>>>>>> 63c7e8f338a04c07b2bd34922d61ab37f2568071
             <view key="contentView" id="TG9-hW-pRf">
                 <rect key="frame" x="0.0" y="0.0" width="388" height="168"/>
                 <autoresizingMask key="autoresizingMask"/>
