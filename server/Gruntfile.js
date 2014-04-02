@@ -44,7 +44,7 @@ module.exports = function(grunt) {
         banner: '/*!\n<%= pkg.name %>\nv<%= pkg.version %>\n<%= grunt.template.today("mm-dd-yyyy") %>\nMade by <%= pkg.author.name %> - <%= pkg.author.url %>\n*/'
       },
       js: {
-        src: ['public/bower_components/two/build/two.js', 'public/js/*.js'],
+        src: ['public/bower_components/two/build/two.js', 'public/js/modernizr.js', 'public/js/modules/*.js', 'public/js/app.js'],
         dest: 'public/javascripts/script.js'
       },
       css: {
