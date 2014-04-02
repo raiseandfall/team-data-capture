@@ -28,6 +28,7 @@
 @synthesize cursorDeltaYLabel;
 @synthesize leftMouseCounterLabel;
 @synthesize isGlobalRecording;
+@synthesize isMessengerEnabled;
 @synthesize isScrollRecording;
 @synthesize isMouseRecording;
 @synthesize isAuthenticated;
@@ -71,7 +72,7 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
 **/
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    self.isAuthenticated = NO;
+    isAuthenticated = NO;
     
     self.logDateFormatter = [[NSDateFormatter alloc] init];
     [self.logDateFormatter setTimeStyle:NSDateFormatterMediumStyle];
@@ -268,7 +269,7 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
  * @description     show messenger window
  **/
 - (IBAction)showMessenger:(id)sender {
-    if ([self isAuthenticated]) {
+    if (isAuthenticated) {
         [[self messengerWindow] setLevel: NSStatusWindowLevel];
         [NSApp activateIgnoringOtherApps:YES];
         [[self messengerWindow] makeKeyAndOrderFront:nil];
@@ -348,9 +349,31 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
  * @description     toggle feature
  **/
 - (void)toggleFeature:(NSString*)featureName :(BOOL)toEnable {
-    if ([featureName isEqualToString:@"MESSENGER"]) {
+    BOOL toggleAllFeatures = [featureName isEqualToString:@"ALL"];
+    
+    // MESSENGER
+    if ([featureName isEqualToString:@"MESSENGER"] || toggleAllFeatures) {
         [self.showMessengerItem setEnabled:toEnable];
+        isMessengerEnabled = toEnable;
     }
+    
+    // MOUSE
+    if ([featureName isEqualToString:@"MOUSE"] || toggleAllFeatures) {
+        [[self pauseMouseRecordingItem] setState:toEnable];
+        isMouseRecording = toEnable;
+        [[self pauseMouseRecordingItem] setTitle:toEnable ? LABEL_RECORDING_MOUSE : LABEL_NOT_RECORDING_MOUSE];
+    }
+    
+    // SCROLL
+    if ([featureName isEqualToString:@"SCROLL"] || toggleAllFeatures) {
+        [self.pauseScrollRecordingItem setState:toEnable];
+        isScrollRecording = toEnable;
+        [self.pauseScrollRecordingItem setTitle:toEnable ? LABEL_RECORDING_SCROLL : LABEL_NOT_RECORDING_SCROLL];
+    }
+    
+    // If toggle all features
+    isGlobalRecording = isMouseRecording || isScrollRecording;
+    [[self pauseAllRecordingsItem] setTitle:isGlobalRecording ? LABEL_STOP_ALL_RECORDINGS : LABEL_START_ALL_RECORDINGS];
 }
 
 
@@ -380,7 +403,7 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
 **/
 - (IBAction)toggleAllRecordings:(id)sender {
     // If recording started already
-    if (!self.isGlobalRecording && _webSocket != nil) {
+    if (!isGlobalRecording && _webSocket != nil) {
         [self startRecording];
     } else {
         [self stopRecording];
@@ -388,28 +411,11 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
 }
 
 /**
- * @function        drawIndicators
- * @description     draw menu bar indicators
-**/
-- (void)drawIndicators {
-    self.isGlobalRecording = self.isMouseRecording || self.isScrollRecording;
-    
-    [[self pauseScrollRecordingItem] setTitle:self.isScrollRecording ? LABEL_RECORDING_SCROLL : LABEL_NOT_RECORDING_SCROLL];
-    [[self pauseScrollRecordingItem] setState:self.isScrollRecording];
-    
-    [[self pauseMouseRecordingItem] setTitle:self.isMouseRecording ? LABEL_RECORDING_MOUSE : LABEL_NOT_RECORDING_MOUSE];
-    [[self pauseMouseRecordingItem] setState:self.isMouseRecording];
-
-    [[self pauseAllRecordingsItem] setTitle:self.isGlobalRecording ? LABEL_STOP_ALL_RECORDINGS : LABEL_START_ALL_RECORDINGS];
-}
-
-/**
  * @function        toggleScrollRecording
  * @description     toggle scroll recording
 **/
 - (IBAction)toggleScrollRecording:(id)sender {
-    self.isScrollRecording = !self.isScrollRecording;
-    [self drawIndicators];
+    [self toggleFeature:@"SCROLL" :!self.isScrollRecording];
 }
 
 /**
@@ -417,8 +423,7 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
  * @description     toggle Mouse recording
 **/
 - (IBAction)toggleMouseRecording:(id)sender {
-    self.isMouseRecording = !self.isMouseRecording;
-    [self drawIndicators];
+    [self toggleFeature:@"MOUSE" :!self.isMouseRecording];
 }
 
 
@@ -493,22 +498,22 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
  * @description     stop global recording
 **/
 - (void)stopRecording {
-    if (!self.isGlobalRecording) {
+    if (!isGlobalRecording) {
         return;
     }
     
     NSLog(@"stopRecording");
     
-    self.isGlobalRecording = NO;
-    self.isMouseRecording = NO;
-    self.isScrollRecording = NO;
+    isGlobalRecording = NO;
+    isMouseRecording = NO;
+    isScrollRecording = NO;
     [NSEvent removeMonitor:monitorUserInputs];
     monitorUserInputs = nil;
     
     [self initCounters];
     
-    // Change indicators in menu bar
-    [self drawIndicators];
+    // Turn off all features
+    [self toggleFeature:@"ALL" :FALSE];
     
     [self logMessageToLogView:[NSString stringWithFormat:@"Stop Recording"]];
 }
@@ -518,9 +523,9 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
  * @description     start global recording
 **/
 - (void)startRecording {
-    self.isGlobalRecording = YES;
-    self.isMouseRecording = YES;
-    self.isScrollRecording = YES;
+    isGlobalRecording = YES;
+    isMouseRecording = YES;
+    isScrollRecording = YES;
     
     NSLog(@"startRecording");
     
@@ -532,7 +537,7 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
             // Mouse move
             case 5:
             {
-                if ([self isMouseRecording]) {
+                if (isMouseRecording) {
                     CGPoint location = [NSEvent mouseLocation];
                     
                     // Get local window position
@@ -562,7 +567,7 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
             // Left click
             case 1:
             {
-                if ([self isMouseRecording]) {
+                if (isMouseRecording) {
                     // Report to socket
                     [self reportToSocket:@"CLICK" :nil];
                 
@@ -575,7 +580,7 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
             // Scroll wheel ( X & Y )
             case 22:
             {
-                if ([self isScrollRecording]) {
+                if (isScrollRecording) {
                     float deltaX = [incomingEvent deltaX];
                     float deltaY = [incomingEvent deltaY];
                     
@@ -602,8 +607,8 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
         }
     }];
     
-    // Update menu bar indicators
-    [self drawIndicators];
+    // Turn on all features
+    [self toggleFeature:@"ALL" :TRUE];
     
     [self logMessageToLogView:[NSString stringWithFormat:@"Start Recording"]];
 }
@@ -622,7 +627,7 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
  * @description     called when record button is pressed
 **/
 - (IBAction)recordButtonPressed:(id)sender {
-    if (self.isGlobalRecording) {
+    if (isGlobalRecording) {
         return;
     }
     [self toggleAllRecordings:nil];
@@ -633,7 +638,7 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
  * @description     called when stop button is pressed
 **/
 - (IBAction)stopButtonPressed:(id)sender {
-    if (!self.isGlobalRecording) {
+    if (!isGlobalRecording) {
         return;
     }
     [self toggleAllRecordings:nil];
@@ -752,15 +757,12 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
         
     // If welcome message
     } else if ([type isEqualToString:@"welcome"]) {
-        
-        NSLog(@"WELCOME !!!");
-        
         // Display server status
         [[self serverStatusItem] setTitle:LABEL_SERVER_UP];
         [[self serverStatusItem] setState:NSOnState];
         
         // User now authentified
-        self.isAuthenticated = YES;
+        isAuthenticated = YES;
         
         // Start recording actions if auto-start enabled
         if ([self autoStartTracking]) {
@@ -768,7 +770,7 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
         }
         
         // Enable messenger feature
-        [self toggleFeature:@"MESSENGER" :true];
+        [self toggleFeature:@"MESSENGER" :TRUE];
     }
     
     if (error) {
@@ -778,15 +780,26 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
 
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
     clientID = 0;
+    isAuthenticated = NO;
     
     // Push notification
     if (self.displayNotifications) {
-        [notifier push:@"WebSocket just closed" :@"The WebSocket just closed, the app lost connection. Please retry." :YES :nil];
+        [notifier push:@"Connection lost" :@"The connection to the websocket or the server just closed. Please try to reconnect." :YES :nil];
     }
     
+    // Log
     [socketStatus setStringValue:@"Websocket Connection Closed! (see logs)"];
     [self logMessageToLogView:reason];
+    
+    // Menu bar item
     [[self serverStatusItem] setState:NSOffState];
+    
+    // Disable all recordings
+    [self toggleFeature:@"ALL" :FALSE];
+    
+    // Stop recording
+    [self stopRecording];
+    
     _webSocket = nil;
 }
 
