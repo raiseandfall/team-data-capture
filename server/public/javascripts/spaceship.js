@@ -36,19 +36,19 @@ var Spaceship = function(id, ws, two) {
 
     var v;
     var ufo_canvas;
-    var ufo1 = {'src':'/img/ship1.png',
+    var ufo1 = {'src':'/images/ship1.png',
                 'x':10,
                 'y':-52,
                 'smokecolor':'#ffcf0f',
                 'smokecolor2':'#FF5A00'
                },
-        ufo2 = {'src':'/img/ship2.png',
+        ufo2 = {'src':'/images/ship2.png',
                 'x':20,
                 'y':-80,
                 'smokecolor':'#FFFFFF',
                 'smokecolor2':'#FFFFFF'
               },
-        ufo3 = {'src':'/img/ship3.png',
+        ufo3 = {'src':'/images/ship3.png',
                'x':20,
                'y':-60,
                'smokecolor':'#00F0FF',
