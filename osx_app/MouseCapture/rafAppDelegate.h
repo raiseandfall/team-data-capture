@@ -52,6 +52,7 @@ static id monitorUserInputs;
 @property (readwrite) BOOL isGlobalRecording;
 @property (readwrite) BOOL isMouseRecording;
 @property (readwrite) BOOL isScrollRecording;
+@property (readwrite) BOOL isMessengerEnabled;
 @property (readwrite) BOOL isAuthenticated;
 
 @property (readwrite) IBOutlet NSMenu *menu;
@@ -64,9 +65,6 @@ static id monitorUserInputs;
 @property (readwrite) IBOutlet NSMenuItem *showLoggerItem;
 @property (readwrite) IBOutlet NSMenuItem *showPreferencesItem;
 @property (readwrite) IBOutlet NSStatusItem *statusItem;
-
-
-- (void)drawIndicators;
 
 - (NSString*)getUserSettings            :(NSString*)settingName;
 - (void)saveUserSettings;

@@ -928,7 +928,7 @@
         </customObject>
         <customObject id="420" customClass="NSFontManager"/>
         <userDefaultsController representsSharedInstance="YES" id="yJF-dN-bmB"/>
-        <menu id="t0p-o8-Lw1">
+        <menu autoenablesItems="NO" id="t0p-o8-Lw1">
             <items>
                 <menuItem title="With ❤ from JVST - 2014 - v0.1 b1" enabled="NO" id="Dsf-0o-HEq">
                     <modifierMask key="keyEquivalentModifierMask"/>
@@ -965,7 +965,7 @@
                     <attributedString key="attributedTitle"/>
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
-                        <action selector="showMessenger:" target="494" id="TwH-mB-uCQ"/>
+                        <action selector="showMessenger:" target="494" id="gsY-Jc-Uon"/>
                     </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="3xy-yl-6uM"/>
