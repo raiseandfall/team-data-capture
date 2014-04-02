@@ -8,7 +8,7 @@ port='9000';
 var ws = new Socket();
 ws.connect(host, port);
 
-var type = 'canvas';
+var type = 'svg';
 
 var two = new Two({
   type: Two.Types[type],

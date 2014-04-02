@@ -1,10 +1,14 @@
 {
-  "name": "application-name",
+  "name": "spacemo.us",
   "version": "0.0.1",
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js"
+  },
+  "author": {
+    "url": "http://www.jvst.us",
+    "name": "JVST"
   },
   "dependencies": {
     "express": "~3.4.8",
@@ -20,9 +24,17 @@
     "grunt-contrib-jshint": "~0.9.0",
     "grunt-contrib-nodeunit": "~0.3.3",
     "grunt-develop": "~0.3.0",
-    "grunt-contrib-watch": "~0.6.0"
+    "grunt-contrib-watch": "~0.6.0",
+    "grunt-sass": "~0.12.1",
+    "grunt-contrib-cssmin": "~0.9.0",
+    "grunt-autoprefixer": "~0.7.2",
+    "grunt-contrib-concat": "~0.4.0"
   },
   "devDependencies": {
-    "jshint-stylish": "~0.1.5"
+    "jshint-stylish": "~0.1.5",
+    "grunt-sass": "~0.12.1",
+    "grunt-autoprefixer": "~0.7.2",
+    "grunt-contrib-concat": "~0.4.0",
+    "grunt-contrib-cssmin": "~0.9.0"
   }
 }

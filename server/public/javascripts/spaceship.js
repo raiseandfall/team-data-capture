@@ -4,7 +4,6 @@ var Spaceship = function(id, ws, two) {
 
     var aTrail = [];
     var aLaser = [];
-    var missiles = [];
     var delta = new Two.Vector();
     var mouse = new Two.Vector();
     var rotation = new Two.Vector();
@@ -25,9 +24,6 @@ var Spaceship = function(id, ws, two) {
     var speedTrail = 5;
     var i = 0;
     var speedLaser = 10;
-    var ufo = new Ship(id, two);
-    var ball = two.makeGroup();
-    ball.add(ufo.getShip());
 
     var bubbleText;
     var message = '';
@@ -37,6 +33,34 @@ var Spaceship = function(id, ws, two) {
     var contentBubble;
     var audio = document.getElementById('laser');
     var reactor_audio = document.getElementById('reactor_audio');
+
+    var v;
+    var ufo_canvas;
+    var ufo1 = {'src':'/images/ship1.png',
+                'x':10,
+                'y':-52,
+                'smokecolor':'#ffcf0f',
+                'smokecolor2':'#FF5A00'
+               },
+        ufo2 = {'src':'/images/ship2.png',
+                'x':20,
+                'y':-80,
+                'smokecolor':'#FFFFFF',
+                'smokecolor2':'#FFFFFF'
+              },
+        ufo3 = {'src':'/images/ship3.png',
+               'x':20,
+               'y':-60,
+               'smokecolor':'#00F0FF',
+               'smokecolor2':'#FFFFFF'
+             };
+    var ufos = [ufo1, ufo2, ufo3];
+    var ufo;
+    var type_ufo;
+    var new_ufo;
+    var imageUfo;
+    var fire, fire2, reactor;
+
 
     //move the the rubberball with the mouse position
     ws.events.addEventListener(ws.EVENT.MOUSE_MOVE+'_'+id, function(e) {
@@ -53,12 +77,16 @@ var Spaceship = function(id, ws, two) {
         aTrail[i].elt.remove();
       }
       aTrail = [];
-      ball.remove();
+      reactor.remove();
+      ufo_canvas.remove();
+      if(bubbleText){
+        bubbleText.remove();
+      }
     });
 
     ws.events.addEventListener(ws.EVENT.CLICK+'_'+id, function(e) {
       var laser = {};
-      laser.elt = ufo.getLaser(mouse.x, mouse.y);
+      laser.elt = getLaser(mouse.x, mouse.y);
       laser.xInit = mouse.x;
       laser.x = mouse.x+200;
       laser.y = mouse.y;
@@ -70,7 +98,10 @@ var Spaceship = function(id, ws, two) {
     });
 
     ws.events.addEventListener(ws.EVENT.MOUSE_WHEEL+'_'+id, function(e) {
-      ufo.startWheeling();
+      if(fire.scale<1){
+        fire.scale += 0.04;
+        fire2.scale += 0.04;
+      }
       if(reactor_audio){
         reactor_audio.currentTime=0;
         reactor_audio.play();
@@ -81,6 +112,51 @@ var Spaceship = function(id, ws, two) {
       var detail = JSON.parse(e.detail);
       createText(detail.data.msg);
     });
+
+    /**
+    *
+    */
+
+    function addShip(){
+      ufo_canvas = document.createElement('canvas');
+      ufo_canvas.id = 'ufo_canvas'+id;
+      ufo_canvas.width = two.width;
+      ufo_canvas.height = two.height;
+      ufo_canvas.style.position = 'fixed';
+      ufo_canvas.style.top = '0px';
+      document.body.appendChild(ufo_canvas);
+      ufo = document.getElementById('ufo_canvas'+id).getContext('2d');
+
+      type_ufo = Math.floor((Math.random()*ufos.length));
+      new_ufo = ufos[type_ufo];
+      imageUfo = new Image();
+      imageUfo.src = new_ufo.src;
+      ufo.drawImage(imageUfo, new_ufo.x, new_ufo.y);
+    }
+
+    /**
+    *
+    */
+
+    function addReactor(){
+      fire = two.makeCircle(0, 0 , 50);
+      fire.fill = fire.stroke = new_ufo.smokecolor;
+      fire.opacity = 0.5;
+      fire.scale = 0;
+      for (i = 0; i < fire.vertices.length; i++) {
+        v = fire.vertices[i];
+        v.originalX = v.x;
+      }
+      fire2 = two.makeCircle(0, 0 , 10);
+      fire2.fill = fire2.stroke = new_ufo.smokecolor2;
+      fire2.opacity = 0.5;
+      fire2.scale = 0;
+      for (i = 0; i < fire2.vertices.length; i++) {
+        v = fire2.vertices[i];
+        v.originalX = v.x;
+      }
+      reactor = two.makeGroup(fire,fire2);
+    }
 
     /**
     *
@@ -120,7 +196,6 @@ var Spaceship = function(id, ws, two) {
       if(textTimer){
         clearInterval(textTimer);
       }
-
       textScale = 1;
       textTranslate = 0;
 
@@ -150,21 +225,43 @@ var Spaceship = function(id, ws, two) {
       if(textTranslate<-100){
         textScale -= 0.2;
       }
-
       if(textScale<=0){
         clearInterval(textTimer);
         contentBubble.clearRect(0,0,two.width,two.height);
       }
     }
 
+    addShip();
+    addReactor();
     nIntervId = setInterval(addTrailItem, frequence);
 
     two.bind('update', function() {
 
-      delta.copy(mouse).subSelf(ball.translation);
-      ball.translation.addSelf(delta);
-      ball.rotation = Math.PI/2*(rotation.y/100);
-      ufo.setPosition(mouse,Math.PI/2*(rotation.y/100));
+      ufo.clearRect(0,0,two.width,two.height);
+      ufo.save();
+      ufo.translate(mouse.x,mouse.y);
+      ufo.rotate(Math.PI/2*(rotation.y/100));
+      ufo.drawImage(imageUfo, new_ufo.x, new_ufo.y);
+      ufo.restore();
+
+      delta.copy(mouse).subSelf(reactor.translation);
+      reactor.translation.addSelf(delta);
+      reactor.rotation = Math.PI/2*(rotation.y/100);
+
+      // smoke reactor
+      if(fire.scale>0){
+        fire.scale -= 0.01;
+        fire2.scale -= 0.01;
+        for (i = 0; i < fire.vertices.length; i++) {
+          v = fire.vertices[i];
+          if(v.x < 0){
+            var rand = Math.floor((Math.random()*50)+1);
+            v.x = v.originalX - rand;
+            var v2 = fire2.vertices[i];
+            v2.x = v2.originalX - rand;
+          }
+        }
+      }
 
       for(i = 0; i<aLaser.length; i++){
         var laser = aLaser[i];
@@ -225,11 +322,29 @@ var Spaceship = function(id, ws, two) {
           itemTrail.elt.scale = percent*itemTrail.z/2;
           itemTrail.elt.opacity = percent*(itemTrail.z);
           itemTrail.elt.translation.set(itemTrail.x, itemTrail.y);
-
           itemTrail.index++;
         }
       }
-
     });
 
+    function getLaser(x,y){
+      var laser;
+      switch(type_ufo){
+        case 0:
+        case 1: laser = two.makeRectangle(0, 0, 20, 2);
+                laser.noStroke().fill = '#FFDC99';
+                break;
+        default:laser = two.makeGroup();
+                var rect = two.makeRectangle(50, 0, 20, 20);
+                rect.rotation = Math.PI/4;
+                var rect2 = rect.clone();
+                rect2.translation.x = 60;
+                laser.add(rect,rect2);
+                laser.noFill().stroke = '#00F0FF';
+                break;
+      }
+      laser.translation.x = x;
+      laser.translation.y = y;
+      return laser;
+    }
 };
