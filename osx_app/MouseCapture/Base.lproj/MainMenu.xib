@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="4514" systemVersion="13C64" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="4514"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="5053"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -650,7 +650,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="335" y="390" width="673" height="433"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1280" height="778"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1058"/>
             <view key="contentView" id="372">
                 <rect key="frame" x="0.0" y="0.0" width="673" height="433"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -996,13 +996,8 @@
         <window title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="leQ-Ih-Rku">
             <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-<<<<<<< HEAD
             <rect key="contentRect" x="814" y="516" width="388" height="168"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1058"/>
-=======
-            <rect key="contentRect" x="814" y="516" width="388" height="319"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1280" height="778"/>
->>>>>>> 63c7e8f338a04c07b2bd34922d61ab37f2568071
             <view key="contentView" id="TG9-hW-pRf">
                 <rect key="frame" x="0.0" y="0.0" width="388" height="168"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -1038,11 +1033,11 @@
                             </tabViewItem>
                             <tabViewItem label="Socket" identifier="2" id="Xoz-Ue-Hfx">
                                 <view key="view" id="vlA-YU-lcV">
-                                    <rect key="frame" x="10" y="33" width="342" height="146"/>
+                                    <rect key="frame" x="10" y="33" width="342" height="106"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="5YO-Ud-FRG">
-                                            <rect key="frame" x="23" y="112" width="73" height="17"/>
+                                            <rect key="frame" x="23" y="72" width="73" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="69" id="pBZ-KI-uAc"/>
@@ -1054,7 +1049,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="4x4-A4-Owd">
-                                            <rect key="frame" x="23" y="74" width="73" height="17"/>
+                                            <rect key="frame" x="23" y="34" width="73" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="69" id="Er4-M7-ZZU"/>
@@ -1066,7 +1061,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iMb-Vo-OS7">
-                                            <rect key="frame" x="102" y="109" width="139" height="22"/>
+                                            <rect key="frame" x="102" y="69" width="139" height="22"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="192.168.173.101" drawsBackground="YES" id="Zif-Y6-1gk">
                                                 <font key="font" metaFont="system"/>
@@ -1075,7 +1070,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hzk-nq-o6L">
-                                            <rect key="frame" x="102" y="71" width="139" height="22"/>
+                                            <rect key="frame" x="102" y="31" width="139" height="22"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="9000" drawsBackground="YES" id="mAV-8f-YHG">
                                                 <font key="font" metaFont="system"/>
@@ -1112,7 +1107,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="762" y="863" width="388" height="164"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1280" height="778"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1058"/>
             <view key="contentView" id="me7-mj-qZx">
                 <rect key="frame" x="0.0" y="0.0" width="388" height="164"/>
                 <autoresizingMask key="autoresizingMask"/>

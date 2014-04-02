@@ -24,3 +24,6 @@ Pods
 *node_modules/
 *bower_components/
 server/config.js
+
+#Submodules
+SocketRocket/
