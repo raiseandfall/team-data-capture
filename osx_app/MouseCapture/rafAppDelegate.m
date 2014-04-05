@@ -17,8 +17,6 @@
 
 @synthesize logView;
 @synthesize toolbarClearButton;
-@synthesize toolbarRecordButton;
-@synthesize toolbarStopButton;
 @synthesize toolbarConnectButton;
 @synthesize toolbarDisconnectButton;
 @synthesize socketStatus;
@@ -27,10 +25,6 @@
 @synthesize cursorDeltaXLabel;
 @synthesize cursorDeltaYLabel;
 @synthesize leftMouseCounterLabel;
-@synthesize isGlobalRecording;
-@synthesize isMessengerEnabled;
-@synthesize isScrollRecording;
-@synthesize isMouseRecording;
 @synthesize isAuthenticated;
 
 @synthesize cursorPositionX;
@@ -54,15 +48,8 @@ NSRect secondScreenFrame;
 
 NSString *LABEL_SHOW_LOGS = @"Show logs";
 NSString *LABEL_HIDE_LOGS = @"Hide logs";
-NSString *LABEL_SERVER_UP = @"Connected to Server";
-NSString *LABEL_SERVER_DOWN = @"Not Connected to Server";
-NSString *LABEL_RECORDING_MOUSE = @"Recording mouse";
-NSString *LABEL_NOT_RECORDING_MOUSE = @"Not recording mouse";
-NSString *LABEL_RECORDING_SCROLL = @"Recording scroll";
-NSString *LABEL_NOT_RECORDING_SCROLL = @"Not recording scroll";
-NSString *LABEL_START_ALL_RECORDINGS = @"Start all recordings";
-NSString *LABEL_STOP_ALL_RECORDINGS = @"Stop all recordings";
-
+NSString *LABEL_SERVER_UP = @"You are connected to the server";
+NSString *LABEL_SERVER_DOWN = @"You are not connected to the server";
 NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
 
 
@@ -100,7 +87,6 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     [self.userSettingHost setStringValue:[self getUserSettings:@"host"]];
     [self.userSettingPort setStringValue:[self getUserSettings:@"port"]];
     [self.userSettingDisplayNotifications setState:[[self getUserSettings:@"displaySystemNotifications"] intValue]];
-    [self.userSettingAutoStartTracking setState:[[self getUserSettings:@"autoStartTracking"] intValue]];
     
     // ACTION TYPES
     ACTION_TYPES = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -252,8 +238,6 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     [[NSUserDefaults standardUserDefaults] setObject:self.userSettingPort.stringValue forKey:@"port"];
     [[NSUserDefaults standardUserDefaults] setObject:self.userSettingDisplayNotifications.stringValue
                                               forKey:@"displaySystemNotifications"];
-    [[NSUserDefaults standardUserDefaults] setObject:self.userSettingAutoStartTracking.stringValue
-                                              forKey:@"autoStartTracking"];
 }
 
 /**
@@ -337,14 +321,6 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
 }
 
 /**
- * @function        displayNotifications
- * @description     returns a boolean wether or not to display notifications
-**/
-- (BOOL)autoStartTracking {
-    return ([[self getUserSettings:@"autoStartTracking"] intValue] == 1 || [self getUserSettings:@"autoStartTracking"] == nil);
-}
-
-/**
  * @function        toggleFeature
  * @description     toggle feature
  **/
@@ -354,26 +330,14 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     // MESSENGER
     if ([featureName isEqualToString:@"MESSENGER"] || toggleAllFeatures) {
         [self.showMessengerItem setEnabled:toEnable];
-        isMessengerEnabled = toEnable;
     }
     
-    // MOUSE
-    if ([featureName isEqualToString:@"MOUSE"] || toggleAllFeatures) {
-        [[self pauseMouseRecordingItem] setState:toEnable];
-        isMouseRecording = toEnable;
-        [[self pauseMouseRecordingItem] setTitle:toEnable ? LABEL_RECORDING_MOUSE : LABEL_NOT_RECORDING_MOUSE];
+    if ([featureName isEqualToString:@"CONNECTION"]) {
+        [[self toggleConnectionItem] setTitle:toEnable ? @"Disconnect" : @"Connect"];
+        
+        [[self serverStatusItem] setTitle:toEnable ? LABEL_SERVER_UP : LABEL_SERVER_DOWN];
+        [[self serverStatusItem] setState:toEnable];
     }
-    
-    // SCROLL
-    if ([featureName isEqualToString:@"SCROLL"] || toggleAllFeatures) {
-        [self.pauseScrollRecordingItem setState:toEnable];
-        isScrollRecording = toEnable;
-        [self.pauseScrollRecordingItem setTitle:toEnable ? LABEL_RECORDING_SCROLL : LABEL_NOT_RECORDING_SCROLL];
-    }
-    
-    // If toggle all features
-    isGlobalRecording = isMouseRecording || isScrollRecording;
-    [[self pauseAllRecordingsItem] setTitle:isGlobalRecording ? LABEL_STOP_ALL_RECORDINGS : LABEL_START_ALL_RECORDINGS];
 }
 
 
@@ -393,39 +357,18 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     [[self statusItem] setHighlightMode:YES];
 }
 
-- (IBAction)fakeAction:(id)sender {
-    NSLog(@"%@ %s", self, __func__);
-}
-
 /**
- * @function        toggleAllRecordings
- * @description     toggle all recordings
+ * @function        toggleConnection
+ * @description     toggle connection
 **/
-- (IBAction)toggleAllRecordings:(id)sender {
+- (IBAction)toggleConnection:(id)sender {
     // If recording started already
-    if (!isGlobalRecording && _webSocket != nil) {
-        [self startRecording];
+    if (isAuthenticated) {
+        [self disconnectSocket:nil];
     } else {
-        [self stopRecording];
+        [self connectSocket:nil];
     }
 }
-
-/**
- * @function        toggleScrollRecording
- * @description     toggle scroll recording
-**/
-- (IBAction)toggleScrollRecording:(id)sender {
-    [self toggleFeature:@"SCROLL" :!self.isScrollRecording];
-}
-
-/**
- * @function        toggleMouseRecording
- * @description     toggle Mouse recording
-**/
-- (IBAction)toggleMouseRecording:(id)sender {
-    [self toggleFeature:@"MOUSE" :!self.isMouseRecording];
-}
-
 
 /*******************
  * WEB SOCKET 
@@ -450,9 +393,16 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     [_webSocket close];
     _webSocket.delegate = nil;
     _webSocket = nil;
+    
+    // Change menu bar item
+    [self toggleFeature:@"CONNECTION" :FALSE];
 
     [toolbarConnectButton setEnabled:YES];
     [toolbarDisconnectButton setEnabled:NO];
+    
+    
+    
+    [self killSession];
 }
 
 /**
@@ -481,10 +431,7 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
         if ([[self getUserSettings:@"host"] isEqualToString:@""] || [[self getUserSettings:@"port"] isEqualToString:@""]) {
             [notifier push:@"Missing server parameters" :@"Please specifiy the server host & port in the preferences" :YES :nil];
         } else {
-            _webSocket = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[NSString
-                                                                                                                stringWithFormat:@"ws://%@:%@",
-                                                                                                                [self getUserSettings:@"host"],
-                                                                                                                [self getUserSettings:@"port"]]]]];
+            _webSocket = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"ws://%@:%@", [self getUserSettings:@"host"], [self getUserSettings:@"port"]]]]];
             _webSocket.delegate = self;
     
             [socketStatus setStringValue:@"Opening connection!"];
@@ -498,15 +445,12 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
  * @description     stop global recording
 **/
 - (void)stopRecording {
-    if (!isGlobalRecording) {
+    if (!isAuthenticated) {
         return;
     }
     
     NSLog(@"stopRecording");
     
-    isGlobalRecording = NO;
-    isMouseRecording = NO;
-    isScrollRecording = NO;
     [NSEvent removeMonitor:monitorUserInputs];
     monitorUserInputs = nil;
     
@@ -523,10 +467,6 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
  * @description     start global recording
 **/
 - (void)startRecording {
-    isGlobalRecording = YES;
-    isMouseRecording = YES;
-    isScrollRecording = YES;
-    
     NSLog(@"startRecording");
     
     // Fire everytime cursor move
@@ -537,66 +477,59 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
             // Mouse move
             case 5:
             {
-                if (isMouseRecording) {
-                    CGPoint location = [NSEvent mouseLocation];
+                CGPoint location = [NSEvent mouseLocation];
                     
-                    // Get local window position
-                    NSDictionary *localPosition = [self getLocalPosition:location];
-                    
-                    NSDictionary *delta = [NSDictionary dictionaryWithObjectsAndKeys:
-                                         [NSNumber numberWithFloat:[incomingEvent deltaX]], @"x",
-                                         [NSNumber numberWithFloat:[incomingEvent deltaY]], @"y",
-                                         nil];
+                // Get local window position
+                NSDictionary *localPosition = [self getLocalPosition:location];
                 
-                    NSMutableDictionary *moveData = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                                    [localPosition objectForKey:@"position"], @"pos",
-                                                    delta, @"delta",
-                                                    [localPosition objectForKey:@"screen"], @"screen",
-                                                    nil];
-                
-                    self.cursorDeltaX = [NSNumber numberWithFloat:[incomingEvent deltaX]];
-                    self.cursorDeltaY = [NSNumber numberWithFloat:[incomingEvent deltaY]];
-                    self.cursorPositionX = [NSNumber numberWithFloat:location.x];
-                    self.cursorPositionY = [NSNumber numberWithFloat:location.y];
-                
-                    [self reportToSocket:@"MOUSE_MOVE" :moveData];
-                }
-                break;
+                NSDictionary *delta = [NSDictionary dictionaryWithObjectsAndKeys:
+                                        [NSNumber numberWithFloat:[incomingEvent deltaX]], @"x",
+                                        [NSNumber numberWithFloat:[incomingEvent deltaY]], @"y",
+                                        nil];
+            
+                NSMutableDictionary *moveData = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                                [localPosition objectForKey:@"position"], @"pos",
+                                                delta, @"delta",
+                                                [localPosition objectForKey:@"screen"], @"screen",
+                                                nil];
+            
+                self.cursorDeltaX = [NSNumber numberWithFloat:[incomingEvent deltaX]];
+                self.cursorDeltaY = [NSNumber numberWithFloat:[incomingEvent deltaY]];
+                self.cursorPositionX = [NSNumber numberWithFloat:location.x];
+                self.cursorPositionY = [NSNumber numberWithFloat:location.y];
+            
+                [self reportToSocket:@"MOUSE_MOVE" :moveData];
             }
+            break;
                 
             // Left click
             case 1:
             {
-                if (isMouseRecording) {
-                    // Report to socket
-                    [self reportToSocket:@"CLICK" :nil];
-                
-                    [self logMessageToLogView:[NSString stringWithFormat:@"Left click!"]];
-                    self.leftMouseCounter = [NSNumber numberWithInt:(1 + [self.leftMouseCounter intValue])];
-                }
-                break;
+                [self reportToSocket:@"CLICK" :nil];
+            
+                [self logMessageToLogView:[NSString stringWithFormat:@"Left click!"]];
+                self.leftMouseCounter = [NSNumber numberWithInt:(1 + [self.leftMouseCounter intValue])];
             }
+            break;
                 
             // Scroll wheel ( X & Y )
             case 22:
             {
-                if (isScrollRecording) {
-                    float deltaX = [incomingEvent deltaX];
-                    float deltaY = [incomingEvent deltaY];
-                    
-                    // Let's not send scroll if null
-                    if (deltaX != 0 || deltaY != 0) {
-                        NSDictionary *delta = [NSDictionary dictionaryWithObjectsAndKeys:
-                                               [NSNumber numberWithFloat:[incomingEvent deltaX]], @"x",
-                                               [NSNumber numberWithFloat:[incomingEvent deltaY]], @"y",
-                                               nil];
-                    
-                        NSMutableDictionary *scrollData = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                                           delta, @"delta",
-                                                           nil];
-                    
-                        [self reportToSocket:@"SCROLL" :scrollData];
-                    }
+                float deltaX = [incomingEvent deltaX];
+                float deltaY = [incomingEvent deltaY];
+                
+                // Let's not send scroll if null
+                if (deltaX != 0 || deltaY != 0) {
+                    NSDictionary *delta = [NSDictionary dictionaryWithObjectsAndKeys:
+                                            [NSNumber numberWithFloat:[incomingEvent deltaX]], @"x",
+                                            [NSNumber numberWithFloat:[incomingEvent deltaY]], @"y",
+                                            nil];
+                
+                    NSMutableDictionary *scrollData = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                                        delta, @"delta",
+                                                        nil];
+                
+                    [self reportToSocket:@"SCROLL" :scrollData];
                 }
             }
                 
@@ -620,28 +553,6 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
 - (IBAction)clearButtonPressed:(id)sender {
     self.leftMouseCounter = [NSNumber numberWithInt:0];
     [self.logView setString:@""];
-}
-
-/**
- * @function        recordButtonPressed
- * @description     called when record button is pressed
-**/
-- (IBAction)recordButtonPressed:(id)sender {
-    if (isGlobalRecording) {
-        return;
-    }
-    [self toggleAllRecordings:nil];
-}
-
-/**
- * @function        stopButtonPressed
- * @description     called when stop button is pressed
-**/
-- (IBAction)stopButtonPressed:(id)sender {
-    if (!isGlobalRecording) {
-        return;
-    }
-    [self toggleAllRecordings:nil];
 }
 
 /**
@@ -730,6 +641,7 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     NSLog(@"WebSocket :: Failed With Error %@", error);
     
     [socketStatus setStringValue:@"WebSocket Connection Failed! (see logs)"];
+    
     _webSocket = nil;
     
     // Push notification
@@ -737,8 +649,7 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
         [notifier push:@"Connection to WebSocket failed" :@"The connection to the WebSocket failed. Please retry." :YES :nil];
     }
     
-    [[self serverStatusItem] setTitle:LABEL_SERVER_DOWN];
-    [[self serverStatusItem] setState:NSOffState];
+    [self toggleFeature:@"CONNECTION" :FALSE];
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(NSString *)message {
@@ -758,16 +669,16 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     // If welcome message
     } else if ([type isEqualToString:@"welcome"]) {
         // Display server status
-        [[self serverStatusItem] setTitle:LABEL_SERVER_UP];
-        [[self serverStatusItem] setState:NSOnState];
+        [self toggleFeature:@"CONNECTION" :TRUE];
         
         // User now authentified
         isAuthenticated = YES;
         
-        // Start recording actions if auto-start enabled
-        if ([self autoStartTracking]) {
-            [self startRecording];
-        }
+        // Start recording actions
+        [self startRecording];
+        
+        // Change connection item in menu bar
+        [self toggleFeature:@"CONNECTION" :TRUE];
         
         // Enable messenger feature
         [self toggleFeature:@"MESSENGER" :TRUE];
@@ -779,9 +690,6 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
-    clientID = 0;
-    isAuthenticated = NO;
-    
     // Push notification
     if (self.displayNotifications) {
         [notifier push:@"Connection lost" :@"The connection to the websocket or the server just closed. Please try to reconnect." :YES :nil];
@@ -792,15 +700,21 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
     [self logMessageToLogView:reason];
     
     // Menu bar item
-    [[self serverStatusItem] setState:NSOffState];
-    
-    // Disable all recordings
-    [self toggleFeature:@"ALL" :FALSE];
+    [self toggleFeature:@"CONNECTION" :FALSE];
     
     // Stop recording
     [self stopRecording];
     
-    _webSocket = nil;
+    [self killSession];
+}
+
+/**
+ * @function        killSession
+ * @description     kill current session
+**/
+- (void)killSession {
+    clientID = 0;
+    isAuthenticated = NO;
 }
 
 @end

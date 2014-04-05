@@ -855,25 +855,13 @@
                             <action selector="clearButtonPressed:" target="494" id="IjH-oV-pnF"/>
                         </connections>
                     </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="E5D58618-EBD7-4865-8F4B-F549B7BDA130" label="Stop" paletteLabel="Stop" tag="-1" image="player_pause" id="ciH-ij-Vi3">
-                        <nil key="toolTip"/>
-                        <connections>
-                            <action selector="stopButtonPressed:" target="494" id="Edv-kK-Tc4"/>
-                        </connections>
-                    </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="58FFA4D0-32F6-4233-BE92-D1B806330E16" label="Record" paletteLabel="Record" tag="-1" image="Record-Pressed-icon" id="nX3-HP-ZmN">
-                        <nil key="toolTip"/>
-                        <connections>
-                            <action selector="recordButtonPressed:" target="494" id="uSi-Mq-1Vx"/>
-                        </connections>
-                    </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="867B97E5-32F6-4292-82CD-695A11BB0014" label="Connect Socket" paletteLabel="Connect Socket" tag="-1" image="connect_websocket" id="j1e-xA-QmE">
+                    <toolbarItem implicitItemIdentifier="867B97E5-32F6-4292-82CD-695A11BB0014" label="Connect" paletteLabel="Connect" tag="-1" image="connect_websocket" id="j1e-xA-QmE">
                         <nil key="toolTip"/>
                         <connections>
                             <action selector="connectSocket:" target="494" id="r7c-Tm-krL"/>
                         </connections>
                     </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="62000EDA-A296-4362-8466-08FC14987340" label="Disconnect Socket" paletteLabel="Disconnect Socket" tag="-1" image="disconnect_ws" id="Auy-1i-gJ1">
+                    <toolbarItem implicitItemIdentifier="62000EDA-A296-4362-8466-08FC14987340" label="Disconnect" paletteLabel="Disconnect" tag="-1" image="disconnect_ws" id="Auy-1i-gJ1">
                         <nil key="toolTip"/>
                         <connections>
                             <action selector="disconnectSocket:" target="494" id="Qbs-5V-cUh"/>
@@ -881,9 +869,6 @@
                     </toolbarItem>
                 </allowedToolbarItems>
                 <defaultToolbarItems>
-                    <toolbarItem reference="nX3-HP-ZmN"/>
-                    <toolbarItem reference="ciH-ij-Vi3"/>
-                    <toolbarItem reference="GlE-WW-sTu"/>
                     <toolbarItem reference="j1e-xA-QmE"/>
                     <toolbarItem reference="Auy-1i-gJ1"/>
                     <toolbarItem reference="GlE-WW-sTu"/>
@@ -903,9 +888,6 @@
                 <outlet property="menu" destination="t0p-o8-Lw1" id="9FS-Jy-6D7"/>
                 <outlet property="messengerTextarea" destination="Eld-jl-vFc" id="86y-7p-Emy"/>
                 <outlet property="messengerWindow" destination="MJ3-9b-4mF" id="q5X-Lk-ywi"/>
-                <outlet property="pauseAllRecordingsItem" destination="RLx-lh-0Nr" id="gIw-TS-Mv2"/>
-                <outlet property="pauseMouseRecordingItem" destination="9wX-MN-9Q7" id="TZE-Tm-g0G"/>
-                <outlet property="pauseScrollRecordingItem" destination="5jY-Bn-qe0" id="QXh-I1-J5I"/>
                 <outlet property="postMessageBtn" destination="V56-Jo-ARy" id="TbX-qr-0JJ"/>
                 <outlet property="preferencesWindow" destination="leQ-Ih-Rku" id="svp-3p-Kxy"/>
                 <outlet property="serverStatusItem" destination="xYW-mj-vsw" id="ELp-ax-ZAX"/>
@@ -913,12 +895,10 @@
                 <outlet property="showMessengerItem" destination="1Mm-cS-gGM" id="hgZ-VU-XU7"/>
                 <outlet property="showPreferencesItem" destination="AzF-vF-Qlu" id="EdC-Gv-p3h"/>
                 <outlet property="socketStatus" destination="mcm-DL-X0c" id="pYp-4i-QAX"/>
+                <outlet property="toggleConnectionItem" destination="wej-2l-lzX" id="JWg-Wk-vgN"/>
                 <outlet property="toolbarClearButton" destination="cSK-Jw-jHQ" id="hMu-JJ-Exh"/>
                 <outlet property="toolbarConnectButton" destination="j1e-xA-QmE" id="EA2-hM-8MJ"/>
                 <outlet property="toolbarDisconnectButton" destination="Auy-1i-gJ1" id="Sjf-R5-fEW"/>
-                <outlet property="toolbarRecordButton" destination="nX3-HP-ZmN" id="kQB-he-sPe"/>
-                <outlet property="toolbarStopButton" destination="ciH-ij-Vi3" id="Mbg-sn-Uj1"/>
-                <outlet property="userSettingAutoStartTracking" destination="zuH-Ff-5oM" id="dFS-NX-EoO"/>
                 <outlet property="userSettingDisplayNotifications" destination="saD-u4-OLX" id="JeW-Re-nYu"/>
                 <outlet property="userSettingHost" destination="iMb-Vo-OS7" id="F0Z-23-myx"/>
                 <outlet property="userSettingPort" destination="hzk-nq-o6L" id="wRJ-5B-ISf"/>
@@ -934,38 +914,23 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="7in-ha-grY"/>
-                <menuItem title="Not Connected to Server" onStateImage="NSStatusAvailable" offStateImage="NSStatusUnavailable" mixedStateImage="NSStatusNone" enabled="NO" id="xYW-mj-vsw">
+                <menuItem title="You are not connected to the server" onStateImage="NSStatusAvailable" offStateImage="NSStatusUnavailable" mixedStateImage="NSStatusNone" enabled="NO" id="xYW-mj-vsw">
                     <attributedString key="attributedTitle"/>
                     <modifierMask key="keyEquivalentModifierMask"/>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="ftT-Zw-Ww5"/>
-                <menuItem title="Not recording mouse" onStateImage="NSStatusAvailable" offStateImage="NSStatusUnavailable" mixedStateImage="NSStatusNone" id="9wX-MN-9Q7">
-                    <attributedString key="attributedTitle"/>
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="toggleMouseRecording:" target="494" id="TK3-aS-7K3"/>
-                    </connections>
-                </menuItem>
-                <menuItem title="Not recording scroll" onStateImage="NSStatusAvailable" offStateImage="NSStatusUnavailable" mixedStateImage="NSStatusNone" id="5jY-Bn-qe0">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="toggleScrollRecording:" target="494" id="Inh-up-xzd"/>
-                    </connections>
-                </menuItem>
-                <menuItem isSeparatorItem="YES" id="Oa4-Cy-3a7"/>
-                <menuItem title="Stop all recordings" id="RLx-lh-0Nr">
-                    <attributedString key="attributedTitle"/>
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="toggleAllRecordings:" target="494" id="W3G-Lk-qVN"/>
-                    </connections>
-                </menuItem>
-                <menuItem isSeparatorItem="YES" id="wPM-Xg-ndS"/>
                 <menuItem title="Messenger" enabled="NO" id="1Mm-cS-gGM">
                     <attributedString key="attributedTitle"/>
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="showMessenger:" target="494" id="gsY-Jc-Uon"/>
+                    </connections>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="oJB-6M-Ee2"/>
+                <menuItem title="Connect" id="wej-2l-lzX">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="toggleConnection:" target="494" id="eYi-N9-aLg"/>
                     </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="3xy-yl-6uM"/>
@@ -996,34 +961,26 @@
         <window title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="leQ-Ih-Rku">
             <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="814" y="516" width="388" height="168"/>
+            <rect key="contentRect" x="814" y="516" width="388" height="152"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1058"/>
             <view key="contentView" id="TG9-hW-pRf">
-                <rect key="frame" x="0.0" y="0.0" width="388" height="168"/>
+                <rect key="frame" x="0.0" y="0.0" width="388" height="152"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <tabView translatesAutoresizingMaskIntoConstraints="NO" id="2BY-Y0-4Uj">
-                        <rect key="frame" x="13" y="10" width="362" height="152"/>
+                        <rect key="frame" x="13" y="10" width="362" height="136"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <font key="font" metaFont="system"/>
                         <tabViewItems>
                             <tabViewItem label="General" identifier="1" id="JW9-BR-Lxd">
                                 <view key="view" id="r3n-Bk-omP">
-                                    <rect key="frame" x="10" y="33" width="342" height="106"/>
+                                    <rect key="frame" x="10" y="33" width="342" height="90"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="saD-u4-OLX">
-                                            <rect key="frame" x="73" y="44" width="197" height="18"/>
+                                            <rect key="frame" x="73" y="58" width="197" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="check" title="Display system notifications" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="I7F-3V-C0c">
-                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                <font key="font" metaFont="system"/>
-                                            </buttonCell>
-                                        </button>
-                                        <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zuH-Ff-5oM">
-                                            <rect key="frame" x="73" y="75" width="173" height="18"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <buttonCell key="cell" type="check" title="Start tracking on launch" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="H6V-Mv-RHa">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
@@ -1033,11 +990,11 @@
                             </tabViewItem>
                             <tabViewItem label="Socket" identifier="2" id="Xoz-Ue-Hfx">
                                 <view key="view" id="vlA-YU-lcV">
-                                    <rect key="frame" x="10" y="33" width="342" height="106"/>
+                                    <rect key="frame" x="10" y="33" width="342" height="90"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="5YO-Ud-FRG">
-                                            <rect key="frame" x="23" y="72" width="73" height="17"/>
+                                            <rect key="frame" x="23" y="56" width="73" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="69" id="pBZ-KI-uAc"/>
@@ -1049,7 +1006,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="4x4-A4-Owd">
-                                            <rect key="frame" x="23" y="34" width="73" height="17"/>
+                                            <rect key="frame" x="23" y="18" width="73" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="69" id="Er4-M7-ZZU"/>
@@ -1061,7 +1018,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iMb-Vo-OS7">
-                                            <rect key="frame" x="102" y="69" width="139" height="22"/>
+                                            <rect key="frame" x="102" y="53" width="139" height="22"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="192.168.173.101" drawsBackground="YES" id="Zif-Y6-1gk">
                                                 <font key="font" metaFont="system"/>
@@ -1070,7 +1027,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hzk-nq-o6L">
-                                            <rect key="frame" x="102" y="31" width="139" height="22"/>
+                                            <rect key="frame" x="102" y="15" width="139" height="22"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="9000" drawsBackground="YES" id="mAV-8f-YHG">
                                                 <font key="font" metaFont="system"/>
@@ -1157,11 +1114,9 @@
         <image name="NSStatusAvailable" width="16" height="16"/>
         <image name="NSStatusNone" width="16" height="16"/>
         <image name="NSStatusUnavailable" width="16" height="16"/>
-        <image name="Record-Pressed-icon" width="128" height="128"/>
         <image name="connect_websocket" width="128" height="128"/>
         <image name="disconnect_ws" width="128" height="128"/>
         <image name="editclear" width="128" height="128"/>
         <image name="jvst_logo_blueOnTransparent" width="418" height="418"/>
-        <image name="player_pause" width="128" height="128"/>
     </resources>
 </document>

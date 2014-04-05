@@ -18,8 +18,6 @@ static id monitorUserInputs;
 @property (strong) IBOutlet NSTextView *logView;
 
 @property (weak) IBOutlet NSToolbarItem *toolbarClearButton;
-@property (weak) IBOutlet NSToolbarItem *toolbarRecordButton;
-@property (weak) IBOutlet NSToolbarItem *toolbarStopButton;
 @property (weak) IBOutlet NSToolbarItem *toolbarConnectButton;
 @property (weak) IBOutlet NSToolbarItem *toolbarDisconnectButton;
 
@@ -34,7 +32,6 @@ static id monitorUserInputs;
 // User Settings
 @property (weak) IBOutlet NSTextField *userSettingHost;
 @property (weak) IBOutlet NSTextField *userSettingPort;
-@property (weak) IBOutlet NSButton *userSettingAutoStartTracking;
 @property (weak) IBOutlet NSButton *userSettingDisplayNotifications;
 
 // Messenger
@@ -49,38 +46,26 @@ static id monitorUserInputs;
 @property (readwrite) NSNumber *cursorPositionY;
 @property (readwrite) NSNumber *leftMouseCounter;
 
-@property (readwrite) BOOL isGlobalRecording;
-@property (readwrite) BOOL isMouseRecording;
-@property (readwrite) BOOL isScrollRecording;
-@property (readwrite) BOOL isMessengerEnabled;
 @property (readwrite) BOOL isAuthenticated;
 
-@property (readwrite) IBOutlet NSMenu *menu;
-@property (readwrite) IBOutlet NSMenuItem *versionNumberItem;
-@property (readwrite) IBOutlet NSMenuItem *pauseAllRecordingsItem;
-@property (readwrite) IBOutlet NSMenuItem *pauseScrollRecordingItem;
-@property (readwrite) IBOutlet NSMenuItem *pauseMouseRecordingItem;
-@property (readwrite) IBOutlet NSMenuItem *showMessengerItem;
-@property (readwrite) IBOutlet NSMenuItem *serverStatusItem;
-@property (readwrite) IBOutlet NSMenuItem *showLoggerItem;
-@property (readwrite) IBOutlet NSMenuItem *showPreferencesItem;
-@property (readwrite) IBOutlet NSStatusItem *statusItem;
+@property (readwrite) IBOutlet NSMenu           *menu;
+@property (readwrite) IBOutlet NSMenuItem       *versionNumberItem;
+@property (readwrite) IBOutlet NSMenuItem       *toggleConnectionItem;
+@property (readwrite) IBOutlet NSMenuItem       *showMessengerItem;
+@property (readwrite) IBOutlet NSMenuItem       *serverStatusItem;
+@property (readwrite) IBOutlet NSMenuItem       *showLoggerItem;
+@property (readwrite) IBOutlet NSMenuItem       *showPreferencesItem;
+@property (readwrite) IBOutlet NSStatusItem     *statusItem;
 
 - (NSString*)getUserSettings            :(NSString*)settingName;
 - (void)saveUserSettings;
 - (void)calculateGlobalResolution;
 - (void)toggleFeature                   :(NSString*)featureName :(BOOL)toEnable;
 - (NSDictionary*)getLocalPosition       :(CGPoint)loc;
-- (IBAction)fakeAction                  :(id)sender;
-- (IBAction)toggleAllRecordings         :(id)sender;
-- (IBAction)toggleMouseRecording        :(id)sender;
-- (IBAction)toggleScrollRecording       :(id)sender;
 
 - (IBAction)connectSocket               :(id)sender;
 - (IBAction)disconnectSocket            :(id)sender;
 - (IBAction)clearButtonPressed          :(id)sender;
-- (IBAction)recordButtonPressed         :(id)sender;
-- (IBAction)stopButtonPressed           :(id)sender;
 - (void)logMessageToLogView             :(NSString*)message;
 
 - (IBAction)clickPostMessage            :(id)sender;
