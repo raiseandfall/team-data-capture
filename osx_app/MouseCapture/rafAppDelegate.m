@@ -677,11 +677,14 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
         // Start recording actions
         [self startRecording];
         
-        // Change connection item in menu bar
-        [self toggleFeature:@"CONNECTION" :TRUE];
-        
         // Enable messenger feature
         [self toggleFeature:@"MESSENGER" :TRUE];
+        
+        // Push notification
+        if (self.displayNotifications) {
+            NSLog(@"WHOOOO");
+            [notifier push:@"Connected" :@"The connection to the websocket has been established." :YES :nil];
+        }
     }
     
     if (error) {
