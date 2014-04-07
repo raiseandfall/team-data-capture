@@ -188,7 +188,7 @@ module.exports = function(grunt) {
       },
       js: {
         files: [
-          'public/js/*',
+          'public/js/**/*',
           '!public/js/modernizr.js'
         ],
         tasks: ['js']

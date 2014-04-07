@@ -92,6 +92,9 @@ var Socket = (function(WebSocket){
 
 		this.connect = function(host, port){
 			this.events = new WebSocket('ws://' + host + ':' + port + '/');
+
+			this.events.onopen = onopen;
+			this.events.onmessage = onmessage;
 		};
 	};
 
