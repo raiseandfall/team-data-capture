@@ -422,21 +422,21 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
  * @description     connect to web socket
 **/
 - (void)_connectSocket {
-    // If web socket is not already running
-    if (_webSocket == nil) {
+    if (_webSocket != nil) {
         _webSocket.delegate = nil;
         [_webSocket close];
+        _webSocket = nil;
+    }
     
-        // If no host & port in the configuration
-        if ([[self getUserSettings:@"host"] isEqualToString:@""] || [[self getUserSettings:@"port"] isEqualToString:@""]) {
-            [notifier push:@"Missing server parameters" :@"Please specifiy the server host & port in the preferences" :YES :nil];
-        } else {
-            _webSocket = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"ws://%@:%@", [self getUserSettings:@"host"], [self getUserSettings:@"port"]]]]];
-            _webSocket.delegate = self;
+    // If no host & port in the configuration
+    if ([[self getUserSettings:@"host"] isEqualToString:@""] || [[self getUserSettings:@"port"] isEqualToString:@""]) {
+        [notifier push:@"Missing server parameters" :@"Please specifiy the server host & port in the preferences" :YES :nil];
+    } else {
+        _webSocket = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"ws://%@:%@", [self getUserSettings:@"host"], [self getUserSettings:@"port"]]]]];
+        _webSocket.delegate = self;
     
-            [socketStatus setStringValue:@"Opening connection!"];
-            [_webSocket open];
-        }
+        [socketStatus setStringValue:@"Opening connection!"];
+        [_webSocket open];
     }
 }
 
