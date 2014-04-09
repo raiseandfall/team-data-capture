@@ -1018,7 +1018,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iMb-Vo-OS7">
-                                            <rect key="frame" x="102" y="53" width="139" height="22"/>
+                                            <rect key="frame" x="102" y="53" width="187" height="22"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="192.168.173.101" drawsBackground="YES" id="Zif-Y6-1gk">
                                                 <font key="font" metaFont="system"/>
@@ -1027,7 +1027,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hzk-nq-o6L">
-                                            <rect key="frame" x="102" y="15" width="139" height="22"/>
+                                            <rect key="frame" x="102" y="15" width="51" height="22"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="9000" drawsBackground="YES" id="mAV-8f-YHG">
                                                 <font key="font" metaFont="system"/>

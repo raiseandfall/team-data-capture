@@ -449,8 +449,6 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
         return;
     }
     
-    NSLog(@"stopRecording");
-    
     [NSEvent removeMonitor:monitorUserInputs];
     monitorUserInputs = nil;
     
@@ -467,8 +465,6 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
  * @description     start global recording
 **/
 - (void)startRecording {
-    NSLog(@"startRecording");
-    
     // Fire everytime cursor move
     NSUInteger eventMasks = NSMouseMovedMask | NSLeftMouseDownMask | NSScrollWheelMask;
     
@@ -682,7 +678,6 @@ NSString *COPYRIGHT_TXT = @"With ❤ from JVST";
         
         // Push notification
         if (self.displayNotifications) {
-            NSLog(@"WHOOOO");
             [notifier push:@"Connected" :@"The connection to the websocket has been established." :YES :nil];
         }
     }
