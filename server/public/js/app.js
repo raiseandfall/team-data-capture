@@ -7,7 +7,7 @@ console.log('Developed with love by frenchies at JVST Inc');
 * Start the Socket connection
 */
 var host = window.document.location.host.replace(/:.*/, ''),
-port='9000';
+port = '8000';
 var ws = new Socket();
 ws.connect(host, port);
 

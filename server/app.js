@@ -11,7 +11,7 @@ var express = require('express'),
 /**
  *  Define the team capture application.
  */
-var TeamCaptureApp = function(ipaddress, port, dbuser, dbpassword) {
+var TeamCaptureApp = function(ipaddress, port) {
 
     //  Scope.
     var self = this;
@@ -26,8 +26,9 @@ var TeamCaptureApp = function(ipaddress, port, dbuser, dbpassword) {
      */
     self.setupVariables = function() {
         //  Set the environment variables we need.
-        self.ipaddress = process.env.OPENSHIFT_NODEJS_IP;
-        self.port      = process.env.OPENSHIFT_NODEJS_PORT || port;
+        self.ipaddress = ipaddress;
+        self.port      = port;
+
         self.mongodb_host = process.env.OPENSHIFT_MONGODB_DB_HOST;
         self.mongodb_port = process.env.OPENSHIFT_MONGODB_DB_PORT;
         self.mongodb_username = process.env.OPENSHIFT_MONGODB_DB_USERNAME;
@@ -36,7 +37,7 @@ var TeamCaptureApp = function(ipaddress, port, dbuser, dbpassword) {
         if (typeof self.ipaddress === 'undefined') {
             //  Log errors on OpenShift but continue w/ 127.0.0.1 - this
             //  allows us to run/test the app locally.
-            self.ipaddress = ipaddress;
+            self.ipaddress = "127.0.0.1";
         }
 
         if (typeof self.mongodb_host === 'undefined') {
