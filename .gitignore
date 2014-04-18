@@ -20,12 +20,5 @@ DerivedData
 #CocoaPods
 Pods
 
-#Node
-*node_modules/
-*bower_components/
-server/config.js
-server/public/stylesheets
-server/public/javascripts
-
 #Submodules
 SocketRocket/
