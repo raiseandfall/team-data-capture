@@ -233,7 +233,7 @@ module.exports = function(grunt) {
   grunt.registerTask('scss', ['sass', 'autoprefixer', 'concat:css', 'cssmin']);
 
   // default = run jslint and all tests
-  grunt.registerTask('default', ['scss', 'js', 'develop', 'nodeunit']);
+  grunt.registerTask('default', ['scss', 'js', 'develop']);
 
   // dev = run jslint and all tests
   grunt.registerTask('dev', ['develop', 'watch']);
