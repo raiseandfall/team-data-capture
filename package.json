@@ -1,5 +1,5 @@
 {
-  "name": "mouse data capture",
+  "name": "mousedatacapture",
   "version": "0.0.1",
   "private": true,
   "main": "server.js",
