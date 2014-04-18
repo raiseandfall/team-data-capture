@@ -23,6 +23,7 @@ The app also has a messenger system, to send chat-type messages.
 If you use npm, when you push your files, openshift will install all your node modules listed in `package.json`.
 
 Some issues can appear when grunt node modules are listed in `package.json`. To prevent those issue: 
+
 1. Build your project with grunt packages listed in `package.json`
 2. Install your package with `$ npm install`
 3. Build your project with `$ grunt command`
