@@ -36,11 +36,11 @@ The main configuration values are the web socket parameters.
 ### OSX App
 A Preferences window is available to change Host & Port settings. Open it from the menu bar item.
 To run the app on the Openshift server, set the following values :
-Host : yourdomain.rhcloud.com ()
-Port : 8000
+- Host : yourdomain.rhcloud.com
+- Port : 8000
 
 ### Server
-In config.js update `db_name` parameter by the database name created by openshift : 
+In `config.js` update `db_name` parameter by the database name created by openshift : 
 ```
 exports.db_name = `<db_name_openshift>`;
 exports.ipaddress = process.env.OPENSHIFT_INTERNAL_IP || process.env.OPENSHIFT_NODEJS_IP;
