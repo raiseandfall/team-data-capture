@@ -1,5 +1,4 @@
 #!/bin/env node
-
 /**
  *  main():  Main code.
  */

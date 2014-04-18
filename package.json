@@ -1,15 +1,23 @@
 {
-  "name": "spacemo.us",
+  "name": "mouse data capture",
   "version": "0.0.1",
   "private": true,
   "main": "server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
-  },
+  "keywords": [
+    "OpenShift",
+    "Node.js",
+    "application",
+    "openshift"
+  ],
   "author": {
-    "url": "http://www.jvst.us",
-    "name": "JVST"
+    "name": "OpenShift",
+    "email": "ramr@example.org",
+    "url": "http://www.openshift.com/"
+  },
+  "homepage": "http://www.openshift.com/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/openshift/origin-server"
   },
   "engines": {
     "node": ">= 0.6.0",
