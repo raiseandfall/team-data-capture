@@ -4,7 +4,9 @@
   "version": "0.0.1",
   "homepage": "https://github.com/raiseandfall/team-data-capture",
   "authors": [
-    "Thibaut Delille <thibaut@jvst.us>"
+    "Thibaut Delille <thibaut@jvst.us>",
+    "Tiffany Pecaud <tiffany@jvst.us>",
+    "Matthieu Colle <matthew@jvst.us>"
   ],
   "description": "Better than NSA - track the mouse of your whole team",
   "license": "MIT",
@@ -17,7 +19,6 @@
     "tests"
   ],
   "dependencies": {
-    "d3": "~3.4.3",
     "two": "~0.3.0",
     "requirejs": "~2.1.11"
   }
