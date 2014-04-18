@@ -2,13 +2,18 @@
   "name": "spacemo.us",
   "version": "0.0.1",
   "private": true,
+  "main": "server.js"
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js"
+    "start": "node server.js"
   },
   "author": {
     "url": "http://www.jvst.us",
     "name": "JVST"
+  },
+  "engines": {
+    "node": ">= 0.6.0",
+    "npm": ">= 1.0.0"
   },
   "dependencies": {
     "express": "~3.4.8",
@@ -32,6 +37,7 @@
     "grunt-modernizr": "~0.5.2",
     "grunt-contrib-uglify": "~0.4.0"
   },
+  "bundleDependencies": [],
   "devDependencies": {
     "jshint-stylish": "~0.1.5",
     "grunt-sass": "~0.12.1",

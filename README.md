@@ -1,5 +1,4 @@
 Team Data Capture
-=================
 
 An OSX app to retrieve users' input data & use it for something with Node.JS.
 So far the app is tracking :
