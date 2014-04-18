@@ -8,45 +8,25 @@ So far the app is tracking :
 
 The app also has a messenger system, to send chat-type messages.
 
-## Installation
+## Update the project on Openshift
 
-### OSX App
+### Openshift project
+1. Login to the website https://openshift.redhat.com
+2. Create a new app
+3. Go in your app settings
+4. Add your ssh key to Public Keys
+5. Get the openshift git repo url : `<openshift-git-repo-url>`
+6. Clone your github project in local and checkout in the good branch
+7. Create a remote of the openshift repo : `$ git remote add openshift -f <openshift-git-repo-url>`
+8. Commit your files from your local project and fixed conflicts (when you create a new app in openshift, some files are created so you can have conflicts)
+9. Push your files to the openshift git repo : `$ git push openshift openshift:master`
+If you use npm, when you push your files, openshift will install all your node modules listed in `package.json`.
 
-##### APP
-1. Open Xcode project
-2. Product -> Archive
-3. Export as Xcode Archive
-4. Show package contents of archive
-5. .app file will be in `Products/Applications/`
-
-##### ACCESSIBILITY
-To get the keyboard event to work, you'll need to authorize Xcode ( if dev mode ) or the compiled app to control your computer  
-1. Go to System Preferences  
-2. Open Security & Privacy section  
-3. Add the app or Xcode ( if dev mode ) to the Accessibility list  
-
-### Server
-Load all the packages
-```
-$ cd server
-$ npm install
-$ bower install
-```
-
-Start Mongodb
-```
-$ mongod
-```
-
-Start the server using grunt allow you to use liveReload for the front end dev
-```
-$ grunt dev
-```
-
-Start the server using Node better log on for the backend dev
-```
-$ node server.js
-```
+Some issues can appear when grunt node modules are listed in `package.json`. To prevent those issue: 
+1. Build your project with grunt packages listed in `package.json`
+2. Install your package with `$ npm install`
+3. Build your project with `$ grunt command`
+4. Before commiting and pushing your changes, remove all grunt dependencies from `package.json`
 
 ## Configuration
 
@@ -54,12 +34,16 @@ The main configuration values are the web socket parameters.
 
 ### OSX App
 A Preferences window is available to change Host & Port settings. Open it from the menu bar item.
+To run the app on the Openshift server, set the following values :
+Host : yourdomain.rhcloud.com ()
+Port : 8000
 
 ### Server
-Set your ip address and port in server/config.js
+In config.js update `db_name` parameter by the database name created by openshift : 
 ```
-exports.ipaddress = '[your ipaddress]';
-exports.port = '[your port]';
+exports.db_name = `<db_name_openshift>`;
+exports.ipaddress = process.env.OPENSHIFT_INTERNAL_IP || process.env.OPENSHIFT_NODEJS_IP;
+exports.port = process.env.OPENSHIFT_INTERNAL_PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080;
 ```
 
 ## Documentation
@@ -70,7 +54,7 @@ We build a little api that allow you to recieve all of the events sent by the os
 Example:
 ```
 var host = window.document.location.host.replace(/:.*/, ''),
-port='9000';
+port='8000';
 var ws = new Socket();
 ws.connect(host, port);
 

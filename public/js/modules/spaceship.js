@@ -188,7 +188,7 @@ var Spaceship = function(id, ws, two) {
       aTrail.push(itemTrailSin);
     }
     
-    nIntervId = setInterval(addTrailItem, frequence);
+    //nIntervId = setInterval(addTrailItem, frequence);
 
     /**
     *
