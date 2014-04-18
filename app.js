@@ -11,7 +11,7 @@ var express = require('express'),
 /**
  *  Define the team capture application.
  */
-var TeamCaptureApp = function(ipaddress, port) {
+var TeamCaptureApp = function(ipaddress, port, db_name) {
 
     //  Scope.
     var self = this;
@@ -46,8 +46,8 @@ var TeamCaptureApp = function(ipaddress, port) {
             self.mongodb = 'mongodb://localhost/teamcapture';
             self.mongodb_db = 'teamcapture';
         }else{
-            self.mongodb = 'mongodb://'+self.mongodb_username+':'+self.mongodb_password+'@'+self.mongodb_host+'/spacemous';
-            self.mongodb_db = 'spacemous';
+            self.mongodb = 'mongodb://'+self.mongodb_username+':'+self.mongodb_password+'@'+self.mongodb_host+'/'+db_name;
+            self.mongodb_db = db_name;
         }
     };
 

@@ -5,6 +5,6 @@
 var config = require('./config.js');
 
 var TeamCaptureApp = require('./app').TeamCaptureApp;
-var app = new TeamCaptureApp(config.ipaddress, config.port);
+var app = new TeamCaptureApp(config.ipaddress, config.port, config.db_name);
 app.initialize();
 app.start();
