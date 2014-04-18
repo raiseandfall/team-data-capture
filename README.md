@@ -10,6 +10,12 @@ The app also has a messenger system, to send chat-type messages.
 
 ## Installation
 
+__openshift__ branch is for openshift deployment
+
+**osx_app** branch is for OSX app
+
+__master__ branch is for server development
+
 ### OSX App
 
 ##### APP
