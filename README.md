@@ -8,26 +8,26 @@ So far the app is tracking :
 
 The app also has a messenger system, to send chat-type messages.
 
-## Update the project on Openshift
+## Openshift project
 
-### Openshift project
+### Working on the project
 1. Login to the website https://openshift.redhat.com
 2. Create a new app
-3. Go in your app settings
+3. Go in the app settings
 4. Add your ssh key to Public Keys
 5. Get the openshift git repo url : `<openshift-git-repo-url>`
 6. Clone your github project in local and checkout in the good branch
 7. Create a remote of the openshift repo : `$ git remote add openshift -f <openshift-git-repo-url>`
-8. Commit your files from your local project and fixed conflicts (when you create a new app in openshift, some files are created so you can have conflicts)
+8. Commit your files from your local project and fixed conflicts (when a new app is added with openshift, some files are created so conflicts can appear)
 9. Push your files to the openshift git repo : `$ git push openshift openshift:master`
 If you use npm, when you push your files, openshift will install all your node modules listed in `package.json`.
 
 Some issues can appear when grunt node modules are listed in `package.json`. To prevent those issue: 
 
-1. Build your project with grunt packages listed in `package.json`
-2. Install your package with `$ npm install`
-3. Build your project with `$ grunt command`
-4. Before commiting and pushing your changes, remove all grunt dependencies from `package.json`
+1. Build the project with grunt packages listed in `package.json`
+2. Install packages with `$ npm install`
+3. Build the project with `$ grunt` command
+4. Before commiting and pushing changes, remove all grunt dependencies from `package.json`
 
 ## Configuration
 
