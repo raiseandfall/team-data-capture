@@ -1,12 +1,22 @@
-Team Data Capture
+# Team Data Capture
 
 An OSX app to retrieve users' input data & use it for something with Node.JS.
-So far the app is tracking :
-- scroll
+The app is tracking :
+- mouse scroll
 - left click
 - mouse move
 
 The app also has a messenger system, to send chat-type messages.
+
+It comes with a contextual menu in the toolbar :
+
+![Team Data Capture Toolbar](images/toolbar.png)
+
+### Example app
+
+The data can be used to display a spaceship per user ( for example ) : the spaceship follows the mouse movement, and shoots a missile on every left click.
+
+![Team Data Capture Space](images/space.png)
 
 ## Installation
 
